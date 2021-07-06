@@ -1,0 +1,75 @@
+EDuke32 r7451
+Built Mar 29 2019 03:35:52, GCC 7.3.0, 64-bit 
+Using /home/dorwan/Proyectos/Granja/frontend_granja/ for game data
+Using /home/dorwan/.config/eduke32/ for game data
+Initializing SDL 2.0.8
+Using "x11" video driver
+Searching for game data...
+Using "duke3d.grp" as main game data file.
+Compiling: GAME.CON (99639 bytes)
+Including: DEFS.CON (28893 bytes)
+Including: USER.CON (36930 bytes)
+GAME.CON: In state `blimphitstate':
+GAME.CON:157: warning: expected action, found define.
+GAME.CON: In actor `ORGANTIC':
+GAME.CON:1923: warning: found `else' with no `if'
+GAME.CON: In state `pigshootenemystate':
+GAME.CON:2817: warning: found `else' with no `if'
+Found 3 warning(s), 0 error(s).
+Compiled 99640 bytes in 20ms, v1.3D compatibility mode
+Initialized 96.0M cache
+Initializing OSD...
+0 joystick(s) found
+Executing "settings.cfg"
+videoSetGamma(): There are 0 joysticks available
+videoSetGamma(): There are 0 joysticks available
+videoSetGamma(): There are 0 joysticks available
+videoSetGamma(): There are 0 joysticks available
+Setting video mode 320x200 (0-bpp windowed)
+Refresh rate: 60Hz
+OpenGL information
+ X.Org AMD STONEY (DRM 3.23.0, 4.15.0-144-generic, LLVM 10.0.0) 4.5 (Compatibility Profile) Mesa 20.0.8
+Setting video mode 1920x1080 (32-bpp windowed)
+Refresh rate: 60Hz
+Opened "texturecache" as cache file
+Initializing music...
+Error: couldn't open any of the following files:
+/etc/timidity/freepats.cfg
+/etc/timidity/timidity.cfg
+/etc/timidity.cfg
+Error: couldn't open any of the following files:
+/etc/timidity/freepats.cfg
+/etc/timidity/timidity.cfg
+/etc/timidity.cfg
+S_MusicStartup(): failed initializing
+Initializing sound... 64 voices, 2 channels, 16-bit 48000 Hz
+Sound hlminhal.voc(#23) not found!
+Sound hlmexhal.voc(#24) not found!
+Sound yes.voc(#45) not found!
+Sound fan.voc(#77) not found!
+Sound hover.voc(#80) not found!
+Sound turrrm.voc(#145) not found!
+Sound turrrg.voc(#146) not found!
+Sound turrat.voc(#147) not found!
+Sound b3atk01.voc(#152) not found!
+Sound turrpn.voc(#161) not found!
+Sound turrdy.voc(#162) not found!
+Sound b3atk01.voc(#176) not found!
+Sound vpiss2.voc(#182) not found!
+Sound hlminhal.voc(#23) not found!
+Sound hlmexhal.voc(#24) not found!
+Sound yes.voc(#45) not found!
+Sound fan.voc(#77) not found!
+Sound hover.voc(#80) not found!
+Sound turrrm.voc(#145) not found!
+Sound turrrg.voc(#146) not found!
+Sound turrat.voc(#147) not found!
+Sound b3atk01.voc(#152) not found!
+Sound turrpn.voc(#161) not found!
+Sound turrdy.voc(#162) not found!
+Sound b3atk01.voc(#176) not found!
+Sound vpiss2.voc(#182) not found!
+Cache time: 36ms
+ 
+Wrote eduke32.cfg
+Wrote settings.cfg
