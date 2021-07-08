@@ -872,7 +872,7 @@
       </template>
     </b-modal>
     <b-modal id="showActivityModal" title="Mostrar Actividad">
-      <form ref="activityForm" id="activityForm">
+      <form ref="activityForm" id="activityForm" onsubmit="return false;">
         <div class="row">
           <div class="col-sm-12 col-md-12 col-lg-12">
             <table class="table table-borderless">
@@ -1005,7 +1005,7 @@
                   <td COLSPAN="2" class="floatCenter">
                     <b-button
                       v-if="showRegister.registro_actividad"
-                      type="buttom"
+                      type="button"
                       form="activityForm"
                       variant="success"
                       size="lg"
@@ -1023,7 +1023,7 @@
                     </b-button>
                     <b-button
                       v-else
-                      type="buttom"
+                      type="button"
                       form="activityForm"
                       variant="success"
                       size="lg"
@@ -1038,14 +1038,14 @@
                   </td>
                   <td COLSPAN="2" class="floatCenter">
                     <b-button
-                      type="buttom"
+                      type="button"
                       form="activityForm"
                       variant="warning"
                       size="lg"
                       class="float-right"
                       @click="handleFinishActivity"
                       :disabled="
-                        showRegister.estado != 'Iniciado' ? true : false
+                        showRegister.estado == 'Iniciado' ? false : true
                       "
                     >
                       Finalizar
@@ -1162,9 +1162,8 @@ export default {
     }
   },
   methods: {
-    handleAddActivity(e) {
+    async handleAddActivity(e) {
       e.preventDefault();
-
       let validate = true;
       const activity = this.activitySelected;
       const proposito = this.propositoSelected;
@@ -1227,7 +1226,7 @@ export default {
 
       if (validate) {
         if (confirm("¿Desea agregar la nueva actividad?")) {
-          this.$apollo
+          await this.$apollo
             .mutate({
               mutation: ACTIVITIES_CREATE_REGISTER,
               variables: {
@@ -1297,11 +1296,11 @@ export default {
       this.showRegister = register;
       this.$root.$emit("bv::show::modal", "showActivityModal");
     },
-    handleUpdateActivity(e) {
+    async handleUpdateActivity(e) {
       e.preventDefault;
       let validate = true;
       const observacion = this.observacion;
-      const recursos = Number(this.recursos);
+      const recursos = 8;
       this.observacionState = true;
       this.recursosState = true;
       this.error = "";
@@ -1320,7 +1319,7 @@ export default {
 
       if (validate) {
         if (confirm("¿Desea iniciar la actividad?")) {
-          this.$apollo
+          await this.$apollo
             .mutate({
               mutation: ACTIVITIES_UPDATE_REGISTER,
               variables: {
@@ -1342,7 +1341,6 @@ export default {
               ]
             })
             .then(data => {
-              console.log(data.data);
               this.showRegister =
                 data.data.updateRegistroActividad.registroActividad;
               this.observacion = "";
@@ -1353,8 +1351,8 @@ export default {
               //this.$root.$emit("bv::hide::modal", "showActivityModal");
             })
             .catch(({ graphQLErrors }) => {
-              graphQLErrors.map(({ extensions }) =>
-                console.log(extensions.exception)
+              graphQLErrors.map(
+                ({ extensions }) => console.log(extensions.exception)
                 /* extensions.exception.data.message.map(({ messages }) =>
                   messages.map(({ message }) => (this.error = message))
                 ) */
@@ -1363,21 +1361,24 @@ export default {
         }
       }
     },
-    handleFinishActivity(e) {
+    async handleFinishActivity(e) {
       e.preventDefault;
       let validate = true;
       const campoId = this.campoSelected.id;
       this.error = "";
+      const id = this.showRegister.id;
+      const endDate = moment();
+      const estado = "Finalizado";
 
       if (validate) {
         if (confirm("¿Desea finalizar la actividad?")) {
-          this.$apollo
+          await this.$apollo
             .mutate({
               mutation: ACTIVITIES_UPDATE_FINISH_REGISTER,
               variables: {
-                id: this.showRegister.id,
-                estado: "Finalizado",
-                endDate: moment()
+                id,
+                estado,
+                endDate
               },
               refetchQueries: [
                 {
@@ -1391,17 +1392,22 @@ export default {
               ]
             })
             .then(data => {
-              console.log(data.data);
+              this.showRegister =
+                data.data.updateRegistroActividad.registroActividad;
+              this.observacion = "";
+              this.recursos = null;
+              this.recursosState = null;
+              this.observacionState = null;
               this.error = "";
-              this.$root.$emit("bv::hide::modal", "showActivityModal");
+              //this.$root.$emit("bv::hide::modal", "showActivityModal");
             })
             .catch(({ graphQLErrors }) => {
-              graphQLErrors.map(({ extensions }) =>
-              console.log(extensions.exception)
+              graphQLErrors.map(
+                ({ extensions }) => console.log(extensions.exception)
                 /* extensions.exception.data.message.map(({ messages }) =>
                   messages.map(({ message }) => (this.error = message))
                 ) */
-              ); 
+              );
             });
         }
       }
