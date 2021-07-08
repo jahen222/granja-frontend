@@ -872,22 +872,14 @@
       </template>
     </b-modal>
     <b-modal id="showActivityModal" title="Mostrar Actividad">
-      <form ref="activityForm" id="activityForm" @submit="handleUpdateActivity">
+      <form ref="activityForm" id="activityForm">
         <div class="row">
-          <div class="col-sm-6 col-md-6 col-lg-6">
+          <div class="col-sm-12 col-md-12 col-lg-12">
             <table class="table table-borderless">
               <tbody>
                 <tr>
                   <td>Actividad:</td>
-                  <td>{{ this.showRegister.actividad }}</td>
-                </tr>
-                <tr>
-                  <td>Propósito:</td>
-                  <td>{{ this.showRegister.proposito }}</td>
-                </tr>
-                <tr>
-                  <td>Estado:</td>
-                  <td>{{ this.showRegister.estado }}</td>
+                  <td COLSPAN="3">{{ this.showRegister.actividad }}</td>
                 </tr>
                 <tr>
                   <td>Inicio:</td>
@@ -898,8 +890,6 @@
                         : ""
                     }}
                   </td>
-                </tr>
-                <tr>
                   <td>Fin:</td>
                   <td>
                     {{
@@ -913,32 +903,32 @@
                   <td>Tipo:</td>
                   <td>{{ this.showRegister.tipo }}</td>
                 </tr>
-                <tr v-if="this.showRegister.tipo === 'Aplicación'">
-                  <td>Cantidad:</td>
-                  <td>{{ this.showRegister.cantidad }}</td>
-                </tr>
-                <tr v-if="this.showRegister.tipo === 'Aplicación'">
-                  <td>Medida:</td>
-                  <td>{{ this.showRegister.medida }}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="col-sm-6 col-md-6 col-lg-6">
-            <table class="table table-borderless">
-              <tbody>
                 <tr v-if="this.showRegister.registro_actividad">
                   <td>Depende:</td>
                   <td>
-                    {{ this.showRegister.registro_actividad.actividad }} -
+                    {{ this.showRegister.registro_actividad.actividad }}
+                  </td>
+                  <td>Finaliza:</td>
+                  <td>
                     {{
                       this.showRegister.registro_actividad.fechafin
-                        ? "Fin: " +
-                          this.showRegister.registro_actividad.fechafin.split(
+                        ? this.showRegister.registro_actividad.fechafin.split(
                             "T"
                           )[0]
                         : ""
                     }}
+                  </td>
+                </tr>
+                <tr v-if="this.showRegister.tipo === 'Aplicación'">
+                  <td>Cantidad:</td>
+                  <td>{{ this.showRegister.cantidad }}</td>
+                  <td>Medida:</td>
+                  <td>{{ this.showRegister.medida }}</td>
+                </tr>
+                <tr>
+                  <td>Propósito:</td>
+                  <td COLSPAN="3">
+                    {{ this.showRegister.proposito }}
                   </td>
                 </tr>
                 <tr>
@@ -950,8 +940,6 @@
                         : "---"
                     }}
                   </td>
-                </tr>
-                <tr>
                   <td>Fin:</td>
                   <td>
                     {{
@@ -970,14 +958,19 @@
                       v-model="recursos"
                       :state="recursosState"
                       required
+                      style="width: 80px"
                     />
                   </td>
+                  <td>Estado:</td>
+                  <td>{{ this.showRegister.estado }}</td>
                 </tr>
                 <tr v-else>
                   <td>Recursos:</td>
                   <td>
                     {{ showRegister.recursos }}
                   </td>
+                  <td>Estado:</td>
+                  <td>{{ this.showRegister.estado }}</td>
                 </tr>
                 <tr
                   v-if="
@@ -987,7 +980,7 @@
                   "
                 >
                   <td>Obs:</td>
-                  <td>
+                  <td COLSPAN="3">
                     <textarea
                       class="form-control"
                       v-model="observacion"
@@ -1004,19 +997,20 @@
                   "
                 >
                   <td>Obs:</td>
-                  <td>
+                  <td COLSPAN="3">
                     {{ showRegister.observacion }}
                   </td>
                 </tr>
                 <tr>
-                  <td>
+                  <td COLSPAN="2" class="floatCenter">
                     <b-button
                       v-if="showRegister.registro_actividad"
-                      type="submit"
+                      type="buttom"
                       form="activityForm"
                       variant="success"
-                      size="sm"
+                      size="lg"
                       class="float-right"
+                      @click="handleUpdateActivity"
                       :disabled="
                         showRegister.registro_actividad.estado == 'Finalizado'
                           ? showRegister.estado != 'Proyectado'
@@ -1029,11 +1023,12 @@
                     </b-button>
                     <b-button
                       v-else
-                      type="submit"
+                      type="buttom"
                       form="activityForm"
                       variant="success"
-                      size="sm"
+                      size="lg"
                       class="float-right"
+                      @click="handleUpdateActivity"
                       :disabled="
                         showRegister.estado != 'Proyectado' ? true : false
                       "
@@ -1041,12 +1036,12 @@
                       Iniciar
                     </b-button>
                   </td>
-                  <td>
+                  <td COLSPAN="2" class="floatCenter">
                     <b-button
                       type="buttom"
                       form="activityForm"
                       variant="warning"
-                      size="sm"
+                      size="lg"
                       class="float-right"
                       @click="handleFinishActivity"
                       :disabled="
@@ -1169,6 +1164,7 @@ export default {
   methods: {
     handleAddActivity(e) {
       e.preventDefault();
+
       let validate = true;
       const activity = this.activitySelected;
       const proposito = this.propositoSelected;
@@ -1188,6 +1184,7 @@ export default {
       const now = new Date();
       const campoId = this.campoSelected.id;
       const dependenciaId = this.dependenciaSelected;
+      const estado = "Proyectado";
 
       if (!activity) {
         validate = false;
@@ -1229,51 +1226,54 @@ export default {
       }
 
       if (validate) {
-        this.$apollo
-          .mutate({
-            mutation: ACTIVITIES_CREATE_REGISTER,
-            variables: {
-              activity,
-              proposito,
-              startDate: moment(startDate),
-              endDate: moment(endDate),
-              type,
-              cantidad,
-              medida,
-              campoId,
-              dependenciaId
-            }
-          })
-          .then(data => {
-            this.registroActividads.unshift(
-              data.data.createRegistroActividad.registroActividad
-            );
-            this.activitySelected = "";
-            this.propositoSelected = "";
-            this.startDateSelected = "";
-            this.endDateSelected = "";
-            this.typeSelected = "";
-            this.cantidadSelected = "";
-            this.medidaSelected = "";
-            this.dependenciaSelected = null;
-            this.activityState = null;
-            this.propositoState = null;
-            this.startDateState = null;
-            this.endDateState = null;
-            this.typeState = null;
-            this.cantidadState = null;
-            this.medidaState = null;
-            this.dependenciaSelected = null;
-            this.error = "";
-            this.$root.$emit("bv::hide::modal", "addActivityModal");
-          })
-          .catch(({ graphQLErrors }) => {
-            graphQLErrors.map(({ extensions }) =>
-              extensions.exception.data.message.map(({ messages }) =>
-                messages.map(({ message }) => (this.error = message))
-              )
-            );
-          });
+        if (confirm("¿Desea agregar la nueva actividad?")) {
+          this.$apollo
+            .mutate({
+              mutation: ACTIVITIES_CREATE_REGISTER,
+              variables: {
+                activity,
+                proposito,
+                startDate: moment(startDate),
+                endDate: moment(endDate),
+                type,
+                cantidad,
+                medida,
+                campoId,
+                dependenciaId,
+                estado
+              }
+            })
+            .then(data => {
+              this.registroActividads.unshift(
+                data.data.createRegistroActividad.registroActividad
+              );
+              this.activitySelected = "";
+              this.propositoSelected = "";
+              this.startDateSelected = "";
+              this.endDateSelected = "";
+              this.typeSelected = "";
+              this.cantidadSelected = "";
+              this.medidaSelected = "";
+              this.dependenciaSelected = null;
+              this.activityState = null;
+              this.propositoState = null;
+              this.startDateState = null;
+              this.endDateState = null;
+              this.typeState = null;
+              this.cantidadState = null;
+              this.medidaState = null;
+              this.dependenciaSelected = null;
+              this.error = "";
+              this.$root.$emit("bv::hide::modal", "addActivityModal");
+            })
+            .catch(({ graphQLErrors }) => {
+              graphQLErrors.map(({ extensions }) =>
+                extensions.exception.data.message.map(({ messages }) =>
+                  messages.map(({ message }) => (this.error = message))
+                )
+              );
+            });
+        }
       }
     },
     handleMinusYear(e) {
@@ -1297,11 +1297,11 @@ export default {
       this.showRegister = register;
       this.$root.$emit("bv::show::modal", "showActivityModal");
     },
-    async handleUpdateActivity(e) {
+    handleUpdateActivity(e) {
       e.preventDefault;
       let validate = true;
       const observacion = this.observacion;
-      const recursos = this.recursos;
+      const recursos = Number(this.recursos);
       this.observacionState = true;
       this.recursosState = true;
       this.error = "";
@@ -1319,45 +1319,48 @@ export default {
       }
 
       if (validate) {
-        await this.$apollo
-          .mutate({
-            mutation: ACTIVITIES_UPDATE_REGISTER,
-            variables: {
-              id: this.showRegister.id,
-              estado: "Iniciado",
-              recursos: Number(recursos),
-              observacion,
-              startDate: moment()
-            },
-            refetchQueries: [
-              {
-                query: ACTIVITIES_GET_REGISTROS,
-                variables: {
-                  campo: this.campoSelected.id,
-                  startDate: this.thisYear + "-04-01",
-                  endDate: this.thisYear + 1 + "-03-31"
+        if (confirm("¿Desea iniciar la actividad?")) {
+          this.$apollo
+            .mutate({
+              mutation: ACTIVITIES_UPDATE_REGISTER,
+              variables: {
+                id: this.showRegister.id,
+                estado: "Iniciado",
+                recursos: recursos,
+                observacion,
+                startDate: moment()
+              },
+              refetchQueries: [
+                {
+                  query: ACTIVITIES_GET_REGISTROS,
+                  variables: {
+                    campo: this.campoSelected.id,
+                    startDate: this.thisYear + "-04-01",
+                    endDate: this.thisYear + 1 + "-03-31"
+                  }
                 }
-              }
-            ]
-          })
-          .then(data => {
-            console.log(data.data);
-            this.showRegister =
-              data.data.updateRegistroActividad.registroActividad;
-            //this.observacion = "";
-            //this.recursos = null;
-            this.recursosState = null;
-            this.observacionState = null;
-            this.error = "";
-            //this.$root.$emit("bv::hide::modal", "showActivityModal");
-          })
-          .catch(({ graphQLErrors }) => {
-            graphQLErrors.map(({ extensions }) =>
-              extensions.exception.data.message.map(({ messages }) =>
-                messages.map(({ message }) => (this.error = message))
-              )
-            );
-          });
+              ]
+            })
+            .then(data => {
+              console.log(data.data);
+              this.showRegister =
+                data.data.updateRegistroActividad.registroActividad;
+              this.observacion = "";
+              this.recursos = null;
+              this.recursosState = null;
+              this.observacionState = null;
+              this.error = "";
+              //this.$root.$emit("bv::hide::modal", "showActivityModal");
+            })
+            .catch(({ graphQLErrors }) => {
+              graphQLErrors.map(({ extensions }) =>
+                console.log(extensions.exception)
+                /* extensions.exception.data.message.map(({ messages }) =>
+                  messages.map(({ message }) => (this.error = message))
+                ) */
+              );
+            });
+        }
       }
     },
     handleFinishActivity(e) {
@@ -1367,36 +1370,40 @@ export default {
       this.error = "";
 
       if (validate) {
-        this.$apollo
-          .mutate({
-            mutation: ACTIVITIES_UPDATE_FINISH_REGISTER,
-            variables: {
-              id: this.showRegister.id,
-              estado: "Finalizado",
-              endDate: moment()
-            },
-            refetchQueries: [
-              {
-                query: ACTIVITIES_GET_REGISTROS,
-                variables: {
-                  campo: campoId,
-                  startDate: this.thisYear + "-04-01",
-                  endDate: this.thisYear + 1 + "-03-31"
+        if (confirm("¿Desea finalizar la actividad?")) {
+          this.$apollo
+            .mutate({
+              mutation: ACTIVITIES_UPDATE_FINISH_REGISTER,
+              variables: {
+                id: this.showRegister.id,
+                estado: "Finalizado",
+                endDate: moment()
+              },
+              refetchQueries: [
+                {
+                  query: ACTIVITIES_GET_REGISTROS,
+                  variables: {
+                    campo: campoId,
+                    startDate: this.thisYear + "-04-01",
+                    endDate: this.thisYear + 1 + "-03-31"
+                  }
                 }
-              }
-            ]
-          })
-          .then(() => {
-            this.error = "";
-            this.$root.$emit("bv::hide::modal", "showActivityModal");
-          })
-          .catch(({ graphQLErrors }) => {
-            graphQLErrors.map(({ extensions }) =>
-              extensions.exception.data.message.map(({ messages }) =>
-                messages.map(({ message }) => (this.error = message))
-              )
-            );
-          });
+              ]
+            })
+            .then(data => {
+              console.log(data.data);
+              this.error = "";
+              this.$root.$emit("bv::hide::modal", "showActivityModal");
+            })
+            .catch(({ graphQLErrors }) => {
+              graphQLErrors.map(({ extensions }) =>
+              console.log(extensions.exception)
+                /* extensions.exception.data.message.map(({ messages }) =>
+                  messages.map(({ message }) => (this.error = message))
+                ) */
+              ); 
+            });
+        }
       }
     }
   },
@@ -1456,5 +1463,11 @@ export default {
   width: 100%;
   overflow: auto;
   max-height: 350px;
+}
+.floatRight {
+  text-align: right;
+}
+.floatCenter {
+  text-align: center;
 }
 </style>

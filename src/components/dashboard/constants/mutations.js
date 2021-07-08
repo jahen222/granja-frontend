@@ -11,6 +11,7 @@ export const ACTIVITIES_CREATE_REGISTER = gql`
     $medida: String
     $campoId: ID!
     $dependenciaId: ID
+    $estado: String!
   ) {
     createRegistroActividad(
       input: {
@@ -24,6 +25,7 @@ export const ACTIVITIES_CREATE_REGISTER = gql`
           medida: $medida
           campo: $campoId
           registro_actividad: $dependenciaId
+          estado: $estado
         }
       }
     ) {
@@ -60,7 +62,7 @@ export const ACTIVITIES_CREATE_REGISTER = gql`
 export const ACTIVITIES_UPDATE_REGISTER = gql`
   mutation updateRegistroActividad(
     $id: ID!
-    $estado: ENUM_REGISTROACTIVIDAD_ESTADO!
+    $estado: String!
     $recursos: Int!
     $observacion: String
     $startDate: DateTime!
@@ -108,7 +110,7 @@ export const ACTIVITIES_UPDATE_REGISTER = gql`
 export const ACTIVITIES_UPDATE_FINISH_REGISTER = gql`
   mutation updateRegistroActividad(
     $id: ID!
-    $estado: ENUM_REGISTROACTIVIDAD_ESTADO!
+    $estado: String!
     $endDate: DateTime!
   ) {
     updateRegistroActividad(
