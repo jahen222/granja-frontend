@@ -147,3 +147,120 @@ export const ACTIVITIES_UPDATE_FINISH_REGISTER = gql`
     }
   }
 `;
+
+export const CUIDADO_CREATE_ACTIVIDAD = gql`
+  mutation createCuidadoArbole(
+    $arbol: ID!
+    $actividad: String!
+    $descripcion: String!
+    $estado: String!
+  ) {
+    createCuidadoArbole(
+      input: {
+        data: {
+          arbol: $arbol
+          descripcion: $descripcion
+          actividad: $actividad
+          estado: $estado
+        }
+      }
+    ) {
+      cuidadoArbole {
+        id
+        actividad
+        estado
+        descripcion
+        arbol {
+          id
+          numero
+          tipo
+          camellone {
+            id
+            numero
+            zona {
+              id
+              numero
+              campo {
+                id
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const CUIDADO_UPDATE_ACTIVIDAD = gql`
+  mutation updateCuidadoArbole(
+    $id: ID!
+    $estado: String!
+  ) {
+    updateCuidadoArbole(
+      input: {
+        where: { id: $id }
+        data: {
+          estado: $estado
+        }
+      }
+    ) {
+      cuidadoArbole {
+        id
+        actividad
+        estado
+        descripcion
+        arbol {
+          id
+          numero
+          tipo
+          camellone {
+            id
+            numero
+            zona {
+              id
+              numero
+              campo {
+                id
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const CUIDADO_DELETE_ACTIVIDAD = gql`
+  mutation deleteCuidadoArbole(
+    $id: ID!
+  ) {
+    deleteCuidadoArbole(
+      input: {
+        where: { id: $id }
+      }
+    ) {
+      cuidadoArbole {
+        id
+        actividad
+        estado
+        descripcion
+        arbol {
+          id
+          numero
+          tipo
+          camellone {
+            id
+            numero
+            zona {
+              id
+              numero
+              campo {
+                id
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
