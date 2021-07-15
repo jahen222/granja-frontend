@@ -155,10 +155,7 @@ export const ARBOLES_GET_CUIDADO = gql`
 
 export const ARBOLES_GET_ZONAS = gql`
   query zonas($campo: ID) {
-    zonas(
-      sort: "numero:asc"
-      where: { campo: { id_contains: $campo } }
-    ) {
+    zonas(sort: "numero:asc", where: { campo: { id_contains: $campo } }) {
       id
       numero
       campo {
@@ -170,10 +167,7 @@ export const ARBOLES_GET_ZONAS = gql`
 
 export const ARBOLES_GET_CAMELLONES = gql`
   query camellones($zona: ID) {
-    camellones(
-      sort: "numero:asc"
-      where: { zona: { id_contains: $zona } }
-    ) {
+    camellones(sort: "numero:asc", where: { zona: { id_contains: $zona } }) {
       id
       numero
       zona {
@@ -194,6 +188,50 @@ export const ARBOLES_GET_ARBOLS = gql`
       camellone {
         id
       }
+    }
+  }
+`;
+
+export const VENTAS_GET_VENTAS = gql`
+  query ventas($campo: ID) {
+    ventas(sort: "id:desc", where: { campo: { id_contains: $campo } }) {
+      id
+      producto {
+        id
+        nombre
+      }
+      calidad
+      cantidad
+      precio
+      valorkilo
+      total
+      factura
+      forma_pago {
+        id
+        nombre
+      }
+      cheque
+      campo {
+        id
+      }
+    }
+  }
+`;
+
+export const VENTAS_GET_PRODUCTOS = gql`
+  query productos {
+    productos(sort: "id:asc") {
+      id
+      nombre
+    }
+  }
+`;
+
+export const VENTAS_GET_FORMAPAGOS = gql`
+  query formaPagos {
+    formaPagos(sort: "id:asc") {
+      id
+      nombre
     }
   }
 `;

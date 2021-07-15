@@ -192,17 +192,9 @@ export const CUIDADO_CREATE_ACTIVIDAD = gql`
 `;
 
 export const CUIDADO_UPDATE_ACTIVIDAD = gql`
-  mutation updateCuidadoArbole(
-    $id: ID!
-    $estado: String!
-  ) {
+  mutation updateCuidadoArbole($id: ID!, $estado: String!) {
     updateCuidadoArbole(
-      input: {
-        where: { id: $id }
-        data: {
-          estado: $estado
-        }
-      }
+      input: { where: { id: $id }, data: { estado: $estado } }
     ) {
       cuidadoArbole {
         id
@@ -231,14 +223,8 @@ export const CUIDADO_UPDATE_ACTIVIDAD = gql`
 `;
 
 export const CUIDADO_DELETE_ACTIVIDAD = gql`
-  mutation deleteCuidadoArbole(
-    $id: ID!
-  ) {
-    deleteCuidadoArbole(
-      input: {
-        where: { id: $id }
-      }
-    ) {
+  mutation deleteCuidadoArbole($id: ID!) {
+    deleteCuidadoArbole(input: { where: { id: $id } }) {
       cuidadoArbole {
         id
         actividad
@@ -259,6 +245,88 @@ export const CUIDADO_DELETE_ACTIVIDAD = gql`
               }
             }
           }
+        }
+      }
+    }
+  }
+`;
+
+export const VENTA_CREATE_VENTA = gql`
+  mutation createVenta(
+    $producto: ID!
+    $calidad: String!
+    $precio: Float!
+    $cantidad: Int!
+    $valorKilo: Float!
+    $total: Float!
+    $factura: String!
+    $formaPago: ID!
+    $cheque: String
+    $campo: ID!
+  ) {
+    createVenta(
+      input: {
+        data: {
+          producto: $producto
+          precio: $precio
+          calidad: $calidad
+          cantidad: $cantidad
+          valorkilo: $valorKilo
+          total: $total
+          factura: $factura
+          forma_pago: $formaPago
+          cheque: $cheque
+          campo: $campo
+        }
+      }
+    ) {
+      venta {
+        id
+        producto {
+          id
+          nombre
+        }
+        calidad
+        cantidad
+        precio
+        valorkilo
+        total
+        factura
+        forma_pago {
+          id
+          nombre
+        }
+        cheque
+        campo {
+          id
+        }
+      }
+    }
+  }
+`;
+
+export const VENTAS_DELETE_VENTAS = gql`
+  mutation deleteVenta($id: ID!) {
+    deleteVenta(input: { where: { id: $id } }) {
+      venta {
+        id
+        producto {
+          id
+          nombre
+        }
+        calidad
+        cantidad
+        precio
+        valorkilo
+        total
+        factura
+        forma_pago {
+          id
+          nombre
+        }
+        cheque
+        campo {
+          id
         }
       }
     }

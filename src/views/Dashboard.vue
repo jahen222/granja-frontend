@@ -47,6 +47,9 @@
               <b-nav-item href="#" @click="changeOption('arboles')"
                 >Árboles</b-nav-item
               >
+              <b-nav-item href="#" @click="changeOption('ventas')"
+                >Ventas</b-nav-item
+              >
             </b-nav>
           </nav>
           <b-button variant="success" block @click="hide">Cerrar</b-button>
@@ -91,6 +94,9 @@
     </header>
     <header class="masthead" v-if="menuOption == 'arboles'">
       <Arboles :user="user" :campoSelected="campoSelected" />
+    </header>
+    <header class="masthead" v-if="menuOption == 'ventas'">
+      <Ventas :user="user" :campoSelected="campoSelected" />
     </header>
   </div>
   <div class="dashboard" v-else>
@@ -157,10 +163,11 @@ import { DASHBOARD_GET_USER, DASHBOARD_GET_CAMPOS } from "./constants/querys";
 import Activities from "../components/dashboard/Activities.vue";
 import ActivitiesClient from "../components/dashboard/ActivitiesClient.vue";
 import Arboles from "../components/dashboard/Arboles.vue";
+import Ventas from "../components/dashboard/Ventas.vue";
 
 export default {
   name: "Dashboard",
-  components: { Activities, ActivitiesClient, Arboles },
+  components: { Activities, ActivitiesClient, Arboles, Ventas },
   data() {
     return {
       user: "",

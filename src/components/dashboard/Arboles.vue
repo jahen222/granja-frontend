@@ -35,7 +35,7 @@
                   <th scope="col" class="tableHeaderGreen">Aplicación</th>
                   <th scope="col" class="tableHeaderGreen">Descripción</th>
                   <th scope="col" class="tableHeaderGreen">Estado</th>
-                  <th scope="col" class="tableHeaderGreen">Opciones</th>
+                  <th scope="col" class="tableHeaderGreen">Acciones</th>
                 </tr>
               </thead>
               <tbody>
@@ -344,10 +344,6 @@ export default {
             });
         }
       }
-    },
-    handleShowCuidado(register) {
-      this.showRegister = register;
-      this.$root.$emit("bv::show::modal", "showActivityModal");
     },
     async handleUpdateState(cuidadoArbol) {
       if (confirm("¿Desea finalizar la actividad?")) {
