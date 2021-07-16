@@ -13,13 +13,13 @@
       >
         <div class="col-lg-8 align-self-end">
           <h2 class="text-white font-weight-bold">
-            Listado de Ventas {{ campoSelected ? campoSelected.nombre : "" }}
+            Listado de Compras {{ campoSelected ? campoSelected.nombre : "" }}
           </h2>
           <hr class="divider" />
         </div>
         <div class="col-lg-12 align-self-baseline">
           <b-button class="btn btn-success btn-xl" v-b-modal.addVentasModal
-            >Agregar Venta</b-button
+            >Agregar Compra</b-button
           >
           <br />
           <br />
@@ -28,10 +28,12 @@
               <thead>
                 <tr>
                   <th scope="col" class="tableHeaderGreen">Productos</th>
-                  <th scope="col" class="tableHeaderGreen">Calidad</th>
+                  <th scope="col" class="tableHeaderGreen">Centro Costo</th>
                   <th scope="col" class="tableHeaderGreen">Cantidad</th>
-                  <th scope="col" class="tableHeaderGreen">Precio Kilo</th>
+                  <th scope="col" class="tableHeaderGreen">Precio Unitario</th>
+                  <th scope="col" class="tableHeaderGreen">Unidad</th>
                   <th scope="col" class="tableHeaderGreen">Total</th>
+                  <th scope="col" class="tableHeaderGreen">Guia</th>
                   <th scope="col" class="tableHeaderGreen">Factura</th>
                   <th scope="col" class="tableHeaderGreen">Forma Pago</th>
                   <th scope="col" class="tableHeaderGreen">Nro. Cheque</th>
@@ -39,21 +41,27 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(venta, index) in ventas" v-bind:key="index">
+                <tr v-for="(venta, index) in compras" v-bind:key="index">
                   <td class="tableBodyGreen">
                     {{ venta.producto.nombre }}
                   </td>
                   <td>
-                    {{ venta.calidad }}
+                    {{ venta.centrocosto.nombre }}
                   </td>
                   <td>
                     {{ venta.cantidad }}
                   </td>
                   <td>
-                    {{ venta.valorkilo }}
+                    {{ venta.valorunitario }}
+                  </td>
+                  <td>
+                    {{ venta.unidad }}
                   </td>
                   <td>
                     {{ venta.total }}
+                  </td>
+                  <td>
+                    {{ venta.guia }}
                   </td>
                   <td>
                     {{ venta.factura }}
@@ -106,39 +114,28 @@
           </select>
         </b-form-group>
         <br />
-        <!-- calidad -->
+        <!-- Centro Costo -->
         <b-form-group
-          label="Calidad"
-          label-for="calidad-input"
-          invalid-feedback="La calidad es requerida"
-          :state="calidadState"
+          label="Centro Costo"
+          label-for="centroCosto-input"
+          invalid-feedback="El Centro Costo es requerido"
+          :state="centroCostoState"
         >
           <select
             class="form-control"
-            v-model="calidadSelected"
-            :state="calidadState"
+            v-model="centroCostoSelected"
+            :state="centroCostoState"
           >
-            <option value="Baja">Baja</option>
-            <option value="Media">Media</option>
-            <option value="Alta">Alta</option>
+            <option
+              v-for="(producto, index) in productos"
+              v-bind:key="index"
+              :value="producto.id"
+            >
+              {{ producto.nombre }}
+            </option>
           </select>
         </b-form-group>
         <br />
-        <!-- precio -->
-        <!-- <b-form-group
-          label="Precio"
-          label-for="precio-input"
-          invalid-feedback="El precio es requerido"
-          :state="precioState"
-        >
-          <b-form-input
-            id="precio-input"
-            type="number"
-            v-model="precioSelected"
-            :state="precioState"
-          ></b-form-input>
-        </b-form-group>
-        <br /> -->
         <!-- cantidad -->
         <b-form-group
           label="Cantidad"
@@ -154,18 +151,35 @@
           ></b-form-input>
         </b-form-group>
         <br />
-        <!-- valor kilo -->
+        <!-- Unidad -->
         <b-form-group
-          label="Valor Kilo"
-          label-for="valorKilo-input"
+          label="Unidad"
+          label-for="unidad-input"
+          invalid-feedback="La unidad es requerida"
+          :state="unidadState"
+        >
+          <select
+            class="form-control"
+            v-model="unidadSelected"
+            :state="unidadState"
+          >
+            <option value="Baja">Kilos</option>
+            <option value="Media">Litros</option>
+          </select>
+        </b-form-group>
+        <br />
+        <!-- valor unitario -->
+        <b-form-group
+          label="Valor Unitario"
+          label-for="valorUnitario-input"
           invalid-feedback="El valor es requerido"
-          :state="valorKiloState"
+          :state="valorUnitarioState"
         >
           <b-form-input
-            id="valorKilo-input"
+            id="valorUnitario-input"
             type="number"
-            v-model="valorKiloSelected"
-            :state="valorKiloState"
+            v-model="valorUnitarioSelected"
+            :state="valorUnitarioState"
           ></b-form-input>
         </b-form-group>
         <br />
@@ -177,6 +191,21 @@
             v-model="totalSelected"
             :state="totalState"
             :disabled="true"
+          ></b-form-input>
+        </b-form-group>
+        <br />
+        <!-- guia -->
+        <b-form-group
+          label="Guia"
+          label-for="guia-input"
+          invalid-feedback="El numero de guia es requerido"
+          :state="guiaState"
+        >
+          <b-form-input
+            id="guia-input"
+            type="text"
+            v-model="guiaSelected"
+            :state="guiaState"
           ></b-form-input>
         </b-form-group>
         <br />
@@ -255,17 +284,17 @@
 
 <script>
 import {
-  VENTAS_GET_VENTAS,
+  COMPRAS_GET_COMPRAS,
   VENTAS_GET_PRODUCTOS,
   VENTAS_GET_FORMAPAGOS
 } from "./constants/querys";
 import {
-  VENTA_CREATE_VENTA,
-  VENTAS_DELETE_VENTAS
+  COMPRAS_CREATE_COMPRAS,
+  COMPRAS_DELETE_COMPRAS
 } from "./constants/mutations";
 
 export default {
-  name: "Ventas",
+  name: "Compras",
   props: ["user", "campoSelected"],
   data() {
     return {
@@ -273,14 +302,14 @@ export default {
       productos: [],
       productoSelected: "",
       productoState: null,
-      calidadSelected: "",
-      calidadState: null,
+      unidadSelected: "",
+      unidadState: null,
       cantidadSelected: "",
       cantidadState: null,
       precioSelected: "",
       precioState: null,
-      valorKiloSelected: "",
-      valorKiloState: null,
+      valorUnitarioSelected: "",
+      valorUnitarioState: null,
       totalState: null,
       facturaSelected: "",
       facturaState: null,
@@ -288,12 +317,16 @@ export default {
       formaPagosSelected: "",
       formaPagosState: null,
       chequeSelected: "",
-      chequeState: null
+      chequeState: null,
+      centroCostoSelected: "",
+      centroCostoState: null,
+      guiaSelected: "",
+      guiaState: null
     };
   },
   apollo: {
-    ventas: {
-      query: VENTAS_GET_VENTAS,
+    compras: {
+      query: COMPRAS_GET_COMPRAS,
       variables() {
         return {
           campo: this.campoSelected ? this.campoSelected.id : null
@@ -312,29 +345,35 @@ export default {
       e.preventDefault();
       let validate = true;
       const producto = this.productoSelected;
-      const calidad = this.calidadSelected;
+      const centrocosto = this.centroCostoSelected;
+      const valorunitario = this.valorUnitarioSelected;
       const cantidad = this.cantidadSelected;
       const total = this.totalSelected;
-      const valorKilo = this.valorKiloSelected;
+      const guia = this.guiaSelected;
       const factura = this.facturaSelected;
       const formaPago = this.formaPagosSelected;
       const cheque = this.chequeSelected;
+      const unidad = this.unidadSelected;
 
       if (!producto) {
         validate = false;
         this.productoState = false;
       }
-      if (!calidad) {
+      if (!centrocosto) {
         validate = false;
-        this.calidadState = false;
+        this.centroCostoState = false;
+      }
+      if (!guia) {
+        validate = false;
+        this.guiaState = false;
       }
       if (!cantidad) {
         validate = false;
         this.cantidadState = false;
       }
-      if (!valorKilo) {
+      if (!valorunitario) {
         validate = false;
-        this.valorKiloState = false;
+        this.valorUnitarioState = false;
       }
       if (!factura) {
         validate = false;
@@ -344,41 +383,51 @@ export default {
         validate = false;
         this.formaPagoState = false;
       }
+      if (!unidad) {
+        validate = false;
+        this.unidadState = false;
+      }
 
       if (validate) {
-        if (confirm("¿Desea agregar la venta?")) {
+        if (confirm("¿Desea agregar la compra?")) {
           await this.$apollo
             .mutate({
-              mutation: VENTA_CREATE_VENTA,
+              mutation: COMPRAS_CREATE_COMPRAS,
               variables: {
                 producto: producto,
-                calidad: calidad,
+                centrocosto: centrocosto,
                 cantidad: Number(cantidad),
-                valorKilo: Number(valorKilo),
+                valorunitario: Number(valorunitario),
                 total: Number(total),
+                guia: guia,
                 factura: factura,
                 formaPago: formaPago,
                 cheque: cheque,
+                unidad: unidad,
                 campo: this.campoSelected ? this.campoSelected.id : null
               }
             })
             .then(data => {
-              this.ventas.unshift(data.data.createVenta.venta);
+              this.compras.unshift(data.data.createCompra.compra);
               this.productoState = null;
-              this.calidadState = null;
               this.cantidadState = null;
-              this.valorKiloState = null;
               this.facturaState = null;
               this.formaPagoState = null;
               this.chequeState = null;
+              this.centroCostoState = null;
+              this.guiaState = null;
+              this.unidadState = null;
+              this.valorunitario = null;
               this.productoSelected = "";
-              this.calidadSelected = "";
+              this.centroCostoSelected = "";
+              this.valorUnitarioSelected = "";
               this.cantidadSelected = "";
               this.totalSelected = "";
-              this.valorKiloSelected = "";
+              this.guiaSelected = "";
               this.facturaSelected = "";
               this.formaPagosSelected = "";
               this.chequeSelected = "";
+              this.unidadSelected = "";
               this.error = "";
               this.$root.$emit("bv::hide::modal", "addVentasModal");
             })
@@ -393,16 +442,16 @@ export default {
       }
     },
     async handleDeleteVenta(venta) {
-      if (confirm("¿Desea eliminar la venta?")) {
+      if (confirm("¿Desea eliminar la compra?")) {
         await this.$apollo
           .mutate({
-            mutation: VENTAS_DELETE_VENTAS,
+            mutation: COMPRAS_DELETE_COMPRAS,
             variables: {
               id: venta.id
             },
             refetchQueries: [
               {
-                query: VENTAS_GET_VENTAS,
+                query: COMPRAS_GET_COMPRAS,
                 variables: {
                   campo: this.campoSelected ? this.campoSelected.id : null
                 }
@@ -410,8 +459,8 @@ export default {
             ]
           })
           .then(data => {
-            this.ventas.filter(function(venta) {
-              return venta.id != data.data.deleteVenta.venta.id;
+            this.compras.filter(function(venta) {
+              return venta.id != data.data.deleteCompra.compra.id;
             });
           })
           .catch(({ graphQLErrors }) => {
@@ -426,7 +475,7 @@ export default {
   },
   computed: {
     totalSelected() {
-      return this.cantidadSelected * this.valorKiloSelected;
+      return this.cantidadSelected * this.valorUnitarioSelected;
     }
   }
 };

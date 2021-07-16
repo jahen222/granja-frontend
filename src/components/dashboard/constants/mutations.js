@@ -255,7 +255,6 @@ export const VENTA_CREATE_VENTA = gql`
   mutation createVenta(
     $producto: ID!
     $calidad: String!
-    $precio: Float!
     $cantidad: Int!
     $valorKilo: Float!
     $total: Float!
@@ -268,7 +267,6 @@ export const VENTA_CREATE_VENTA = gql`
       input: {
         data: {
           producto: $producto
-          precio: $precio
           calidad: $calidad
           cantidad: $cantidad
           valorkilo: $valorKilo
@@ -288,7 +286,6 @@ export const VENTA_CREATE_VENTA = gql`
         }
         calidad
         cantidad
-        precio
         valorkilo
         total
         factura
@@ -316,9 +313,100 @@ export const VENTAS_DELETE_VENTAS = gql`
         }
         calidad
         cantidad
-        precio
         valorkilo
         total
+        factura
+        forma_pago {
+          id
+          nombre
+        }
+        cheque
+        campo {
+          id
+        }
+      }
+    }
+  }
+`;
+
+export const COMPRAS_CREATE_COMPRAS = gql`
+  mutation createCompra(
+    $producto: ID!
+    $centrocosto: ID!
+    $cantidad: Int!
+    $valorunitario: Float!
+    $total: Float!
+    $factura: String!
+    $formaPago: ID!
+    $cheque: String
+    $campo: ID!
+    $guia: String!
+    $unidad: String!
+  ) {
+    createCompra(
+      input: {
+        data: {
+          producto: $producto
+          cantidad: $cantidad
+          centrocosto: $centrocosto
+          valorunitario: $valorunitario
+          total: $total
+          factura: $factura
+          forma_pago: $formaPago
+          cheque: $cheque
+          campo: $campo
+          guia: $guia
+          unidad: $unidad
+        }
+      }
+    ) {
+      compra {
+        id
+        producto {
+          id
+          nombre
+        }
+        centrocosto {
+          id
+          nombre
+        }
+        cantidad
+        unidad
+        valorunitario
+        total
+        guia
+        factura
+        forma_pago {
+          id
+          nombre
+        }
+        cheque
+        campo {
+          id
+        }
+      }
+    }
+  }
+`;
+
+export const COMPRAS_DELETE_COMPRAS = gql`
+  mutation deleteCompra($id: ID!) {
+    deleteCompra(input: { where: { id: $id } }) {
+      compra {
+        id
+        producto {
+          id
+          nombre
+        }
+        centrocosto {
+          id
+          nombre
+        }
+        cantidad
+        unidad
+        valorunitario
+        total
+        guia
         factura
         forma_pago {
           id

@@ -202,7 +202,6 @@ export const VENTAS_GET_VENTAS = gql`
       }
       calidad
       cantidad
-      precio
       valorkilo
       total
       factura
@@ -232,6 +231,36 @@ export const VENTAS_GET_FORMAPAGOS = gql`
     formaPagos(sort: "id:asc") {
       id
       nombre
+    }
+  }
+`;
+
+export const COMPRAS_GET_COMPRAS = gql`
+  query compras($campo: ID) {
+    compras(sort: "id:desc", where: { campo: { id_contains: $campo } }) {
+      id
+      producto {
+        id
+        nombre
+      }
+      centrocosto {
+        id
+        nombre
+      }
+      cantidad
+      unidad
+      valorunitario
+      total
+      guia
+      factura
+      forma_pago {
+        id
+        nombre
+      }
+      cheque
+      campo {
+        id
+      }
     }
   }
 `;
