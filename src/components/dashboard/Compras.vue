@@ -12,6 +12,23 @@
         "
       >
         <div class="col-lg-8 align-self-end">
+          <b-alert
+            :show="dismissCountDown"
+            fade
+            :variant="typeNotification"
+            @dismissed="dismissCountDown = 0"
+            @dismiss-count-down="countDownChanged"
+          >
+            <p>
+              {{ messageNotification }}
+            </p>
+            <b-progress
+              :variant="typeNotification"
+              max="5"
+              :value="dismissCountDown"
+              height="4px"
+            ></b-progress>
+          </b-alert>
           <h2 class="text-white font-weight-bold">
             Listado de Compras {{ campoSelected ? campoSelected.nombre : "" }}
           </h2>
@@ -52,13 +69,13 @@
                     {{ venta.cantidad }}
                   </td>
                   <td>
-                    {{ venta.valorunitario }}
+                    {{ venta.valorunitario.toLocaleString() }}
                   </td>
                   <td>
                     {{ venta.unidad }}
                   </td>
                   <td>
-                    {{ venta.total }}
+                    {{ venta.total.toLocaleString() }}
                   </td>
                   <td>
                     {{ venta.guia }}
@@ -80,7 +97,7 @@
                       class="float-right"
                       @click="handleDeleteVenta(venta)"
                     >
-                      Borrar
+                      <font-awesome-icon icon="trash" style="color: white" />
                     </b-button>
                   </td>
                 </tr>
@@ -90,29 +107,45 @@
         </div>
       </div>
     </div>
-    <b-modal id="addVentasModal" title="Agregar Venta">
+    <b-modal id="addVentasModal">
+      <div slot="modal-title">
+        <font-awesome-icon icon="bookmark" style="color: green" />
+        Agregar Compra
+      </div>
       <form ref="ventasForm" id="ventasForm" @submit="handleAddVenta">
         <!-- Producto -->
-        <b-form-group
-          label="Producto"
-          label-for="producto-input"
-          invalid-feedback="La producto es requerida"
-          :state="productoState"
-        >
-          <select
-            class="form-control"
-            v-model="productoSelected"
-            :state="productoState"
-          >
-            <option
-              v-for="(producto, index) in productos"
-              v-bind:key="index"
-              :value="producto.id"
+        <div class="row">
+          <div class="col-10">
+            <b-form-group
+              label="Producto"
+              label-for="producto-input"
+              invalid-feedback="La producto es requerida"
+              :state="productoState"
             >
-              {{ producto.nombre }}
-            </option>
-          </select>
-        </b-form-group>
+              <select
+                class="form-control"
+                v-model="productoSelected"
+                :state="productoState"
+              >
+                <option disabled selected>Seleccione una opción:</option>
+                <option
+                  v-for="(producto, index) in productos"
+                  v-bind:key="index"
+                  :value="producto.id"
+                >
+                  {{ producto.nombre }}
+                </option>
+              </select>
+            </b-form-group>
+          </div>
+          <div class="col-2">
+            <b-form-group label="Agregar">
+              <a href="#" v-b-modal.addProductoModal
+                ><font-awesome-icon icon="plus" style="color: green"
+              /></a>
+            </b-form-group>
+          </div>
+        </div>
         <br />
         <!-- Centro Costo -->
         <b-form-group
@@ -126,6 +159,7 @@
             v-model="centroCostoSelected"
             :state="centroCostoState"
           >
+            <option disabled selected>Seleccione una opción:</option>
             <option
               v-for="(producto, index) in productos"
               v-bind:key="index"
@@ -145,9 +179,11 @@
         >
           <b-form-input
             id="cantidad-input"
-            type="text"
+            type="number"
+            placeholder="Ingrese la cantidad"
             v-model="cantidadSelected"
             :state="cantidadState"
+            min="0"
           ></b-form-input>
         </b-form-group>
         <br />
@@ -163,6 +199,7 @@
             v-model="unidadSelected"
             :state="unidadState"
           >
+            <option disabled selected>Seleccione una opción:</option>
             <option value="Baja">Kilos</option>
             <option value="Media">Litros</option>
           </select>
@@ -177,9 +214,10 @@
         >
           <b-form-input
             id="valorUnitario-input"
-            type="number"
-            v-model="valorUnitarioSelected"
+            type="text"
+            placeholder="Ingrese el valor unitario"
             :state="valorUnitarioState"
+            :formatter="valorUnitarioFormat"
           ></b-form-input>
         </b-form-group>
         <br />
@@ -187,7 +225,7 @@
         <b-form-group label="Total" label-for="total-input" :state="totalState">
           <b-form-input
             id="total-input"
-            type="number"
+            type="text"
             v-model="totalSelected"
             :state="totalState"
             :disabled="true"
@@ -203,9 +241,11 @@
         >
           <b-form-input
             id="guia-input"
-            type="text"
+            type="number"
+            placeholder="Ingrese el número de guía"
             v-model="guiaSelected"
             :state="guiaState"
+            min="0"
           ></b-form-input>
         </b-form-group>
         <br />
@@ -218,9 +258,11 @@
         >
           <b-form-input
             id="factura-input"
-            type="text"
+            type="number"
+            placeholder="Ingrese el número de factura"
             v-model="facturaSelected"
             :state="facturaState"
+            min="0"
           ></b-form-input>
         </b-form-group>
         <br />
@@ -236,6 +278,7 @@
             v-model="formaPagosSelected"
             :state="formaPagosState"
           >
+            <option disabled selected>Seleccione una opción:</option>
             <option
               v-for="(formaPago, index) in formaPagos"
               v-bind:key="index"
@@ -257,6 +300,7 @@
           <b-form-input
             id="cheque-input"
             type="text"
+            placeholder="Ingrese el número de cheque"
             v-model="chequeSelected"
             :state="chequeState"
           ></b-form-input>
@@ -279,6 +323,45 @@
         </div>
       </template>
     </b-modal>
+    <b-modal id="addProductoModal">
+      <div slot="modal-title">
+        <font-awesome-icon icon="bookmark" style="color: green" />
+        Agregar Producto
+      </div>
+      <form ref="productoForm" id="productoForm" @submit="handleAddProducto">
+        <!-- producto -->
+        <b-form-group
+          label="Nombre producto"
+          label-for="producto-input"
+          invalid-feedback="El nombre del producto es requerido"
+          :state="productoaddState"
+        >
+          <b-form-input
+            id="producto-input"
+            type="text"
+            placeholder="Ingrese el nombre del nuevo producto"
+            v-model="productoaddSelected"
+            :state="productoaddState"
+          ></b-form-input>
+        </b-form-group>
+        <br />
+        <p v-if="error" class="errorMessage">{{ error }}</p>
+        <br v-if="error" />
+      </form>
+      <template #modal-footer>
+        <div class="w-100">
+          <b-button
+            type="submit"
+            form="productoForm"
+            variant="success"
+            size="sm"
+            class="float-right"
+          >
+            Agregar
+          </b-button>
+        </div>
+      </template>
+    </b-modal>
   </div>
 </template>
 
@@ -290,7 +373,8 @@ import {
 } from "./constants/querys";
 import {
   COMPRAS_CREATE_COMPRAS,
-  COMPRAS_DELETE_COMPRAS
+  COMPRAS_DELETE_COMPRAS,
+  COMPRAS_CREATE_PRODUCTO
 } from "./constants/mutations";
 
 export default {
@@ -321,7 +405,12 @@ export default {
       centroCostoSelected: "",
       centroCostoState: null,
       guiaSelected: "",
-      guiaState: null
+      guiaState: null,
+      productoaddSelected: "",
+      productoaddState: null,
+      dismissCountDown: 0,
+      typeNotification: "",
+      messageNotification: ""
     };
   },
   apollo: {
@@ -348,7 +437,7 @@ export default {
       const centrocosto = this.centroCostoSelected;
       const valorunitario = this.valorUnitarioSelected;
       const cantidad = this.cantidadSelected;
-      const total = this.totalSelected;
+      const total = this.cantidadSelected * this.valorUnitarioSelected;
       const guia = this.guiaSelected;
       const factura = this.facturaSelected;
       const formaPago = this.formaPagosSelected;
@@ -422,21 +511,39 @@ export default {
               this.centroCostoSelected = "";
               this.valorUnitarioSelected = "";
               this.cantidadSelected = "";
-              this.totalSelected = "";
               this.guiaSelected = "";
               this.facturaSelected = "";
               this.formaPagosSelected = "";
               this.chequeSelected = "";
               this.unidadSelected = "";
+              this.totalSelected = "";
               this.error = "";
               this.$root.$emit("bv::hide::modal", "addVentasModal");
+              this.showAlert("success", 5, "Compra creada exitosamente.");
             })
-            .catch(({ graphQLErrors }) => {
-              graphQLErrors.map(({ extensions }) =>
-                extensions.exception.data.message.map(({ messages }) =>
-                  messages.map(({ message }) => (this.error = message))
-                )
-              );
+            .catch(() => {
+              this.productoState = null;
+              this.cantidadState = null;
+              this.facturaState = null;
+              this.formaPagoState = null;
+              this.chequeState = null;
+              this.centroCostoState = null;
+              this.guiaState = null;
+              this.unidadState = null;
+              this.valorunitario = null;
+              this.productoSelected = "";
+              this.centroCostoSelected = "";
+              this.valorUnitarioSelected = "";
+              this.cantidadSelected = "";
+              this.guiaSelected = "";
+              this.facturaSelected = "";
+              this.formaPagosSelected = "";
+              this.chequeSelected = "";
+              this.unidadSelected = "";
+              this.totalSelected = "";
+              this.error = "";
+              this.$root.$emit("bv::hide::modal", "addVentasModal");
+              this.showAlert("danger", 5, "La compra no pudo ser creada.");
             });
         }
       }
@@ -462,20 +569,68 @@ export default {
             this.compras.filter(function(venta) {
               return venta.id != data.data.deleteCompra.compra.id;
             });
+            this.showAlert("success", 5, "Compra eliminada exitosamente.");
           })
-          .catch(({ graphQLErrors }) => {
-            graphQLErrors.map(({ extensions }) =>
-              extensions.exception.data.message.map(({ messages }) =>
-                messages.map(({ message }) => (this.error = message))
-              )
-            );
+          .catch(() => {
+            this.showAlert("danger", 5, "La compra no pudo ser eliminada.");
           });
       }
+    },
+    async handleAddProducto(e) {
+      e.preventDefault();
+      let validate = true;
+      const producto = this.productoaddSelected;
+
+      if (!producto) {
+        validate = false;
+        this.productoaddState = false;
+      }
+
+      if (validate) {
+        if (confirm("¿Desea agregar el producto?")) {
+          await this.$apollo
+            .mutate({
+              mutation: COMPRAS_CREATE_PRODUCTO,
+              variables: {
+                nombre: producto
+              },
+              refetchQueries: [
+                {
+                  query: VENTAS_GET_PRODUCTOS
+                }
+              ]
+            })
+            .then(() => {
+              this.productoaddState = null;
+              this.productoaddSelected = "";
+              this.error = "";
+              this.$root.$emit("bv::hide::modal", "addProductoModal");
+              this.showAlert("success", 5, "Producto creado exitosamente.");
+            })
+            .catch(() => {
+              this.showAlert("danger", 5, "El producto no pudo ser creado.");
+            });
+        }
+      }
+    },
+    valorUnitarioFormat(value) {
+      this.valorUnitarioSelected = Number(value.replace(/\D/g, ""));
+      return value == "0" ? "" : this.valorUnitarioSelected.toLocaleString();
+    },
+    countDownChanged(dismissCountDown) {
+      this.dismissCountDown = dismissCountDown;
+    },
+    showAlert(type, time, message) {
+      this.typeNotification = type;
+      this.dismissCountDown = time;
+      this.messageNotification = message;
     }
   },
   computed: {
     totalSelected() {
-      return this.cantidadSelected * this.valorUnitarioSelected;
+      return (
+        this.cantidadSelected * this.valorUnitarioSelected
+      ).toLocaleString();
     }
   }
 };

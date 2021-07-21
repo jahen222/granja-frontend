@@ -12,6 +12,23 @@
         "
       >
         <div class="col-lg-8 align-self-end">
+          <b-alert
+            :show="dismissCountDown"
+            fade
+            :variant="typeNotification"
+            @dismissed="dismissCountDown = 0"
+            @dismiss-count-down="countDownChanged"
+          >
+            <p>
+              {{ messageNotification }}
+            </p>
+            <b-progress
+              :variant="typeNotification"
+              max="5"
+              :value="dismissCountDown"
+              height="4px"
+            ></b-progress>
+          </b-alert>
           <h2 class="text-white font-weight-bold">
             Actividades {{ campoSelected ? campoSelected.nombre : "" }}
           </h2>
@@ -59,7 +76,6 @@
               <thead>
                 <tr>
                   <th scope="col" class="tableHeaderGreen">Actividad</th>
-                  <!-- <th scope="col">Propósito</th> -->
                   <th scope="col" class="tableHeaderGreen">Estado</th>
                   <th scope="col" class="tableHeaderGreen">Abril</th>
                   <th scope="col" class="tableHeaderGreen">Mayo</th>
@@ -86,9 +102,6 @@
                   >
                     {{ register.actividad }}
                   </td>
-                  <!-- <td @click="handleShowAvtivity(register)">
-                    {{ register.proposito }}
-                  </td> -->
                   <td
                     class="tableBodyGreen"
                     @click="handleShowAvtivity(register)"
@@ -702,7 +715,11 @@
         </div>
       </div>
     </div>
-    <b-modal id="addActivityModal" title="Agregar Actividad">
+    <b-modal id="addActivityModal">
+      <div slot="modal-title">
+        <font-awesome-icon icon="bookmark" style="color: green" />
+        Agregar Actividad
+      </div>
       <form ref="activityForm" id="activityForm" @submit="handleAddActivity">
         <!-- acticvidad -->
         <b-form-group
@@ -716,6 +733,7 @@
             v-model="activitySelected"
             :state="activityState"
           >
+            <option disabled selected>Seleccione una opción:</option>
             <option
               v-for="(actividad, index) in actividades"
               v-bind:key="index"
@@ -736,6 +754,7 @@
           <b-form-input
             id="proposito-input"
             type="text"
+            placeholder="Ingrese el propósito de la actividad"
             v-model="propositoSelected"
             :state="propositoState"
           ></b-form-input>
@@ -783,6 +802,7 @@
             :disabled="startDateSelected ? false : true"
             :state="dependenciaState"
           >
+            <option disabled selected>Seleccione una opción:</option>
             <option
               v-for="(dependencia, index) in getDependencias"
               v-bind:key="index"
@@ -805,6 +825,7 @@
             v-model="typeSelected"
             :state="typeState"
           >
+            <option disabled selected>Seleccione una opción:</option>
             <option
               v-for="(tipo, index) in tipos"
               v-bind:key="index"
@@ -826,6 +847,7 @@
           <b-form-input
             id="cantidad-input"
             type="number"
+            placeholder="Ingrese la cantidad"
             v-model="cantidadSelected"
             :state="cantidadState"
           ></b-form-input>
@@ -844,6 +866,7 @@
             v-model="medidaSelected"
             :state="medidaState"
           >
+            <option disabled selected>Seleccione una opción:</option>
             <option
               v-for="(medida, index) in medidas"
               v-bind:key="index"
@@ -871,7 +894,11 @@
         </div>
       </template>
     </b-modal>
-    <b-modal id="showActivityModal" title="Mostrar Actividad">
+    <b-modal id="showActivityModal">
+      <div slot="modal-title">
+        <font-awesome-icon icon="bookmark" style="color: green" />
+        Mostrar Actividad
+      </div>
       <form ref="activityForm" id="activityForm" onsubmit="return false;">
         <div class="row">
           <div class="col-sm-12 col-md-12 col-lg-12">
@@ -959,6 +986,7 @@
                       :state="recursosState"
                       required
                       style="width: 80px"
+                      min="0"
                     />
                   </td>
                   <td>Estado:</td>
@@ -999,6 +1027,11 @@
                   <td>Obs:</td>
                   <td COLSPAN="3">
                     {{ showRegister.observacion }}
+                  </td>
+                </tr>
+                <tr v-if="errorModal">
+                  <td COLSPAN="4">
+                    <p class="errorMessage">{{ errorModal }}</p>
                   </td>
                 </tr>
                 <tr>
@@ -1111,6 +1144,7 @@ export default {
       ],
       items: [],
       error: "",
+      errorModal: "",
       actividades: [],
       activitySelected: "",
       activityState: null,
@@ -1143,7 +1177,10 @@ export default {
       observacion: "",
       observacionState: null,
       recursos: null,
-      recursosState: null
+      recursosState: null,
+      dismissCountDown: 0,
+      typeNotification: "",
+      messageNotification: ""
     };
   },
   apollo: {
@@ -1264,13 +1301,10 @@ export default {
               this.dependenciaSelected = null;
               this.error = "";
               this.$root.$emit("bv::hide::modal", "addActivityModal");
+              this.showAlert("success", 5, "Actividad creada exitosamente.");
             })
-            .catch(({ graphQLErrors }) => {
-              graphQLErrors.map(({ extensions }) =>
-                extensions.exception.data.message.map(({ messages }) =>
-                  messages.map(({ message }) => (this.error = message))
-                )
-              );
+            .catch(() => {
+              this.showAlert("danger", 5, "La Actividad no pudo ser creada.");
             });
         }
       }
@@ -1300,7 +1334,7 @@ export default {
       e.preventDefault;
       let validate = true;
       const observacion = this.observacion;
-      const recursos = 8;
+      const recursos = this.recursos;
       this.observacionState = true;
       this.recursosState = true;
       this.error = "";
@@ -1311,10 +1345,12 @@ export default {
       ) {
         validate = false;
         this.observacionState = false;
+        this.errorModal = "Debes agregar una observación valida.";
       }
       if (!recursos) {
         validate = false;
         this.recursosState = false;
+        this.errorModal = "Debes agregar los recursos.";
       }
 
       if (validate) {
@@ -1325,7 +1361,7 @@ export default {
               variables: {
                 id: this.showRegister.id,
                 estado: "Iniciado",
-                recursos: recursos,
+                recursos: Number(recursos),
                 observacion,
                 startDate: moment()
               },
@@ -1348,6 +1384,7 @@ export default {
               this.recursosState = null;
               this.observacionState = null;
               this.error = "";
+              this.errorModal = "";
               //this.$root.$emit("bv::hide::modal", "showActivityModal");
             })
             .catch(({ graphQLErrors }) => {
@@ -1411,6 +1448,14 @@ export default {
             });
         }
       }
+    },
+    countDownChanged(dismissCountDown) {
+      this.dismissCountDown = dismissCountDown;
+    },
+    showAlert(type, time, message) {
+      this.typeNotification = type;
+      this.dismissCountDown = time;
+      this.messageNotification = message;
     }
   },
   asyncComputed: {

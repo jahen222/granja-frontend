@@ -12,6 +12,23 @@
         "
       >
         <div class="col-lg-8 align-self-end">
+          <b-alert
+            :show="dismissCountDown"
+            fade
+            :variant="typeNotification"
+            @dismissed="dismissCountDown = 0"
+            @dismiss-count-down="countDownChanged"
+          >
+            <p>
+              {{ messageNotification }}
+            </p>
+            <b-progress
+              :variant="typeNotification"
+              max="5"
+              :value="dismissCountDown"
+              height="4px"
+            ></b-progress>
+          </b-alert>
           <h2 class="text-white font-weight-bold">
             Cuidado Árboles {{ campoSelected ? campoSelected.nombre : "" }}
           </h2>
@@ -82,13 +99,14 @@
                       Finalizar
                     </b-button>
                     <b-button
+                      v-if="cuidadoArbol.estado != 'Finalizado'"
                       type="button"
                       variant="danger"
                       size="sm"
                       class="float-right"
                       @click="handleDeleteCuidado(cuidadoArbol)"
                     >
-                      Borrar
+                      <font-awesome-icon icon="trash" style="color: white" />
                     </b-button>
                   </td>
                 </tr>
@@ -98,7 +116,11 @@
         </div>
       </div>
     </div>
-    <b-modal id="addCuidadoModal" title="Agregar Cuidado Árbol">
+    <b-modal id="addCuidadoModal">
+      <div slot="modal-title">
+        <font-awesome-icon icon="bookmark" style="color: green" />
+        Agregar Cuidado Árbol
+      </div>
       <form ref="cuidadoForm" id="cuidadoForm" @submit="handleAddCuidado">
         <!-- zona -->
         <b-form-group
@@ -112,6 +134,7 @@
             v-model="zonaSelected"
             :state="zonaState"
           >
+            <option disabled selected>Seleccione una opción:</option>
             <option
               v-for="(zona, index) in zonas"
               v-bind:key="index"
@@ -135,6 +158,7 @@
             :state="camellonState"
             :disabled="camellones ? false : true"
           >
+            <option disabled selected>Seleccione una opción:</option>
             <option
               v-for="(camellon, index) in camellones"
               v-bind:key="index"
@@ -158,6 +182,7 @@
             :state="arbolState"
             :disabled="arboles ? false : true"
           >
+            <option disabled selected>Seleccione una opción:</option>
             <option
               v-for="(arbol, index) in arboles"
               v-bind:key="index"
@@ -180,6 +205,7 @@
             v-model="activitySelected"
             :state="activityState"
           >
+            <option disabled selected>Seleccione una opción:</option>
             <option
               v-for="(actividad, index) in actividades"
               v-bind:key="index"
@@ -200,6 +226,7 @@
           <b-form-input
             id="descripcion-input"
             type="text"
+            placeholder="Ingrese una descripción"
             v-model="descripcionSelected"
             :state="descripcionState"
           ></b-form-input>
@@ -256,7 +283,10 @@ export default {
       arbolSelected: "",
       arbolState: null,
       descripcionSelected: "",
-      descripcionState: null
+      descripcionState: null,
+      dismissCountDown: 0,
+      typeNotification: "",
+      messageNotification: ""
     };
   },
   apollo: {
@@ -332,14 +362,35 @@ export default {
               this.arbolState = null;
               this.descripcionState = null;
               this.activityState = null;
+              this.activitySelected = "";
+              this.zonaSelected = "";
+              this.camellonSelected = "";
+              this.arbolSelected = "";
+              this.descripcionSelected = "";
               this.error = "";
               this.$root.$emit("bv::hide::modal", "addCuidadoModal");
+              this.showAlert(
+                "success",
+                5,
+                "Cuidado de arbol creado exitosamente."
+              );
             })
-            .catch(({ graphQLErrors }) => {
-              graphQLErrors.map(({ extensions }) =>
-                extensions.exception.data.message.map(({ messages }) =>
-                  messages.map(({ message }) => (this.error = message))
-                )
+            .catch(() => {
+              this.zonaState = null;
+              this.camellonState = null;
+              this.arbolState = null;
+              this.descripcionState = null;
+              this.activityState = null;
+              this.activitySelected = "";
+              this.zonaSelected = "";
+              this.camellonSelected = "";
+              this.arbolSelected = "";
+              this.descripcionSelected = "";
+              this.error = "";
+              this.showAlert(
+                "danger",
+                5,
+                "El cuidado de árbol no pudo ser creado."
               );
             });
         }
@@ -363,11 +414,18 @@ export default {
               }
             ]
           })
-          .catch(({ graphQLErrors }) => {
-            graphQLErrors.map(({ extensions }) =>
-              extensions.exception.data.message.map(({ messages }) =>
-                messages.map(({ message }) => (this.error = message))
-              )
+          .then(() => {
+            this.showAlert(
+              "success",
+              5,
+              "Cuidado de árbol finalizo exitosamente."
+            );
+          })
+          .catch(() => {
+            this.showAlert(
+              "danger",
+              5,
+              "El cuidado de árbol no pudo ser finalizado."
             );
           });
       }
@@ -396,15 +454,28 @@ export default {
                 data.data.deleteCuidadoArbole.cuidadoArbole.id
               );
             });
+            this.showAlert(
+              "success",
+              5,
+              "Cuidado de árbol eliminado exitosamente."
+            );
           })
-          .catch(({ graphQLErrors }) => {
-            graphQLErrors.map(({ extensions }) =>
-              extensions.exception.data.message.map(({ messages }) =>
-                messages.map(({ message }) => (this.error = message))
-              )
+          .catch(() => {
+            this.showAlert(
+              "danger",
+              5,
+              "El cuidado de árbol no pudo ser eliminado."
             );
           });
       }
+    },
+    countDownChanged(dismissCountDown) {
+      this.dismissCountDown = dismissCountDown;
+    },
+    showAlert(type, time, message) {
+      this.typeNotification = type;
+      this.dismissCountDown = time;
+      this.messageNotification = message;
     }
   },
   asyncComputed: {

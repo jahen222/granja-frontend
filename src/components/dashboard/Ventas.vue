@@ -12,6 +12,23 @@
         "
       >
         <div class="col-lg-8 align-self-end">
+          <b-alert
+            :show="dismissCountDown"
+            fade
+            :variant="typeNotification"
+            @dismissed="dismissCountDown = 0"
+            @dismiss-count-down="countDownChanged"
+          >
+            <p>
+              {{ messageNotification }}
+            </p>
+            <b-progress
+              :variant="typeNotification"
+              max="5"
+              :value="dismissCountDown"
+              height="4px"
+            ></b-progress>
+          </b-alert>
           <h2 class="text-white font-weight-bold">
             Listado de Ventas {{ campoSelected ? campoSelected.nombre : "" }}
           </h2>
@@ -50,10 +67,10 @@
                     {{ venta.cantidad }}
                   </td>
                   <td>
-                    {{ venta.valorkilo }}
+                    {{ venta.valorkilo.toLocaleString() }}
                   </td>
                   <td>
-                    {{ venta.total }}
+                    {{ venta.total.toLocaleString() }}
                   </td>
                   <td>
                     {{ venta.factura }}
@@ -72,7 +89,7 @@
                       class="float-right"
                       @click="handleDeleteVenta(venta)"
                     >
-                      Borrar
+                      <font-awesome-icon icon="trash" style="color: white" />
                     </b-button>
                   </td>
                 </tr>
@@ -82,7 +99,11 @@
         </div>
       </div>
     </div>
-    <b-modal id="addVentasModal" title="Agregar Venta">
+    <b-modal id="addVentasModal">
+      <div slot="modal-title">
+        <font-awesome-icon icon="bookmark" style="color: green" />
+        Agregar Venta
+      </div>
       <form ref="ventasForm" id="ventasForm" @submit="handleAddVenta">
         <!-- Producto -->
         <b-form-group
@@ -96,6 +117,7 @@
             v-model="productoSelected"
             :state="productoState"
           >
+            <option disabled selected>Seleccione una opción:</option>
             <option
               v-for="(producto, index) in productos"
               v-bind:key="index"
@@ -118,27 +140,13 @@
             v-model="calidadSelected"
             :state="calidadState"
           >
+            <option disabled selected>Seleccione una opción:</option>
             <option value="Baja">Baja</option>
             <option value="Media">Media</option>
             <option value="Alta">Alta</option>
           </select>
         </b-form-group>
         <br />
-        <!-- precio -->
-        <!-- <b-form-group
-          label="Precio"
-          label-for="precio-input"
-          invalid-feedback="El precio es requerido"
-          :state="precioState"
-        >
-          <b-form-input
-            id="precio-input"
-            type="number"
-            v-model="precioSelected"
-            :state="precioState"
-          ></b-form-input>
-        </b-form-group>
-        <br /> -->
         <!-- cantidad -->
         <b-form-group
           label="Cantidad"
@@ -148,9 +156,11 @@
         >
           <b-form-input
             id="cantidad-input"
-            type="text"
+            type="number"
+            placeholder="Ingrese la cantidad"
             v-model="cantidadSelected"
             :state="cantidadState"
+            min="0"
           ></b-form-input>
         </b-form-group>
         <br />
@@ -163,9 +173,10 @@
         >
           <b-form-input
             id="valorKilo-input"
-            type="number"
-            v-model="valorKiloSelected"
+            type="text"
+            placeholder="Ingrese el valor del kilo"
             :state="valorKiloState"
+            :formatter="valorKiloFormat"
           ></b-form-input>
         </b-form-group>
         <br />
@@ -173,7 +184,7 @@
         <b-form-group label="Total" label-for="total-input" :state="totalState">
           <b-form-input
             id="total-input"
-            type="number"
+            type="text"
             v-model="totalSelected"
             :state="totalState"
             :disabled="true"
@@ -189,9 +200,11 @@
         >
           <b-form-input
             id="factura-input"
-            type="text"
+            type="number"
+            placeholder="Ingrese el número de factura"
             v-model="facturaSelected"
             :state="facturaState"
+            min="0"
           ></b-form-input>
         </b-form-group>
         <br />
@@ -207,6 +220,7 @@
             v-model="formaPagosSelected"
             :state="formaPagosState"
           >
+            <option disabled selected>Seleccione una opción:</option>
             <option
               v-for="(formaPago, index) in formaPagos"
               v-bind:key="index"
@@ -228,6 +242,7 @@
           <b-form-input
             id="cheque-input"
             type="text"
+            placeholder="Ingrese el número de cheque"
             v-model="chequeSelected"
             :state="chequeState"
           ></b-form-input>
@@ -288,7 +303,10 @@ export default {
       formaPagosSelected: "",
       formaPagosState: null,
       chequeSelected: "",
-      chequeState: null
+      chequeState: null,
+      dismissCountDown: 0,
+      typeNotification: "",
+      messageNotification: ""
     };
   },
   apollo: {
@@ -314,7 +332,7 @@ export default {
       const producto = this.productoSelected;
       const calidad = this.calidadSelected;
       const cantidad = this.cantidadSelected;
-      const total = this.totalSelected;
+      const total = this.cantidadSelected * this.valorKiloSelected;
       const valorKilo = this.valorKiloSelected;
       const factura = this.facturaSelected;
       const formaPago = this.formaPagosSelected;
@@ -381,13 +399,26 @@ export default {
               this.chequeSelected = "";
               this.error = "";
               this.$root.$emit("bv::hide::modal", "addVentasModal");
+              this.showAlert("success", 5, "Venta creada exitosamente.");
             })
-            .catch(({ graphQLErrors }) => {
-              graphQLErrors.map(({ extensions }) =>
-                extensions.exception.data.message.map(({ messages }) =>
-                  messages.map(({ message }) => (this.error = message))
-                )
-              );
+            .catch(() => {
+              this.productoState = null;
+              this.calidadState = null;
+              this.cantidadState = null;
+              this.valorKiloState = null;
+              this.facturaState = null;
+              this.formaPagoState = null;
+              this.chequeState = null;
+              this.productoSelected = "";
+              this.calidadSelected = "";
+              this.cantidadSelected = "";
+              this.totalSelected = "";
+              this.valorKiloSelected = "";
+              this.facturaSelected = "";
+              this.formaPagosSelected = "";
+              this.chequeSelected = "";
+              this.error = "";
+              this.showAlert("danger", 5, "La venta no pudo ser creada.");
             });
         }
       }
@@ -413,20 +444,29 @@ export default {
             this.ventas.filter(function(venta) {
               return venta.id != data.data.deleteVenta.venta.id;
             });
+            this.showAlert("success", 5, "Venta eliminada exitosamente.");
           })
-          .catch(({ graphQLErrors }) => {
-            graphQLErrors.map(({ extensions }) =>
-              extensions.exception.data.message.map(({ messages }) =>
-                messages.map(({ message }) => (this.error = message))
-              )
-            );
+          .catch(() => {
+            this.showAlert("danger", 5, "La venta no pudo ser eliminada.");
           });
       }
+    },
+    valorKiloFormat(value) {
+      this.valorKiloSelected = Number(value.replace(/\D/g, ""));
+      return value == "0" ? "" : this.valorKiloSelected.toLocaleString();
+    },
+    countDownChanged(dismissCountDown) {
+      this.dismissCountDown = dismissCountDown;
+    },
+    showAlert(type, time, message) {
+      this.typeNotification = type;
+      this.dismissCountDown = time;
+      this.messageNotification = message;
     }
   },
   computed: {
     totalSelected() {
-      return this.cantidadSelected * this.valorKiloSelected;
+      return (this.cantidadSelected * this.valorKiloSelected).toLocaleString();
     }
   }
 };

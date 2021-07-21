@@ -420,3 +420,22 @@ export const COMPRAS_DELETE_COMPRAS = gql`
     }
   }
 `;
+
+export const COMPRAS_CREATE_PRODUCTO = gql`
+  mutation createProducto(
+    $nombre: String!
+  ) {
+    createProducto(
+      input: {
+        data: {
+          nombre: $nombre
+        }
+      }
+    ) {
+      producto {
+        id
+        nombre
+      }
+    }
+  }
+`;

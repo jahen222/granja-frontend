@@ -6,7 +6,7 @@
     >
       <div class="container px-4 px-lg-5">
         <a class="navbar-brand" href="#"
-          >Bienbenido {{ user ? user.username : "" }}</a
+          >Bienvenido {{ user ? user.username : "" }}</a
         >
         <button
           class="navbar-toggler navbar-toggler-right"
