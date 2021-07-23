@@ -30,13 +30,13 @@
             ></b-progress>
           </b-alert>
           <h2 class="text-white font-weight-bold">
-            Listado de Ventas {{ campoSelected ? campoSelected.nombre : "" }}
+            Cosecha {{ campoSelected ? campoSelected.nombre : "" }}
           </h2>
           <hr class="divider" />
         </div>
         <div class="col-lg-12 align-self-baseline">
           <b-button class="btn btn-success btn-xl" v-b-modal.addVentasModal
-            >Agregar Venta</b-button
+            >Agregar Cosecha</b-button
           >
           <br />
           <br />
@@ -46,44 +46,44 @@
                 <tr>
                   <th scope="col" class="tableHeaderGreen">ID</th>
                   <th scope="col" class="tableHeaderGreen">Producto</th>
-                  <th scope="col" class="tableHeaderGreen">Calidad</th>
+                  <th scope="col" class="tableHeaderGreen">Zona</th>
                   <th scope="col" class="tableHeaderGreen">Cantidad</th>
-                  <th scope="col" class="tableHeaderGreen">Precio Kilo</th>
-                  <th scope="col" class="tableHeaderGreen">Total</th>
-                  <th scope="col" class="tableHeaderGreen">Factura</th>
-                  <th scope="col" class="tableHeaderGreen">Forma Pago</th>
-                  <th scope="col" class="tableHeaderGreen">Nro. Cheque</th>
+                  <th scope="col" class="tableHeaderGreen">Unidad</th>
+                  <th scope="col" class="tableHeaderGreen">Ha</th>
+                  <th scope="col" class="tableHeaderGreen">Árboles</th>
+                  <th scope="col" class="tableHeaderGreen">Kilos x Árbol</th>
+                  <th scope="col" class="tableHeaderGreen">Kilos x Ha</th>
                   <th scope="col" class="tableHeaderGreen">Acciones</th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(venta, index) in ventas" v-bind:key="index">
+                <tr v-for="(venta, index) in cosechas" v-bind:key="index">
                   <td class="tableBodyGreen">
                     {{ venta.id }}
                   </td>
                   <td class="tableBodyGreen">
-                    {{ venta.producto.nombre }}
+                    {{ venta.producto_cosecha.nombre }}
                   </td>
                   <td>
-                    {{ venta.calidad }}
+                    {{ venta.zona_cosecha.nombre }}
                   </td>
                   <td>
                     {{ venta.cantidad }}
                   </td>
                   <td>
-                    {{ venta.valorkilo.toLocaleString() }}
+                    {{ venta.unidad }}
                   </td>
                   <td>
-                    {{ venta.total.toLocaleString() }}
+                    {{ venta.ha }}
                   </td>
                   <td>
-                    {{ venta.factura }}
+                    {{ venta.arboles }}
                   </td>
                   <td>
-                    {{ venta.forma_pago.nombre }}
+                    {{ venta.kilosxarbol }}
                   </td>
                   <td>
-                    {{ venta.cheque }}
+                    {{ venta.kilosxhectarea }}
                   </td>
                   <td>
                     <b-button
@@ -97,10 +97,10 @@
                     </b-button>
                   </td>
                 </tr>
-                <tr>
+                <!-- <tr>
                   <td COLSPAN="4">Total:</td>
                   <td>{{ getTotal.toLocaleString() }}</td>
-                </tr>
+                </tr> -->
               </tbody>
             </table>
           </div>
@@ -110,7 +110,7 @@
     <b-modal id="addVentasModal">
       <div slot="modal-title">
         <font-awesome-icon icon="bookmark" style="color: green" />
-        Agregar Venta
+        Agregar Cosecha
       </div>
       <form ref="ventasForm" id="ventasForm" @submit="handleAddVenta">
         <!-- Producto -->
@@ -127,7 +127,7 @@
           >
             <option disabled selected>Seleccione una opción:</option>
             <option
-              v-for="(producto, index) in productos"
+              v-for="(producto, index) in productoCosechas"
               v-bind:key="index"
               :value="producto.id"
             >
@@ -136,22 +136,26 @@
           </select>
         </b-form-group>
         <br />
-        <!-- calidad -->
+        <!-- Zona -->
         <b-form-group
-          label="Calidad"
-          label-for="calidad-input"
-          invalid-feedback="La calidad es requerida"
-          :state="calidadState"
+          label="Zona"
+          label-for="zona-input"
+          invalid-feedback="La zona es requerida"
+          :state="zonaState"
         >
           <select
             class="form-control"
-            v-model="calidadSelected"
-            :state="calidadState"
+            v-model="zonaSelected"
+            :state="zonaState"
           >
             <option disabled selected>Seleccione una opción:</option>
-            <option value="Baja">Baja</option>
-            <option value="Media">Media</option>
-            <option value="Alta">Alta</option>
+            <option
+              v-for="(zona, index) in zonaCosechas"
+              v-bind:key="index"
+              :value="zona.id"
+            >
+              {{ zona.nombre }}
+            </option>
           </select>
         </b-form-group>
         <br />
@@ -172,90 +176,92 @@
           ></b-form-input>
         </b-form-group>
         <br />
-        <!-- valor kilo -->
+        <!-- Unidad -->
         <b-form-group
-          label="Valor Kilo"
-          label-for="valorKilo-input"
-          invalid-feedback="El valor es requerido"
-          :state="valorKiloState"
+          label="Unidad"
+          label-for="unidad-input"
+          invalid-feedback="La unidad es requerida"
+          :state="unidadState"
         >
-          <b-form-input
-            id="valorKilo-input"
-            type="text"
-            placeholder="Ingrese el valor del kilo"
-            :state="valorKiloState"
-            :formatter="valorKiloFormat"
-          ></b-form-input>
+          <select
+            class="form-control"
+            v-model="unidadSelected"
+            :state="unidadState"
+          >
+            <option disabled selected>Seleccione una opción:</option>
+            <option value="Kilos">Kilos</option>
+            <option value="Litros">Litros</option>
+          </select>
         </b-form-group>
         <br />
-        <!-- total -->
-        <b-form-group label="Total" label-for="total-input" :state="totalState">
-          <b-form-input
-            id="total-input"
-            type="text"
-            v-model="totalSelected"
-            :state="totalState"
-            :disabled="true"
-          ></b-form-input>
-        </b-form-group>
-        <br />
-        <!-- factura -->
+        <!-- hectáreas -->
         <b-form-group
-          label="Factura"
-          label-for="factura-input"
-          invalid-feedback="El numero de factura es requerido"
-          :state="facturaState"
+          label="Hectáreas"
+          label-for="ha-input"
+          invalid-feedback="Las hectárias son requeridas"
+          :state="haState"
         >
           <b-form-input
-            id="factura-input"
+            id="ha-input"
             type="number"
-            placeholder="Ingrese el número de factura"
-            v-model="facturaSelected"
-            :state="facturaState"
+            placeholder="Ingrese las hectáreas"
+            v-model="haSelected"
+            :state="haState"
             min="0"
           ></b-form-input>
         </b-form-group>
         <br />
-        <!-- formaPagos -->
+        <!-- arboles -->
         <b-form-group
-          label="Forma Pagos"
-          label-for="formaPagos-input"
-          invalid-feedback="La Forma de pago es requerida"
-          :state="formaPagosState"
-        >
-          <select
-            class="form-control"
-            v-model="formaPagosSelected"
-            :state="formaPagosState"
-          >
-            <option disabled selected>Seleccione una opción:</option>
-            <option
-              v-for="(formaPago, index) in formaPagos"
-              v-bind:key="index"
-              :value="formaPago.id"
-            >
-              {{ formaPago.nombre }}
-            </option>
-          </select>
-        </b-form-group>
-        <br />
-        <!-- nro cheque -->
-        <b-form-group
-          v-if="formaPagosSelected == 3"
-          label="Nro Cheque"
-          label-for="cheque-input"
-          invalid-feedback="El numero de cheque es requerido"
-          :state="chequeState"
+          label="Árboles"
+          label-for="arboles-input"
+          invalid-feedback="Las arboles son requeridos"
+          :state="arbolesState"
         >
           <b-form-input
-            id="cheque-input"
-            type="text"
-            placeholder="Ingrese el número de cheque"
-            v-model="chequeSelected"
-            :state="chequeState"
+            id="arboles-input"
+            type="number"
+            placeholder="Ingrese los árboles"
+            v-model="arbolesSelected"
+            :state="arbolesState"
+            min="0"
           ></b-form-input>
         </b-form-group>
-        <br v-if="formaPagosSelected == 3" />
+        <br />
+        <!-- kxa -->
+        <b-form-group
+          label="Kilos x Árbol"
+          label-for="kxa-input"
+          invalid-feedback="Es requerido"
+          :state="kxaState"
+        >
+          <b-form-input
+            id="kxa-input"
+            type="number"
+            placeholder="Ingrese las kilos x árbol"
+            v-model="kxaSelected"
+            :state="kxaState"
+            min="0"
+          ></b-form-input>
+        </b-form-group>
+        <br />
+        <!-- kxh -->
+        <b-form-group
+          label="Kilos x Hectárea"
+          label-for="kxh-input"
+          invalid-feedback="Es requerido"
+          :state="kxhState"
+        >
+          <b-form-input
+            id="kxh-input"
+            type="number"
+            placeholder="Ingrese las kilos x hectárea"
+            v-model="kxhSelected"
+            :state="kxhState"
+            min="0"
+          ></b-form-input>
+        </b-form-group>
+        <br />
         <p v-if="error" class="errorMessage">{{ error }}</p>
         <br v-if="error" />
       </form>
@@ -278,48 +284,48 @@
 
 <script>
 import {
-  VENTAS_GET_VENTAS,
-  VENTAS_GET_PRODUCTOS,
-  VENTAS_GET_FORMAPAGOS
+  COSECHA_GET_COSECHA,
+  COSECHA_GET_PRODUCTOS_COSECHAS,
+  COSECHA_GET_ZONAS_COSECHAS
 } from "./constants/querys";
 import {
-  VENTA_CREATE_VENTA,
-  VENTAS_DELETE_VENTAS
+  COSECHA_CREATE_COSECHA,
+  COSECHA_DELETE_COSECHA
 } from "./constants/mutations";
 
 export default {
-  name: "Ventas",
+  name: "Cosecha",
   props: ["user", "campoSelected"],
   data() {
     return {
       error: "",
-      productos: [],
+      cosechas: [],
+      productoCosechas: [],
+      zonas: [],
       productoSelected: "",
       productoState: null,
-      calidadSelected: "",
-      calidadState: null,
       cantidadSelected: "",
       cantidadState: null,
-      precioSelected: "",
-      precioState: null,
-      valorKiloSelected: "",
-      valorKiloState: null,
-      totalState: null,
-      facturaSelected: "",
-      facturaState: null,
-      formaPagos: [],
-      formaPagosSelected: "",
-      formaPagosState: null,
-      chequeSelected: "",
-      chequeState: null,
+      zonaSelected: "",
+      zonaState: null,
+      unidadSelected: "",
+      unidadState: null,
+      haSelected: "",
+      haState: null,
+      arbolesSelected: "",
+      arbolesState: null,
+      kxaSelected: "",
+      kxaState: null,
+      kxhSelected: "",
+      kxhState: null,
       dismissCountDown: 0,
       typeNotification: "",
       messageNotification: ""
     };
   },
   apollo: {
-    ventas: {
-      query: VENTAS_GET_VENTAS,
+    cosechas: {
+      query: COSECHA_GET_COSECHA,
       variables() {
         return {
           campo: this.campoSelected ? this.campoSelected.id : null
@@ -327,134 +333,137 @@ export default {
       },
       fetchPolicy: "no-cache"
     },
-    productos: {
-      query: VENTAS_GET_PRODUCTOS
-    },
-    formaPagos: {
-      query: VENTAS_GET_FORMAPAGOS
+    productoCosechas: {
+      query: COSECHA_GET_PRODUCTOS_COSECHAS
     }
   },
   methods: {
-    async handleAddVenta(e) {
+    handleAddVenta(e) {
       e.preventDefault();
       let validate = true;
       const producto = this.productoSelected;
-      const calidad = this.calidadSelected;
+      const zona = this.zonaSelected;
       const cantidad = this.cantidadSelected;
-      const total = this.cantidadSelected * this.valorKiloSelected;
-      const valorKilo = this.valorKiloSelected;
-      const factura = this.facturaSelected;
-      const formaPago = this.formaPagosSelected;
-      const cheque = this.chequeSelected;
+      const arboles = this.arbolesSelected;
+      const unidad = this.unidadSelected;
+      const ha = this.haSelected;
+      const kxa = this.kxaSelected;
+      const kxh = this.kxhSelected;
 
       if (!producto) {
         validate = false;
         this.productoState = false;
       }
-      if (!calidad) {
+      if (!zona) {
         validate = false;
-        this.calidadState = false;
+        this.zonaState = false;
       }
       if (!cantidad) {
         validate = false;
         this.cantidadState = false;
       }
-      if (!valorKilo) {
+      if (!arboles) {
         validate = false;
-        this.valorKiloState = false;
+        this.arbolesState = false;
       }
-      if (!factura) {
+      if (!unidad) {
         validate = false;
-        this.facturaState = false;
+        this.unidadState = false;
       }
-      if (!formaPago) {
+      if (!ha) {
         validate = false;
-        this.formaPagoState = false;
+        this.haState = false;
+      }
+      if (!kxh) {
+        validate = false;
+        this.kxhState = false;
+      }
+      if (!kxa) {
+        validate = false;
+        this.kxaState = false;
       }
 
       if (validate) {
-        if (confirm("¿Desea agregar la venta?")) {
-          await this.$apollo
+        if (confirm("¿Desea agregar la cosecha?")) {
+          this.$apollo
             .mutate({
-              mutation: VENTA_CREATE_VENTA,
+              mutation: COSECHA_CREATE_COSECHA,
               variables: {
                 producto: producto,
-                calidad: calidad,
+                zona: zona,
+                unidad: unidad,
                 cantidad: Number(cantidad),
-                valorKilo: Number(valorKilo),
-                total: Number(total),
-                factura: factura,
-                formaPago: formaPago,
-                cheque: cheque,
+                arboles: Number(arboles),
+                ha: Number(ha),
+                kilosxhectarea: Number(kxh),
+                kilosxarbol: Number(kxa),
                 campo: this.campoSelected ? this.campoSelected.id : null
               }
             })
             .then(data => {
-              this.ventas.unshift(data.data.createVenta.venta);
-              this.productoState = null;
-              this.calidadState = null;
-              this.cantidadState = null;
-              this.valorKiloState = null;
-              this.facturaState = null;
-              this.formaPagoState = null;
-              this.chequeState = null;
-              this.productoSelected = "";
-              this.calidadSelected = "";
-              this.cantidadSelected = "";
-              this.totalSelected = "";
-              this.valorKiloSelected = "";
-              this.facturaSelected = "";
-              this.formaPagosSelected = "";
-              this.chequeSelected = "";
+              this.cosechas.unshift(data.data.createCosecha.cosecha);
               this.error = "";
+              this.productoSelected = "";
+              this.zonaSelected = "";
+              this.cantidadSelected = "";
+              this.arbolesSelected = "";
+              this.unidadSelected = "";
+              this.haSelected = "";
+              this.kxaSelected = "";
+              this.kxhSelected = "";
+              this.productoState = null;
+              this.zonaState = null;
+              this.cantidadState = null;
+              this.arbolesState = null;
+              this.unidadState = null;
+              this.haState = null;
+              this.kxaState = null;
+              this.kxhState = null;
               this.$root.$emit("bv::hide::modal", "addVentasModal");
-              this.showAlert("success", 5, "Venta creada exitosamente.");
+              this.showAlert("success", 5, "Cosecha creada exitosamente.");
             })
             .catch(() => {
-              this.productoState = null;
-              this.calidadState = null;
-              this.cantidadState = null;
-              this.valorKiloState = null;
-              this.facturaState = null;
-              this.formaPagoState = null;
-              this.chequeState = null;
-              this.productoSelected = "";
-              this.calidadSelected = "";
-              this.cantidadSelected = "";
-              this.totalSelected = "";
-              this.valorKiloSelected = "";
-              this.facturaSelected = "";
-              this.formaPagosSelected = "";
-              this.chequeSelected = "";
               this.error = "";
-              this.showAlert("danger", 5, "La venta no pudo ser creada.");
+              this.productoSelected = "";
+              this.zonaSelected = "";
+              this.cantidadSelected = "";
+              this.arbolesSelected = "";
+              this.unidadSelected = "";
+              this.haSelected = "";
+              this.kxaSelected = "";
+              this.kxhSelected = "";
+              this.productoState = null;
+              this.zonaState = null;
+              this.cantidadState = null;
+              this.arbolesState = null;
+              this.unidadState = null;
+              this.haState = null;
+              this.kxaState = null;
+              this.kxhState = null;
+              this.showAlert("danger", 5, "La cosecha no pudo ser creada.");
             });
         }
       }
     },
-    async handleDeleteVenta(venta) {
-      if (confirm("¿Desea eliminar la venta?")) {
-        await this.$apollo
+    handleDeleteVenta(venta) {
+      if (confirm("¿Desea eliminar la cosecha?")) {
+        this.$apollo
           .mutate({
-            mutation: VENTAS_DELETE_VENTAS,
+            mutation: COSECHA_DELETE_COSECHA,
             variables: {
               id: venta.id
             }
           })
           .then(data => {
-            this.ventas = this.ventas.filter(function(venta) {
-              return venta.id != data.data.deleteVenta.venta.id;
+            this.cosechas = this.cosechas.filter(function(cosecha) {
+              return cosecha.id != data.data.deleteCosecha.cosecha.id;
             });
-            this.showAlert("success", 5, "Venta eliminada exitosamente.");
+            this.showAlert("success", 5, "Cosecha eliminada exitosamente.");
           })
           .catch(() => {
-            this.showAlert("danger", 5, "La venta no pudo ser eliminada.");
+            this.showAlert("danger", 5, "La cosecha no pudo ser eliminada.");
           });
       }
-    },
-    valorKiloFormat(value) {
-      this.valorKiloSelected = Number(value.replace(/\D/g, ""));
-      return value == "0" ? "" : this.valorKiloSelected.toLocaleString();
     },
     countDownChanged(dismissCountDown) {
       this.dismissCountDown = dismissCountDown;
@@ -465,20 +474,29 @@ export default {
       this.messageNotification = message;
     }
   },
-  computed: {
-    totalSelected() {
-      return (this.cantidadSelected * this.valorKiloSelected).toLocaleString();
-    },
-    getTotal() {
-      let total = 0;
+  asyncComputed: {
+    async zonaCosechas() {
+      let zonas = [];
 
-      if (this.ventas) {
-        this.ventas.map(venta => {
-          total = total + venta.total;
-        });
+      if (this.productoSelected) {
+        await this.$apollo
+          .query({
+            query: COSECHA_GET_ZONAS_COSECHAS,
+            variables: {
+              productoId: this.productoSelected
+            }
+          })
+          .then(data => {
+            zonas = data.data.zonaCosechas;
+          })
+          .catch(({ graphQLErrors }) => {
+            graphQLErrors.map(({ extensions }) =>
+              console.log(extensions.exception)
+            );
+          });
       }
 
-      return total;
+      return zonas;
     }
   }
 };

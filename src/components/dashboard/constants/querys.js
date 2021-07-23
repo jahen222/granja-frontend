@@ -243,7 +243,7 @@ export const COMPRAS_GET_COMPRAS = gql`
         id
         nombre
       }
-      centrocosto {
+      centro_costo {
         id
         nombre
       }
@@ -258,6 +258,61 @@ export const COMPRAS_GET_COMPRAS = gql`
         nombre
       }
       cheque
+      campo {
+        id
+      }
+    }
+  }
+`;
+
+export const VENTAS_GET_CENTRO_COSTOS = gql`
+  query centroCostos {
+    centroCostos(sort: "id:asc") {
+      id
+      nombre
+    }
+  }
+`;
+
+export const COSECHA_GET_PRODUCTOS_COSECHAS = gql`
+  query productoCosechas {
+    productoCosechas(sort: "id:asc") {
+      id
+      nombre
+    }
+  }
+`;
+
+export const COSECHA_GET_ZONAS_COSECHAS = gql`
+  query zonaCosechas($productoId: ID) {
+    zonaCosechas(
+      sort: "nombre:asc"
+      where: { producto_cosecha: { id_contains: $productoId } }
+    ) {
+      id
+      nombre
+    }
+  }
+`;
+
+export const COSECHA_GET_COSECHA = gql`
+  query cosechas($campo: ID) {
+    cosechas(sort: "id:desc", where: { campo: { id_contains: $campo } }) {
+      id
+      producto_cosecha {
+        id
+        nombre
+      }
+      zona_cosecha {
+        id
+        nombre
+      }
+      cantidad
+      unidad
+      arboles
+      ha
+      kilosxarbol
+      kilosxhectarea
       campo {
         id
       }

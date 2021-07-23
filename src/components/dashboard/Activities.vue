@@ -71,10 +71,11 @@
             </ul>
           </nav>
           <br />
-          <div class="table-responsive">
+          <div class="table-responsive tableFixHead">
             <table class="table table-borderless table-hover tableStyle">
               <thead>
                 <tr>
+                  <th scope="col" class="tableHeaderGreen">ID</th>
                   <th scope="col" class="tableHeaderGreen">Actividad</th>
                   <th scope="col" class="tableHeaderGreen">Estado</th>
                   <th scope="col" class="tableHeaderGreen">Abril</th>
@@ -96,6 +97,12 @@
                   v-for="(register, index) in registroActividads"
                   v-bind:key="index"
                 >
+                  <td
+                    class="tableBodyGreen"
+                    @click="handleShowAvtivity(register)"
+                  >
+                    {{ register.id }}
+                  </td>
                   <td
                     class="tableBodyGreen"
                     @click="handleShowAvtivity(register)"
@@ -1195,7 +1202,8 @@ export default {
           startDate: this.thisYear + "-04-01",
           endDate: this.thisYear + 1 + "-03-31"
         };
-      }
+      },
+      fetchPolicy: "no-cache"
     }
   },
   methods: {
@@ -1496,20 +1504,6 @@ export default {
 .tableBodyGreen {
   background-color: rgb(216, 252, 216);
 }
-/* .table > thead:first-child > tr:first-child > th:first-child {
-  position: absolute;
-  display: inline-block;
-}
-.table > tbody > tr > td:first-child {
-  position: absolute;
-  display: inline-block;
-}
-.table > thead:first-child > tr:first-child > th:nth-child(2) {
-  padding-left: 100px;
-}
-.table > tbody > tr > td:nth-child(2) {
-  padding-left: 100px !important;
-} */
 .table-responsive {
   width: 100%;
   overflow: auto;
@@ -1520,5 +1514,25 @@ export default {
 }
 .floatCenter {
   text-align: center;
+}
+.tableFixHead {
+  overflow: auto;
+  height: 80%;
+}
+.tableFixHead thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+th,
+td {
+  padding: 8px 16px;
+}
+th {
+  background: #eee;
 }
 </style>

@@ -38,20 +38,24 @@
         <div class="p-3">
           <nav class="mb-3">
             <b-nav vertical>
-              <b-nav-item href="#" @click="changeOption('index')"
+              <h4>Menú de actividades</h4>
+              <b-nav-item class="menuLink" href="#" @click="changeOption('index')"
                 >Campo</b-nav-item
               >
-              <b-nav-item href="#" @click="changeOption('activities')"
+              <b-nav-item class="menuLink" href="#" @click="changeOption('activities')"
                 >Actividades</b-nav-item
               >
-              <b-nav-item href="#" @click="changeOption('arboles')"
+              <b-nav-item class="menuLink" href="#" @click="changeOption('arboles')"
                 >Árboles</b-nav-item
               >
-              <b-nav-item href="#" @click="changeOption('ventas')"
+              <b-nav-item class="menuLink" href="#" @click="changeOption('ventas')"
                 >Ventas</b-nav-item
               >
-              <b-nav-item href="#" @click="changeOption('compras')"
+              <b-nav-item class="menuLink" href="#" @click="changeOption('compras')"
                 >Compras</b-nav-item
+              >
+              <b-nav-item class="menuLink" href="#" @click="changeOption('cosecha')"
+                >Cosecha</b-nav-item
               >
             </b-nav>
           </nav>
@@ -103,6 +107,9 @@
     </header>
     <header class="masthead" v-if="menuOption == 'compras'">
       <Compras :user="user" :campoSelected="campoSelected" />
+    </header>
+    <header class="masthead" v-if="menuOption == 'cosecha'">
+      <Cosecha :user="user" :campoSelected="campoSelected" />
     </header>
   </div>
   <div class="dashboard" v-else>
@@ -171,10 +178,11 @@ import ActivitiesClient from "../components/dashboard/ActivitiesClient.vue";
 import Arboles from "../components/dashboard/Arboles.vue";
 import Ventas from "../components/dashboard/Ventas.vue";
 import Compras from "../components/dashboard/Compras.vue";
+import Cosecha from "../components/dashboard/Cosecha.vue";
 
 export default {
   name: "Dashboard",
-  components: { Activities, ActivitiesClient, Arboles, Ventas, Compras },
+  components: { Activities, ActivitiesClient, Arboles, Ventas, Compras, Cosecha },
   data() {
     return {
       user: "",
@@ -222,5 +230,16 @@ export default {
 .errorMessage {
   color: red;
   text-align: center;
+}
+.menuLink .nav-link {
+  padding-left: 0px !important;
+  padding-bottom: 2px !important;
+  color: #198754;
+}
+.menuLink .nav-link:hover {
+  color: black;
+}
+.menuLink .nav-link:focus {
+  color: black;
 }
 </style>

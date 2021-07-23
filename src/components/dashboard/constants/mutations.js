@@ -348,7 +348,7 @@ export const COMPRAS_CREATE_COMPRAS = gql`
         data: {
           producto: $producto
           cantidad: $cantidad
-          centrocosto: $centrocosto
+          centro_costo: $centrocosto
           valorunitario: $valorunitario
           total: $total
           factura: $factura
@@ -366,7 +366,7 @@ export const COMPRAS_CREATE_COMPRAS = gql`
           id
           nombre
         }
-        centrocosto {
+        centro_costo {
           id
           nombre
         }
@@ -398,7 +398,7 @@ export const COMPRAS_DELETE_COMPRAS = gql`
           id
           nombre
         }
-        centrocosto {
+        centro_costo {
           id
           nombre
         }
@@ -422,19 +422,99 @@ export const COMPRAS_DELETE_COMPRAS = gql`
 `;
 
 export const COMPRAS_CREATE_PRODUCTO = gql`
-  mutation createProducto(
-    $nombre: String!
-  ) {
-    createProducto(
-      input: {
-        data: {
-          nombre: $nombre
-        }
-      }
-    ) {
+  mutation createProducto($nombre: String!) {
+    createProducto(input: { data: { nombre: $nombre } }) {
       producto {
         id
         nombre
+      }
+    }
+  }
+`;
+
+export const COMPRAS_UPDATE_FACTURA = gql`
+  mutation updateCompra($factura: String!, $id: ID!) {
+    updateCompra(input: { where: { id: $id }, data: { factura: $factura } }) {
+      compra {
+        id
+      }
+    }
+  }
+`;
+
+export const COSECHA_CREATE_COSECHA = gql`
+  mutation createCosecha(
+    $producto: ID!
+    $zona: ID!
+    $unidad: String!
+    $cantidad: Int!
+    $arboles: Int!
+    $ha: Float!
+    $kilosxhectarea: Float!
+    $kilosxarbol: Float!
+    $campo: ID!
+  ) {
+    createCosecha(
+      input: {
+        data: {
+          producto_cosecha: $producto
+          zona_cosecha: $zona
+          unidad: $unidad
+          cantidad: $cantidad
+          arboles: $arboles
+          ha: $ha
+          kilosxhectarea: $kilosxhectarea
+          kilosxarbol: $kilosxarbol
+          campo: $campo
+        }
+      }
+    ) {
+      cosecha {
+        id
+        producto_cosecha {
+          id
+          nombre
+        }
+        zona_cosecha {
+          id
+          nombre
+        }
+        cantidad
+        unidad
+        arboles
+        ha
+        kilosxarbol
+        kilosxhectarea
+        campo {
+          id
+        }
+      }
+    }
+  }
+`;
+
+export const COSECHA_DELETE_COSECHA = gql`
+  mutation deleteCosecha($id: ID!) {
+    deleteCosecha(input: { where: { id: $id } }) {
+      cosecha {
+        id
+        producto_cosecha {
+          id
+          nombre
+        }
+        zona_cosecha {
+          id
+          nombre
+        }
+        cantidad
+        unidad
+        arboles
+        ha
+        kilosxarbol
+        kilosxhectarea
+        campo {
+          id
+        }
       }
     }
   }

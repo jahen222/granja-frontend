@@ -40,11 +40,12 @@
           >
           <br />
           <br />
-          <div class="table-responsive">
+          <div class="table-responsive tableFixHead">
             <table class="table table-borderless table-hover tableStyle">
               <thead>
                 <tr>
-                  <th scope="col" class="tableHeaderGreen">Productos</th>
+                  <th scope="col" class="tableHeaderGreen">ID</th>
+                  <th scope="col" class="tableHeaderGreen">Producto</th>
                   <th scope="col" class="tableHeaderGreen">Centro Costo</th>
                   <th scope="col" class="tableHeaderGreen">Cantidad</th>
                   <th scope="col" class="tableHeaderGreen">Precio Unitario</th>
@@ -60,10 +61,13 @@
               <tbody>
                 <tr v-for="(venta, index) in compras" v-bind:key="index">
                   <td class="tableBodyGreen">
+                    {{ venta.id }}
+                  </td>
+                  <td class="tableBodyGreen">
                     {{ venta.producto.nombre }}
                   </td>
                   <td>
-                    {{ venta.centrocosto.nombre }}
+                    {{ venta.centro_costo.nombre }}
                   </td>
                   <td>
                     {{ venta.cantidad }}
@@ -91,6 +95,17 @@
                   </td>
                   <td>
                     <b-button
+                      v-if="!venta.factura"
+                      type="button"
+                      variant="success"
+                      size="sm"
+                      class="float-right"
+                      style="margin-right: 10px"
+                      @click="selectCompra(venta.id)"
+                    >
+                      Factura
+                    </b-button>
+                    <b-button
                       type="button"
                       variant="danger"
                       size="sm"
@@ -100,6 +115,10 @@
                       <font-awesome-icon icon="trash" style="color: white" />
                     </b-button>
                   </td>
+                </tr>
+                <tr>
+                  <td COLSPAN="5">Total:</td>
+                  <td>{{ getTotal.toLocaleString() }}</td>
                 </tr>
               </tbody>
             </table>
@@ -161,7 +180,7 @@
           >
             <option disabled selected>Seleccione una opción:</option>
             <option
-              v-for="(producto, index) in productos"
+              v-for="(producto, index) in centroCostos"
               v-bind:key="index"
               :value="producto.id"
             >
@@ -200,8 +219,8 @@
             :state="unidadState"
           >
             <option disabled selected>Seleccione una opción:</option>
-            <option value="Baja">Kilos</option>
-            <option value="Media">Litros</option>
+            <option value="Kilos">Kilos</option>
+            <option value="Litros">Litros</option>
           </select>
         </b-form-group>
         <br />
@@ -323,6 +342,46 @@
         </div>
       </template>
     </b-modal>
+    <b-modal id="addFacturaModal">
+      <div slot="modal-title">
+        <font-awesome-icon icon="bookmark" style="color: green" />
+        Agregar Número de factura
+      </div>
+      <form ref="facturaForm" id="facturaForm" @submit="handleAddFacturao">
+        <!-- factura -->
+        <b-form-group
+          label="Número factura"
+          label-for="factura-input"
+          invalid-feedback="El número de factura es requerido"
+          :state="facturaaddState"
+        >
+          <b-form-input
+            id="factura-input"
+            type="number"
+            placeholder="Ingrese el número de factura"
+            v-model="facturaaddSelected"
+            min="0"
+            :state="facturaaddState"
+          ></b-form-input>
+        </b-form-group>
+        <br />
+        <p v-if="error" class="errorMessage">{{ error }}</p>
+        <br v-if="error" />
+      </form>
+      <template #modal-footer>
+        <div class="w-100">
+          <b-button
+            type="submit"
+            form="facturaForm"
+            variant="success"
+            size="sm"
+            class="float-right"
+          >
+            Agregar
+          </b-button>
+        </div>
+      </template>
+    </b-modal>
     <b-modal id="addProductoModal">
       <div slot="modal-title">
         <font-awesome-icon icon="bookmark" style="color: green" />
@@ -369,12 +428,14 @@
 import {
   COMPRAS_GET_COMPRAS,
   VENTAS_GET_PRODUCTOS,
-  VENTAS_GET_FORMAPAGOS
+  VENTAS_GET_FORMAPAGOS,
+  VENTAS_GET_CENTRO_COSTOS
 } from "./constants/querys";
 import {
   COMPRAS_CREATE_COMPRAS,
   COMPRAS_DELETE_COMPRAS,
-  COMPRAS_CREATE_PRODUCTO
+  COMPRAS_CREATE_PRODUCTO,
+  COMPRAS_UPDATE_FACTURA
 } from "./constants/mutations";
 
 export default {
@@ -410,7 +471,11 @@ export default {
       productoaddState: null,
       dismissCountDown: 0,
       typeNotification: "",
-      messageNotification: ""
+      messageNotification: "",
+      centroCostos: [],
+      facturaaddSelected: "",
+      facturaaddState: null,
+      compraIdAux: ""
     };
   },
   apollo: {
@@ -420,13 +485,17 @@ export default {
         return {
           campo: this.campoSelected ? this.campoSelected.id : null
         };
-      }
+      },
+      fetchPolicy: "no-cache"
     },
     productos: {
       query: VENTAS_GET_PRODUCTOS
     },
     formaPagos: {
       query: VENTAS_GET_FORMAPAGOS
+    },
+    centroCostos: {
+      query: VENTAS_GET_CENTRO_COSTOS
     }
   },
   methods: {
@@ -463,10 +532,6 @@ export default {
       if (!valorunitario) {
         validate = false;
         this.valorUnitarioState = false;
-      }
-      if (!factura) {
-        validate = false;
-        this.facturaState = false;
       }
       if (!formaPago) {
         validate = false;
@@ -555,18 +620,10 @@ export default {
             mutation: COMPRAS_DELETE_COMPRAS,
             variables: {
               id: venta.id
-            },
-            refetchQueries: [
-              {
-                query: COMPRAS_GET_COMPRAS,
-                variables: {
-                  campo: this.campoSelected ? this.campoSelected.id : null
-                }
-              }
-            ]
+            }
           })
           .then(data => {
-            this.compras.filter(function(venta) {
+            this.compras = this.compras.filter(function(venta) {
               return venta.id != data.data.deleteCompra.compra.id;
             });
             this.showAlert("success", 5, "Compra eliminada exitosamente.");
@@ -624,6 +681,58 @@ export default {
       this.typeNotification = type;
       this.dismissCountDown = time;
       this.messageNotification = message;
+    },
+    selectCompra(compraId) {
+      this.compraIdAux = compraId;
+      this.$root.$emit("bv::show::modal", "addFacturaModal");
+    },
+    async handleAddFacturao(e) {
+      e.preventDefault();
+      let validate = true;
+      const factura = this.facturaaddSelected;
+      const compraId = this.compraIdAux;
+
+      if (!factura) {
+        validate = false;
+        this.facturaaddState = false;
+      }
+
+      if (validate) {
+        if (confirm("¿Desea agregar el número de la factura?")) {
+          await this.$apollo
+            .mutate({
+              mutation: COMPRAS_UPDATE_FACTURA,
+              variables: {
+                id: compraId,
+                factura: factura
+              },
+              refetchQueries: [
+                {
+                  query: COMPRAS_GET_COMPRAS,
+                  variables() {
+                    return {
+                      campo: this.campoSelected ? this.campoSelected.id : null
+                    };
+                  }
+                }
+              ]
+            })
+            .then(() => {
+              this.facturaaddState = null;
+              this.facturaaddSelected = "";
+              this.error = "";
+              this.$root.$emit("bv::hide::modal", "addFacturaModal");
+              this.showAlert(
+                "success",
+                5,
+                "El número fue agregado exitosamente."
+              );
+            })
+            .catch(() => {
+              this.showAlert("danger", 5, "El número no pudo ser agregado.");
+            });
+        }
+      }
     }
   },
   computed: {
@@ -631,6 +740,17 @@ export default {
       return (
         this.cantidadSelected * this.valorUnitarioSelected
       ).toLocaleString();
+    },
+    getTotal() {
+      let total = 0;
+
+      if (this.compras) {
+        this.compras.map(compra => {
+          total = total + compra.total;
+        });
+      }
+
+      return total;
     }
   }
 };
@@ -649,20 +769,6 @@ export default {
 .tableBodyGreen {
   background-color: rgb(216, 252, 216);
 }
-/* .table > thead:first-child > tr:first-child > th:first-child {
-  position: absolute;
-  display: inline-block;
-}
-.table > tbody > tr > td:first-child {
-  position: absolute;
-  display: inline-block;
-}
-.table > thead:first-child > tr:first-child > th:nth-child(2) {
-  padding-left: 100px;
-}
-.table > tbody > tr > td:nth-child(2) {
-  padding-left: 100px !important;
-} */
 .table-responsive {
   width: 100%;
   overflow: auto;
@@ -673,5 +779,25 @@ export default {
 }
 .floatCenter {
   text-align: center;
+}
+.tableFixHead {
+  overflow: auto;
+  height: 80%;
+}
+.tableFixHead thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+th,
+td {
+  padding: 8px 16px;
+}
+th {
+  background: #eee;
 }
 </style>
