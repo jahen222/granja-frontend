@@ -519,3 +519,139 @@ export const COSECHA_DELETE_COSECHA = gql`
     }
   }
 `;
+
+export const HONORARIOS_CREATE_HONORARIOS = gql`
+  mutation createHonorario(
+    $profesional: ID!
+    $descripcion: String!
+    $monto: Float!
+    $startDate: DateTime!
+    $factura: String!
+    $campo: ID!
+  ) {
+    createHonorario(
+      input: {
+        data: {
+          profesionale: $profesional
+          descripcion: $descripcion
+          boleta: $factura
+          monto: $monto
+          fecha: $startDate
+          campo: $campo
+        }
+      }
+    ) {
+      honorario {
+        id
+        profesionale {
+          id
+          nombre
+        }
+        descripcion
+        boleta
+        monto
+        fecha
+        campo {
+          id
+        }
+      }
+    }
+  }
+`;
+
+export const HONORARIOS_DELETE_HONORARIO = gql`
+  mutation deleteHonorario($id: ID!) {
+    deleteHonorario(input: { where: { id: $id } }) {
+      honorario {
+        id
+        profesionale {
+          id
+          nombre
+        }
+        descripcion
+        boleta
+        monto
+        fecha
+        campo {
+          id
+        }
+      }
+    }
+  }
+`;
+
+export const GASTO_CREATE_GASTO = gql`
+  mutation createGastosGenerale(
+    $proveedor: ID!
+    $descripcion: String!
+    $cantidad: Int!
+    $startDate: DateTime!
+    $unidad: String!
+    $precio: Float!
+    $documento: String!
+    $tipoDocumento: String!
+    $total: Float!
+    $campo: ID!
+  ) {
+    createGastosGenerale(
+      input: {
+        data: {
+          proveedore: $proveedor
+          descripcion: $descripcion
+          cantidad: $cantidad
+          total: $total
+          fecha: $startDate
+          unidad: $unidad
+          precio: $precio
+          documento: $documento
+          tipo_documento: $tipoDocumento
+          campo: $campo
+        }
+      }
+    ) {
+      gastosGenerale {
+        id
+        proveedore {
+          id
+          nombre
+        }
+        descripcion
+        cantidad
+        total
+        fecha
+        unidad
+        precio
+        documento
+        tipo_documento
+        campo {
+          id
+        }
+      }
+    }
+  }
+`;
+
+export const GASTO_DELETE_GASTO = gql`
+  mutation deleteGastosGenerale($id: ID!) {
+    deleteGastosGenerale(input: { where: { id: $id } }) {
+      gastosGenerale {
+        id
+        proveedore {
+          id
+          nombre
+        }
+        descripcion
+        cantidad
+        total
+        fecha
+        unidad
+        precio
+        documento
+        tipo_documento
+        campo {
+          id
+        }
+      }
+    }
+  }
+`;

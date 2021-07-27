@@ -319,3 +319,66 @@ export const COSECHA_GET_COSECHA = gql`
     }
   }
 `;
+
+export const HONORARIOS_GET_PROFESIONALES = gql`
+  query profesionales {
+    profesionales(sort: "id:asc") {
+      id
+      nombre
+    }
+  }
+`;
+
+export const HONORARIOS_GET_HONORARIOS = gql`
+  query honorarios($campo: ID) {
+    honorarios(sort: "id:desc", where: { campo: { id_contains: $campo } }) {
+      id
+      profesionale {
+        id
+        nombre
+      }
+      descripcion
+      boleta
+      monto
+      fecha
+      campo {
+        id
+      }
+    }
+  }
+`;
+
+export const GASTOS_GET_PROVEEDORES = gql`
+  query proveedores {
+    proveedores(sort: "id:asc") {
+      id
+      nombre
+    }
+  }
+`;
+
+export const GASTOS_GET_GASTOS = gql`
+  query gastosGenerales($campo: ID) {
+    gastosGenerales(
+      sort: "id:desc"
+      where: { campo: { id_contains: $campo } }
+    ) {
+      id
+      proveedore {
+        id
+        nombre
+      }
+      descripcion
+      cantidad
+      total
+      fecha
+      unidad
+      precio
+      documento
+      tipo_documento
+      campo {
+        id
+      }
+    }
+  }
+`;
