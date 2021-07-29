@@ -382,3 +382,12 @@ export const GASTOS_GET_GASTOS = gql`
     }
   }
 `;
+
+export const GASTOS_GET_UNIDADES = gql`
+  query unidadesGastos {
+    unidadesGastos(sort: "id:asc") {
+      id
+      nombre
+    }
+  }
+`;

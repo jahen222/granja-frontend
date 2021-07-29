@@ -46,14 +46,18 @@
                 <tr>
                   <th scope="col" class="tableHeaderGreen">ID</th>
                   <th scope="col" class="tableHeaderGreen">Actividad</th>
-                  <th scope="col" class="tableHeaderGreen">Tipo Árbol</th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 100px">
+                    Tipo Árbol
+                  </th>
                   <th scope="col" class="tableHeaderGreen">Número</th>
                   <th scope="col" class="tableHeaderGreen">Zona</th>
                   <th scope="col" class="tableHeaderGreen">Camellón</th>
                   <th scope="col" class="tableHeaderGreen">Aplicación</th>
                   <th scope="col" class="tableHeaderGreen">Descripción</th>
                   <th scope="col" class="tableHeaderGreen">Estado</th>
-                  <th scope="col" class="tableHeaderGreen">Acciones</th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 130px">
+                    Acciones
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -409,17 +413,20 @@ export default {
             variables: {
               id: cuidadoArbol.id,
               estado: "Finalizado"
-            },
-            refetchQueries: [
-              {
-                query: ARBOLES_GET_CUIDADO,
-                variables: {
-                  campo: this.campoSelected ? this.campoSelected.id : null
-                }
-              }
-            ]
+            }
           })
-          .then(() => {
+          .then(data => {
+            this.cuidadoArboles = this.cuidadoArboles.map(function(
+              cuidadoArbol
+            ) {
+              if (
+                cuidadoArbol.id ===
+                data.data.updateCuidadoArbole.cuidadoArbole.id
+              ) {
+                return (data.data.updateCuidadoArbole.cuidadoArbole);
+              } else return (cuidadoArbol);
+            });
+
             this.showAlert(
               "success",
               5,
@@ -445,7 +452,9 @@ export default {
             }
           })
           .then(data => {
-            this.cuidadoArboles = this.cuidadoArboles.filter(function(cuidadoArbol) {
+            this.cuidadoArboles = this.cuidadoArboles.filter(function(
+              cuidadoArbol
+            ) {
               return (
                 cuidadoArbol.id !==
                 data.data.deleteCuidadoArbole.cuidadoArbole.id

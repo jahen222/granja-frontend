@@ -401,7 +401,6 @@ export default {
               this.productoSelected = "";
               this.calidadSelected = "";
               this.cantidadSelected = "";
-              this.totalSelected = "";
               this.valorKiloSelected = "";
               this.facturaSelected = "";
               this.formaPagosSelected = "";
@@ -421,7 +420,6 @@ export default {
               this.productoSelected = "";
               this.calidadSelected = "";
               this.cantidadSelected = "";
-              this.totalSelected = "";
               this.valorKiloSelected = "";
               this.facturaSelected = "";
               this.formaPagosSelected = "";
@@ -467,7 +465,11 @@ export default {
   },
   computed: {
     totalSelected() {
-      return (this.cantidadSelected * this.valorKiloSelected).toLocaleString();
+      var val = 0;
+      if (this.cantidadSelected && this.valorKiloSelected) {
+        val = (this.cantidadSelected * this.valorKiloSelected).toLocaleString();
+      }
+      return val;
     },
     getTotal() {
       let total = 0;

@@ -79,10 +79,10 @@
                   <td>
                     {{ venta.arboles }}
                   </td>
-                  <td>
+                  <td class="tableBodyGrey">
                     {{ venta.kilosxarbol }}
                   </td>
-                  <td>
+                  <td class="tableBodyGrey">
                     {{ venta.kilosxhectarea }}
                   </td>
                   <td>
@@ -238,10 +238,9 @@
           <b-form-input
             id="kxa-input"
             type="number"
-            placeholder="Ingrese las kilos x árbol"
             v-model="kxaSelected"
             :state="kxaState"
-            min="0"
+            :disabled="true"
           ></b-form-input>
         </b-form-group>
         <br />
@@ -255,10 +254,9 @@
           <b-form-input
             id="kxh-input"
             type="number"
-            placeholder="Ingrese las kilos x hectárea"
             v-model="kxhSelected"
             :state="kxhState"
-            min="0"
+            :disabled="true"
           ></b-form-input>
         </b-form-group>
         <br />
@@ -314,9 +312,7 @@ export default {
       haState: null,
       arbolesSelected: "",
       arbolesState: null,
-      kxaSelected: "",
       kxaState: null,
-      kxhSelected: "",
       kxhState: null,
       dismissCountDown: 0,
       typeNotification: "",
@@ -409,8 +405,6 @@ export default {
               this.arbolesSelected = "";
               this.unidadSelected = "";
               this.haSelected = "";
-              this.kxaSelected = "";
-              this.kxhSelected = "";
               this.productoState = null;
               this.zonaState = null;
               this.cantidadState = null;
@@ -430,8 +424,6 @@ export default {
               this.arbolesSelected = "";
               this.unidadSelected = "";
               this.haSelected = "";
-              this.kxaSelected = "";
-              this.kxhSelected = "";
               this.productoState = null;
               this.zonaState = null;
               this.cantidadState = null;
@@ -472,6 +464,22 @@ export default {
       this.typeNotification = type;
       this.dismissCountDown = time;
       this.messageNotification = message;
+    }
+  },
+  computed: {
+    kxaSelected() {
+      if (this.cantidadSelected && this.arbolesSelected) {
+        return (this.cantidadSelected / this.arbolesSelected)
+          .toFixed(3)
+          .toLocaleString();
+      } else return 0;
+    },
+    kxhSelected() {
+      if (this.cantidadSelected && this.haSelected) {
+        return (this.cantidadSelected / this.haSelected)
+          .toFixed(3)
+          .toLocaleString();
+      } else return 0;
     }
   },
   asyncComputed: {
@@ -545,5 +553,8 @@ td {
 }
 th {
   background: #eee;
+}
+.tableBodyGrey {
+  background-color: lightgrey;
 }
 </style>

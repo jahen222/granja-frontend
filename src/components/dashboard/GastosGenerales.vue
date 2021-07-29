@@ -49,16 +49,19 @@
                   <th scope="col" class="tableHeaderGreen">Descripción</th>
                   <th scope="col" class="tableHeaderGreen">Cantidad</th>
                   <th scope="col" class="tableHeaderGreen">Unidad</th>
-                  <th scope="col" class="tableHeaderGreen">Precio Unitario</th>
+                  <th scope="col" class="tableHeaderGreen">P/U</th>
                   <th scope="col" class="tableHeaderGreen">Total</th>
-                  <th scope="col" class="tableHeaderGreen">Fecha</th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 100px;">Fecha</th>
                   <th scope="col" class="tableHeaderGreen">Documento</th>
-                  <th scope="col" class="tableHeaderGreen">Tipo documento</th>
+                  <th scope="col" class="tableHeaderGreen">Tipo</th>
                   <th scope="col" class="tableHeaderGreen">Acciones</th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(venta, index) in gastosGenerales" v-bind:key="index">
+                <tr
+                  v-for="(venta, index) in gastosGenerales"
+                  v-bind:key="index"
+                >
                   <td class="tableBodyGreen">
                     {{ venta.id }}
                   </td>
@@ -186,8 +189,13 @@
             :state="unidadState"
           >
             <option disabled selected>Seleccione una opción:</option>
-            <option value="Kilos">Kilos</option>
-            <option value="Litros">Litros</option>
+            <option
+              v-for="(unidadesGasto, index) in unidadesGastos"
+              v-bind:key="index"
+              :value="unidadesGasto.id"
+            >
+              {{ unidadesGasto.nombre }}
+            </option>
           </select>
         </b-form-group>
         <br />
@@ -233,9 +241,34 @@
           ></b-form-datepicker>
         </b-form-group>
         <br />
+        <!-- Tipo documento -->
+        <b-form-group
+          label="Tipo Documento"
+          label-for="tipoDocumento-input"
+          invalid-feedback="El tipo de documento es requerido"
+          :state="tipoDocumentoState"
+        >
+          <!-- <b-form-input
+            id="tipoDocumento-input"
+            type="text"
+            placeholder="Ingrese el tipo de documento"
+            v-model="tipoDocumentoSelected"
+            :state="tipoDocumentoState"
+          ></b-form-input> -->
+          <select
+            class="form-control"
+            v-model="tipoDocumentoSelected"
+            :state="tipoDocumentoState"
+          >
+            <option disabled selected>Seleccione una opción:</option>
+            <option value="Factura">Factura</option>
+            <option value="Boleta">Boleta</option>
+          </select>
+        </b-form-group>
+        <br />
         <!-- documento -->
         <b-form-group
-          label="Documento"
+          label="Numero Documento"
           label-for="documento-input"
           invalid-feedback="El numero de documento es requerido"
           :state="documentoState"
@@ -247,22 +280,6 @@
             v-model="documentoSelected"
             :state="documentoState"
             min="0"
-          ></b-form-input>
-        </b-form-group>
-        <br />
-        <!-- Tipo documento -->
-        <b-form-group
-          label="Tipo Documento"
-          label-for="tipoDocumento-input"
-          invalid-feedback="El tipo de documento es requerido"
-          :state="tipoDocumentoState"
-        >
-          <b-form-input
-            id="tipoDocumento-input"
-            type="text"
-            placeholder="Ingrese el tipo de documento"
-            v-model="tipoDocumentoSelected"
-            :state="tipoDocumentoState"
           ></b-form-input>
         </b-form-group>
         <br />
@@ -287,7 +304,11 @@
 </template>
 
 <script>
-import { GASTOS_GET_GASTOS, GASTOS_GET_PROVEEDORES } from "./constants/querys";
+import {
+  GASTOS_GET_GASTOS,
+  GASTOS_GET_PROVEEDORES,
+  GASTOS_GET_UNIDADES
+} from "./constants/querys";
 import { GASTO_CREATE_GASTO, GASTO_DELETE_GASTO } from "./constants/mutations";
 import moment from "moment";
 
@@ -318,7 +339,8 @@ export default {
       gastosGenerales: [],
       dismissCountDown: 0,
       typeNotification: "",
-      messageNotification: ""
+      messageNotification: "",
+      unidadesGastos: []
     };
   },
   apollo: {
@@ -333,6 +355,9 @@ export default {
     },
     proveedores: {
       query: GASTOS_GET_PROVEEDORES
+    },
+    unidadesGastos: {
+      query: GASTOS_GET_UNIDADES
     }
   },
   methods: {
@@ -458,7 +483,9 @@ export default {
           })
           .then(data => {
             this.gastosGenerales = this.gastosGenerales.filter(function(venta) {
-              return venta.id != data.data.deleteGastosGenerale.gastosGenerale.id;
+              return (
+                venta.id != data.data.deleteGastosGenerale.gastosGenerale.id
+              );
             });
             this.showAlert("success", 5, "Gasto eliminado exitosamente.");
           })
@@ -534,7 +561,7 @@ export default {
 }
 table {
   border-collapse: collapse;
-  width: 100%;
+  width: 1224px;
 }
 th,
 td {

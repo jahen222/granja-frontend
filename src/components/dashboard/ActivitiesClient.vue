@@ -12,6 +12,23 @@
         "
       >
         <div class="col-lg-8 align-self-end">
+          <b-alert
+            :show="dismissCountDown"
+            fade
+            :variant="typeNotification"
+            @dismissed="dismissCountDown = 0"
+            @dismiss-count-down="countDownChanged"
+          >
+            <p>
+              {{ messageNotification }}
+            </p>
+            <b-progress
+              :variant="typeNotification"
+              max="5"
+              :value="dismissCountDown"
+              height="4px"
+            ></b-progress>
+          </b-alert>
           <h2 class="text-white font-weight-bold">
             Actividades {{ campoSelected ? campoSelected.nombre : "" }}
           </h2>
@@ -39,11 +56,10 @@
           </nav>
           <br />
           <div class="table-responsive">
-            <table class="table table-borderless table-hover tableStyle">
+            <table class="table table-borderless table-hover tableStyle" style="width: 1490px;">
               <thead>
                 <tr>
                   <th scope="col" class="tableHeaderGreen">Actividad</th>
-                  <!-- <th scope="col">Propósito</th> -->
                   <th scope="col" class="tableHeaderGreen">Estado</th>
                   <th scope="col" class="tableHeaderGreen">Abril</th>
                   <th scope="col" class="tableHeaderGreen">Mayo</th>
@@ -70,9 +86,6 @@
                   >
                     {{ register.actividad }}
                   </td>
-                  <!-- <td @click="handleShowAvtivity(register)">
-                    {{ register.proposito }}
-                  </td> -->
                   <td
                     @click="handleShowAvtivity(register)"
                     class="tableBodyGreen"
@@ -686,7 +699,11 @@
         </div>
       </div>
     </div>
-    <b-modal id="showActivityModal" title="Mostrar Actividad">
+    <b-modal id="showActivityModal">
+      <div slot="modal-title">
+        <font-awesome-icon icon="bookmark" style="color: green" />
+        Mostrar Actividad
+      </div>
       <form ref="activityForm" id="activityForm" onsubmit="return false;">
         <div class="row">
           <div class="col-sm-12 col-md-12 col-lg-12">
@@ -774,6 +791,7 @@
                       :state="recursosState"
                       required
                       style="width: 80px"
+                      min="0"
                     />
                   </td>
                   <td>Estado:</td>
@@ -814,6 +832,11 @@
                   <td>Obs:</td>
                   <td COLSPAN="3">
                     {{ showRegister.observacion }}
+                  </td>
+                </tr>
+                <tr v-if="errorModal">
+                  <td COLSPAN="4">
+                    <p class="errorMessage">{{ errorModal }}</p>
                   </td>
                 </tr>
                 <tr>
@@ -906,14 +929,19 @@ export default {
   props: ["user", "campoSelected"],
   data() {
     return {
+      error: "",
+      errorModal: "",
       registroActividads: [],
-      thisYear: moment().year(),
+      thisYear: new Date().getFullYear(),
       showRegister: "",
       moment: moment(),
       observacion: "",
       observacionState: null,
       recursos: null,
-      recursosState: null
+      recursosState: null,
+      dismissCountDown: 0,
+      typeNotification: "",
+      messageNotification: ""
     };
   },
   apollo: {
@@ -954,7 +982,7 @@ export default {
       e.preventDefault;
       let validate = true;
       const observacion = this.observacion;
-      const recursos = 8;
+      const recursos = this.recursos;
       this.observacionState = true;
       this.recursosState = true;
       this.error = "";
@@ -965,10 +993,12 @@ export default {
       ) {
         validate = false;
         this.observacionState = false;
+        this.errorModal = "Debes agregar una observación valida.";
       }
       if (!recursos) {
         validate = false;
         this.recursosState = false;
+        this.errorModal = "Debes agregar los recursos.";
       }
 
       if (validate) {
@@ -979,7 +1009,7 @@ export default {
               variables: {
                 id: this.showRegister.id,
                 estado: "Iniciado",
-                recursos: recursos,
+                recursos: Number(recursos),
                 observacion,
                 startDate: moment()
               },
@@ -1002,9 +1032,16 @@ export default {
               this.recursosState = null;
               this.observacionState = null;
               this.error = "";
+              this.errorModal = "";
               //this.$root.$emit("bv::hide::modal", "showActivityModal");
             })
             .catch(({ graphQLErrors }) => {
+              this.observacion = "";
+              this.recursos = null;
+              this.recursosState = null;
+              this.observacionState = null;
+              this.error = "";
+              this.errorModal = "";
               graphQLErrors.map(
                 ({ extensions }) => console.log(extensions.exception)
                 /* extensions.exception.data.message.map(({ messages }) =>
@@ -1053,9 +1090,16 @@ export default {
               this.recursosState = null;
               this.observacionState = null;
               this.error = "";
+              this.errorModal = "";
               //this.$root.$emit("bv::hide::modal", "showActivityModal");
             })
             .catch(({ graphQLErrors }) => {
+              this.observacion = "";
+              this.recursos = null;
+              this.recursosState = null;
+              this.observacionState = null;
+              this.error = "";
+              this.errorModal = "";
               graphQLErrors.map(
                 ({ extensions }) => console.log(extensions.exception)
                 /* extensions.exception.data.message.map(({ messages }) =>
@@ -1065,6 +1109,14 @@ export default {
             });
         }
       }
+    },
+    countDownChanged(dismissCountDown) {
+      this.dismissCountDown = dismissCountDown;
+    },
+    showAlert(type, time, message) {
+      this.typeNotification = type;
+      this.dismissCountDown = time;
+      this.messageNotification = message;
     }
   }
 };
@@ -1083,23 +1135,36 @@ export default {
 .tableBodyGreen {
   background-color: rgb(216, 252, 216);
 }
-/* .table > thead:first-child > tr:first-child > th:first-child {
-  position: absolute;
-  display: inline-block;
-}
-.table > tbody > tr > td:first-child {
-  position: absolute;
-  display: inline-block;
-}
-.table > thead:first-child > tr:first-child > th:nth-child(2) {
-  padding-left: 100px;
-}
-.table > tbody > tr > td:nth-child(2) {
-  padding-left: 100px !important;
-} */
 .table-responsive {
   width: 100%;
   overflow: auto;
   max-height: 350px;
+}
+.floatRight {
+  text-align: right;
+}
+.floatCenter {
+  text-align: center;
+}
+.tableFixHead {
+  overflow: auto;
+  height: 80%;
+}
+.tableFixHead thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+table {
+  border-collapse: collapse;
+  table-layout: fixed;
+  width: 100%;
+}
+th,
+td {
+  padding: 8px 16px;
+}
+th {
+  background: #eee;
 }
 </style>

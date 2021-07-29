@@ -72,7 +72,7 @@
           </nav>
           <br />
           <div class="table-responsive tableFixHead">
-            <table class="table table-borderless table-hover tableStyle">
+            <table class="table table-borderless table-hover tableStyle" style="width: 1490px;">
               <thead>
                 <tr>
                   <th scope="col" class="tableHeaderGreen">ID</th>
@@ -1396,6 +1396,12 @@ export default {
               //this.$root.$emit("bv::hide::modal", "showActivityModal");
             })
             .catch(({ graphQLErrors }) => {
+              this.observacion = "";
+              this.recursos = null;
+              this.recursosState = null;
+              this.observacionState = null;
+              this.error = "";
+              this.errorModal = "";
               graphQLErrors.map(
                 ({ extensions }) => console.log(extensions.exception)
                 /* extensions.exception.data.message.map(({ messages }) =>
@@ -1444,9 +1450,16 @@ export default {
               this.recursosState = null;
               this.observacionState = null;
               this.error = "";
+              this.errorModal = "";
               //this.$root.$emit("bv::hide::modal", "showActivityModal");
             })
             .catch(({ graphQLErrors }) => {
+              this.observacion = "";
+              this.recursos = null;
+              this.recursosState = null;
+              this.observacionState = null;
+              this.error = "";
+              this.errorModal = "";
               graphQLErrors.map(
                 ({ extensions }) => console.log(extensions.exception)
                 /* extensions.exception.data.message.map(({ messages }) =>
@@ -1526,6 +1539,7 @@ export default {
 }
 table {
   border-collapse: collapse;
+  table-layout: fixed;
   width: 100%;
 }
 th,

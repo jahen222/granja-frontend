@@ -581,7 +581,6 @@ export default {
               this.formaPagosSelected = "";
               this.chequeSelected = "";
               this.unidadSelected = "";
-              this.totalSelected = "";
               this.error = "";
               this.$root.$emit("bv::hide::modal", "addVentasModal");
               this.showAlert("success", 5, "Compra creada exitosamente.");
@@ -605,7 +604,6 @@ export default {
               this.formaPagosSelected = "";
               this.chequeSelected = "";
               this.unidadSelected = "";
-              this.totalSelected = "";
               this.error = "";
               this.$root.$emit("bv::hide::modal", "addVentasModal");
               this.showAlert("danger", 5, "La compra no pudo ser creada.");
@@ -737,9 +735,11 @@ export default {
   },
   computed: {
     totalSelected() {
-      return (
-        this.cantidadSelected * this.valorUnitarioSelected
-      ).toLocaleString();
+      var val = 0;
+      if (this.cantidadSelected && this.valorUnitarioSelected) {
+        val = (this.cantidadSelected * this.valorUnitarioSelected).toLocaleString();
+      }
+      return val;
     },
     getTotal() {
       let total = 0;

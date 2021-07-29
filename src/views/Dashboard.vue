@@ -5,8 +5,8 @@
       id="mainNav"
     >
       <div class="container px-4 px-lg-5">
-        <a class="navbar-brand" href="#"
-          >Bienvenido {{ user ? user.username : "" }}</a
+        <a class="navbar-brand" href="#">
+          <font-awesome-icon icon="user" /> {{ user ? user.username : "" }}</a
         >
         <button
           class="navbar-toggler navbar-toggler-right"
@@ -21,6 +21,14 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ms-auto my-2 my-lg-0">
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                href="https://granja-admin.herokuapp.com/admin"
+                target="_blank"
+                >Mantenedores</a
+              >
+            </li>
             <li class="nav-item">
               <a class="nav-link" @click="handleLogout">Salir</a>
             </li>
@@ -155,7 +163,7 @@
     >
       <div class="container px-4 px-lg-5">
         <a class="navbar-brand" href="#"
-          >Bienbenido {{ user ? user.username : "" }}</a
+          ><font-awesome-icon icon="user" /> {{ user ? user.username : "" }}</a
         >
         <button
           class="navbar-toggler navbar-toggler-right"
@@ -170,6 +178,14 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ms-auto my-2 my-lg-0">
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                href="https://granja-admin.herokuapp.com/admin"
+                target="_blank"
+                >Mantenedores</a
+              >
+            </li>
             <li class="nav-item">
               <a class="nav-link" @click="handleLogout">Salir</a>
             </li>
