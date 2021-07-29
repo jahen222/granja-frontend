@@ -2,13 +2,13 @@
   <div class="dashboard" v-if="user ? user.role.name === 'Admin' : false">
     <b-navbar
       toggleable="sm"
-      type="light"
-      variant="light"
       style="padding-left: 10%"
+      class="navbar navbar-expand-lg navbar-light fixed-top py-3"
+      id="mainNav"
     >
       <b-navbar-toggle target="nav-text-collapse"></b-navbar-toggle>
 
-      <b-navbar-brand
+      <b-navbar-brand class="navbar-brand"
         ><font-awesome-icon icon="user" />
         {{ user ? user.username : "" }}</b-navbar-brand
       >
@@ -186,13 +186,13 @@
   <div class="dashboard" v-else>
     <b-navbar
       toggleable="sm"
-      type="light"
-      variant="light"
       style="padding-left: 10%"
+      class="navbar navbar-expand-lg navbar-light fixed-top py-3"
+      id="mainNav"
     >
       <b-navbar-toggle target="nav-text-collapse"></b-navbar-toggle>
 
-      <b-navbar-brand
+      <b-navbar-brand class="navbar-brand"
         ><font-awesome-icon icon="user" />
         {{ user ? user.username : "" }}</b-navbar-brand
       >
