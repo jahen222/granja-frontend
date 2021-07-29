@@ -1,6 +1,33 @@
 <template>
   <div class="dashboard" v-if="user ? user.role.name === 'Admin' : false">
-    <nav
+    <b-navbar
+      toggleable="sm"
+      type="light"
+      variant="light"
+      style="padding-left: 10%"
+    >
+      <b-navbar-toggle target="nav-text-collapse"></b-navbar-toggle>
+
+      <b-navbar-brand
+        ><font-awesome-icon icon="user" />
+        {{ user ? user.username : "" }}</b-navbar-brand
+      >
+
+      <b-collapse id="nav-text-collapse" is-nav>
+        <b-navbar-nav>
+          <b-nav-item
+            href="https://granja-admin.herokuapp.com/admin"
+            target="_blank"
+            >Mantenedores</b-nav-item
+          >
+          <b-nav-item v-b-toggle.sidebar-right v-if="campoSelected"
+            >Actividades</b-nav-item
+          >
+          <b-nav-item @click="handleLogout">Salir</b-nav-item>
+        </b-navbar-nav>
+      </b-collapse>
+    </b-navbar>
+    <!-- <nav
       class="navbar navbar-expand-lg navbar-light fixed-top py-3"
       id="mainNav"
     >
@@ -40,7 +67,7 @@
           </ul>
         </div>
       </div>
-    </nav>
+    </nav> -->
     <b-sidebar id="sidebar-right" no-header right shadow>
       <template #default="{ hide }">
         <div class="p-3">
@@ -157,7 +184,34 @@
     </header>
   </div>
   <div class="dashboard" v-else>
-    <nav
+    <b-navbar
+      toggleable="sm"
+      type="light"
+      variant="light"
+      style="padding-left: 10%"
+    >
+      <b-navbar-toggle target="nav-text-collapse"></b-navbar-toggle>
+
+      <b-navbar-brand
+        ><font-awesome-icon icon="user" />
+        {{ user ? user.username : "" }}</b-navbar-brand
+      >
+
+      <b-collapse id="nav-text-collapse" is-nav>
+        <b-navbar-nav>
+          <b-nav-item
+            href="https://granja-admin.herokuapp.com/admin"
+            target="_blank"
+            >Mantenedores</b-nav-item
+          >
+          <b-nav-item v-b-toggle.sidebar-right v-if="campoSelected"
+            >Actividades</b-nav-item
+          >
+          <b-nav-item @click="handleLogout">Salir</b-nav-item>
+        </b-navbar-nav>
+      </b-collapse>
+    </b-navbar>
+    <!-- <nav
       class="navbar navbar-expand-lg navbar-light fixed-top py-3"
       id="mainNav"
     >
@@ -197,7 +251,7 @@
           </ul>
         </div>
       </div>
-    </nav>
+    </nav> -->
     <b-sidebar id="sidebar-right" no-header right shadow>
       <template #default="{ hide }">
         <div class="p-3">
