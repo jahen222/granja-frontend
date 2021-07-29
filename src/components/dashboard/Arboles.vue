@@ -46,7 +46,7 @@
                 <tr>
                   <th scope="col" class="tableHeaderGreen">ID</th>
                   <th scope="col" class="tableHeaderGreen">Actividad</th>
-                  <th scope="col" class="tableHeaderGreen" style="width: 100px">
+                  <th scope="col" class="tableHeaderGreen" style="width: 120px">
                     Tipo Árbol
                   </th>
                   <th scope="col" class="tableHeaderGreen">Número</th>
@@ -55,7 +55,7 @@
                   <th scope="col" class="tableHeaderGreen">Aplicación</th>
                   <th scope="col" class="tableHeaderGreen">Descripción</th>
                   <th scope="col" class="tableHeaderGreen">Estado</th>
-                  <th scope="col" class="tableHeaderGreen" style="width: 130px">
+                  <th scope="col" class="tableHeaderGreen" style="width: 150px">
                     Acciones
                   </th>
                 </tr>

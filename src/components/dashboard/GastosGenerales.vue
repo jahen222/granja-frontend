@@ -51,7 +51,7 @@
                   <th scope="col" class="tableHeaderGreen">Unidad</th>
                   <th scope="col" class="tableHeaderGreen">P/U</th>
                   <th scope="col" class="tableHeaderGreen">Total</th>
-                  <th scope="col" class="tableHeaderGreen" style="width: 100px;">Fecha</th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 120px;">Fecha</th>
                   <th scope="col" class="tableHeaderGreen">Documento</th>
                   <th scope="col" class="tableHeaderGreen">Tipo</th>
                   <th scope="col" class="tableHeaderGreen">Acciones</th>

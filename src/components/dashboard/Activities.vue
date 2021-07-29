@@ -72,24 +72,24 @@
           </nav>
           <br />
           <div class="table-responsive tableFixHead">
-            <table class="table table-borderless table-hover tableStyle" style="width: 1490px;">
+            <table class="table table-borderless table-hover tableStyle">
               <thead>
                 <tr>
-                  <th scope="col" class="tableHeaderGreen">ID</th>
-                  <th scope="col" class="tableHeaderGreen">Actividad</th>
-                  <th scope="col" class="tableHeaderGreen">Estado</th>
-                  <th scope="col" class="tableHeaderGreen">Abril</th>
-                  <th scope="col" class="tableHeaderGreen">Mayo</th>
-                  <th scope="col" class="tableHeaderGreen">Junio</th>
-                  <th scope="col" class="tableHeaderGreen">Julio</th>
-                  <th scope="col" class="tableHeaderGreen">Agosto</th>
-                  <th scope="col" class="tableHeaderGreen">Septiembre</th>
-                  <th scope="col" class="tableHeaderGreen">Octubre</th>
-                  <th scope="col" class="tableHeaderGreen">Noviembre</th>
-                  <th scope="col" class="tableHeaderGreen">Diciembre</th>
-                  <th scope="col" class="tableHeaderGreen">Enero</th>
-                  <th scope="col" class="tableHeaderGreen">Febrero</th>
-                  <th scope="col" class="tableHeaderGreen">Marzo</th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 50px">ID</th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 120px">Actividad</th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 120px">Estado</th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 120px">Abril</th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 120px">Mayo</th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 120px">Junio</th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 120px">Julio</th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 120px">Agosto</th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 120px">Septiembre</th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 120px">Octubre</th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 120px">Noviembre</th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 120px">Diciembre</th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 120px">Enero</th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 120px">Febrero</th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 120px">Marzo</th>
                 </tr>
               </thead>
               <tbody>

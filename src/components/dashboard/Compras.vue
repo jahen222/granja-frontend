@@ -44,18 +44,18 @@
             <table class="table table-borderless table-hover tableStyle">
               <thead>
                 <tr>
-                  <th scope="col" class="tableHeaderGreen">ID</th>
-                  <th scope="col" class="tableHeaderGreen">Producto</th>
-                  <th scope="col" class="tableHeaderGreen">Centro Costo</th>
-                  <th scope="col" class="tableHeaderGreen">Cantidad</th>
-                  <th scope="col" class="tableHeaderGreen">Precio Unitario</th>
-                  <th scope="col" class="tableHeaderGreen">Unidad</th>
-                  <th scope="col" class="tableHeaderGreen">Total</th>
-                  <th scope="col" class="tableHeaderGreen">Guia</th>
-                  <th scope="col" class="tableHeaderGreen">Factura</th>
-                  <th scope="col" class="tableHeaderGreen">Forma Pago</th>
-                  <th scope="col" class="tableHeaderGreen">Nro. Cheque</th>
-                  <th scope="col" class="tableHeaderGreen">Acciones</th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 50px">ID</th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 120px">Producto</th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 140px">Centro Costo</th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 120px">Cantidad</th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 150px">Precio Unitario</th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 120px">Unidad</th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 120px">Total</th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 120px">Guia</th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 120px">Factura</th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 130px">Forma Pago</th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 130px">Nro. Cheque</th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 120px">Acciones</th>
                 </tr>
               </thead>
               <tbody>
@@ -791,6 +791,7 @@ export default {
 }
 table {
   border-collapse: collapse;
+  table-layout: fixed;
   width: 100%;
 }
 th,
