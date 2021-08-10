@@ -68,22 +68,22 @@
                     {{ venta.zona_cosecha.nombre }}
                   </td>
                   <td>
-                    {{ venta.cantidad }}
+                    {{ venta.cantidad.toLocaleString() }}
                   </td>
                   <td>
                     {{ venta.unidad }}
                   </td>
                   <td>
-                    {{ venta.ha }}
+                    {{ venta.ha.toLocaleString() }}
                   </td>
                   <td>
-                    {{ venta.arboles }}
+                    {{ venta.arboles.toLocaleString() }}
                   </td>
                   <td class="tableBodyGrey">
-                    {{ venta.kilosxarbol }}
+                    {{ venta.kilosxarbol.toLocaleString() }}
                   </td>
                   <td class="tableBodyGrey">
-                    {{ venta.kilosxhectarea }}
+                    {{ venta.kilosxhectarea.toLocaleString() }}
                   </td>
                   <td>
                     <b-button

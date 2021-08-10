@@ -68,7 +68,7 @@
                     {{ venta.calidad }}
                   </td>
                   <td>
-                    {{ venta.cantidad }}
+                    {{ venta.cantidad.toLocaleString() }}
                   </td>
                   <td>
                     {{ venta.valorkilo.toLocaleString() }}
@@ -98,7 +98,7 @@
                   </td>
                 </tr>
                 <tr>
-                  <td COLSPAN="4">Total:</td>
+                  <td COLSPAN="5">Total:</td>
                   <td>{{ getTotal.toLocaleString() }}</td>
                 </tr>
               </tbody>

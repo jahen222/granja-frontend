@@ -70,7 +70,7 @@
                     {{ venta.centro_costo.nombre }}
                   </td>
                   <td>
-                    {{ venta.cantidad }}
+                    {{ venta.cantidad.toLocaleString() }}
                   </td>
                   <td>
                     {{ venta.valorunitario.toLocaleString() }}
@@ -117,7 +117,7 @@
                   </td>
                 </tr>
                 <tr>
-                  <td COLSPAN="5">Total:</td>
+                  <td COLSPAN="6">Total:</td>
                   <td>{{ getTotal.toLocaleString() }}</td>
                 </tr>
               </tbody>

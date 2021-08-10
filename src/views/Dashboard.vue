@@ -14,7 +14,7 @@
       >
 
       <b-collapse id="nav-text-collapse" is-nav>
-        <b-navbar-nav>
+        <b-navbar-nav style="padding-inline-start: 64%;">
           <b-nav-item
             href="https://granja-admin.herokuapp.com/admin"
             target="_blank"
