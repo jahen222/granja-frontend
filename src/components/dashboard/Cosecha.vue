@@ -68,22 +68,22 @@
                     {{ venta.zona_cosecha.nombre }}
                   </td>
                   <td>
-                    {{ venta.cantidad.toLocaleString() }}
+                    {{ venta.cantidad.toLocaleString("de-DE") }}
                   </td>
                   <td>
                     {{ venta.unidad }}
                   </td>
                   <td>
-                    {{ venta.ha.toLocaleString() }}
+                    {{ venta.ha.toLocaleString("de-DE") }}
                   </td>
                   <td>
-                    {{ venta.arboles.toLocaleString() }}
+                    {{ venta.arboles.toLocaleString("de-DE") }}
                   </td>
                   <td class="tableBodyGrey">
-                    {{ venta.kilosxarbol.toLocaleString() }}
+                    {{ Math.floor(venta.kilosxarbol).toLocaleString("de-DE") }}
                   </td>
                   <td class="tableBodyGrey">
-                    {{ venta.kilosxhectarea.toLocaleString() }}
+                    {{ Math.floor(venta.kilosxhectarea).toLocaleString("de-DE") }}
                   </td>
                   <td>
                     <b-button
@@ -99,7 +99,7 @@
                 </tr>
                 <!-- <tr>
                   <td COLSPAN="4">Total:</td>
-                  <td>{{ getTotal.toLocaleString() }}</td>
+                  <td>{{ getTotal.toLocaleString("de-DE") }}</td>
                 </tr> -->
               </tbody>
             </table>
@@ -168,9 +168,9 @@
         >
           <b-form-input
             id="cantidad-input"
-            type="number"
+            type="text"
             placeholder="Ingrese la cantidad"
-            v-model="cantidadSelected"
+            :formatter="cantidadFormat"
             :state="cantidadState"
             min="0"
           ></b-form-input>
@@ -464,21 +464,25 @@ export default {
       this.typeNotification = type;
       this.dismissCountDown = time;
       this.messageNotification = message;
-    }
+    },
+    cantidadFormat(value) {
+      this.cantidadSelected = Number(value.replace(/\D/g, ""));
+      return value == "0" ? "" : this.cantidadSelected.toLocaleString("de-DE");
+    },
   },
   computed: {
     kxaSelected() {
       if (this.cantidadSelected && this.arbolesSelected) {
         return (this.cantidadSelected / this.arbolesSelected)
           .toFixed(3)
-          .toLocaleString();
+          .toLocaleString("de-DE");
       } else return 0;
     },
     kxhSelected() {
       if (this.cantidadSelected && this.haSelected) {
         return (this.cantidadSelected / this.haSelected)
           .toFixed(3)
-          .toLocaleString();
+          .toLocaleString("de-DE");
       } else return 0;
     }
   },

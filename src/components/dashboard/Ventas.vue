@@ -68,13 +68,13 @@
                     {{ venta.calidad }}
                   </td>
                   <td>
-                    {{ venta.cantidad.toLocaleString() }}
+                    {{ venta.cantidad.toLocaleString("de-DE") }}
                   </td>
                   <td>
-                    {{ venta.valorkilo.toLocaleString() }}
+                    {{ venta.valorkilo.toLocaleString("de-DE") }}
                   </td>
                   <td>
-                    {{ venta.total.toLocaleString() }}
+                    {{ Math.floor(venta.total).toLocaleString("de-DE") }}
                   </td>
                   <td>
                     {{ venta.factura }}
@@ -99,7 +99,7 @@
                 </tr>
                 <tr>
                   <td COLSPAN="5">Total:</td>
-                  <td>{{ getTotal.toLocaleString() }}</td>
+                  <td>{{ Math.floor(getTotal).toLocaleString("de-DE") }}</td>
                 </tr>
               </tbody>
             </table>
@@ -164,10 +164,10 @@
         >
           <b-form-input
             id="cantidad-input"
-            type="number"
+            type="text"
             placeholder="Ingrese la cantidad"
-            v-model="cantidadSelected"
             :state="cantidadState"
+            :formatter="cantidadFormat"
             min="0"
           ></b-form-input>
         </b-form-group>
@@ -452,7 +452,11 @@ export default {
     },
     valorKiloFormat(value) {
       this.valorKiloSelected = Number(value.replace(/\D/g, ""));
-      return value == "0" ? "" : this.valorKiloSelected.toLocaleString();
+      return value == "0" ? "" : this.valorKiloSelected.toLocaleString("de-DE");
+    },
+    cantidadFormat(value) {
+      this.cantidadSelected = Number(value.replace(/\D/g, ""));
+      return value == "0" ? "" : this.cantidadSelected.toLocaleString("de-DE");
     },
     countDownChanged(dismissCountDown) {
       this.dismissCountDown = dismissCountDown;
@@ -467,7 +471,9 @@ export default {
     totalSelected() {
       var val = 0;
       if (this.cantidadSelected && this.valorKiloSelected) {
-        val = (this.cantidadSelected * this.valorKiloSelected).toLocaleString();
+        val = (this.cantidadSelected * this.valorKiloSelected).toLocaleString(
+          "de-DE"
+        );
       }
       return val;
     },

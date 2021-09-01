@@ -51,7 +51,9 @@
                   <th scope="col" class="tableHeaderGreen">Unidad</th>
                   <th scope="col" class="tableHeaderGreen">P/U</th>
                   <th scope="col" class="tableHeaderGreen">Total</th>
-                  <th scope="col" class="tableHeaderGreen" style="width: 120px;">Fecha</th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 120px">
+                    Fecha
+                  </th>
                   <th scope="col" class="tableHeaderGreen">Documento</th>
                   <th scope="col" class="tableHeaderGreen">Tipo</th>
                   <th scope="col" class="tableHeaderGreen">Acciones</th>
@@ -72,16 +74,16 @@
                     {{ venta.descripcion }}
                   </td>
                   <td>
-                    {{ venta.cantidad }}
+                    {{ venta.cantidad.toLocaleString("de-DE") }}
                   </td>
                   <td>
                     {{ venta.unidad }}
                   </td>
                   <td>
-                    {{ venta.precio.toLocaleString() }}
+                    {{ venta.precio.toLocaleString("de-DE") }}
                   </td>
                   <td>
-                    {{ venta.total.toLocaleString() }}
+                    {{ Math.floor(venta.total).toLocaleString("de-DE") }}
                   </td>
                   <td>
                     {{ venta.fecha ? venta.fecha.split("T")[0] : "" }}
@@ -106,7 +108,7 @@
                 </tr>
                 <tr>
                   <td COLSPAN="6">Total:</td>
-                  <td>{{ getTotal.toLocaleString() }}</td>
+                  <td>{{ Math.floor(getTotal).toLocaleString("de-DE") }}</td>
                 </tr>
               </tbody>
             </table>
@@ -168,9 +170,9 @@
         >
           <b-form-input
             id="cantidad-input"
-            type="number"
+            type="text"
             placeholder="Ingrese la cantidad"
-            v-model="cantidadSelected"
+            :formatter="cantidadFormat"
             :state="cantidadState"
             min="0"
           ></b-form-input>
@@ -496,7 +498,11 @@ export default {
     },
     precioFormat(value) {
       this.precioSelected = Number(value.replace(/\D/g, ""));
-      return value == "0" ? "" : this.precioSelected.toLocaleString();
+      return value == "0" ? "" : this.precioSelected.toLocaleString("de-DE");
+    },
+    cantidadFormat(value) {
+      this.cantidadSelected = Number(value.replace(/\D/g, ""));
+      return value == "0" ? "" : this.cantidadSelected.toLocaleString("de-DE");
     },
     countDownChanged(dismissCountDown) {
       this.dismissCountDown = dismissCountDown;
@@ -509,7 +515,7 @@ export default {
   },
   computed: {
     totalSelected() {
-      return (this.cantidadSelected * this.precioSelected).toLocaleString();
+      return (this.cantidadSelected * this.precioSelected).toLocaleString("de-DE");
     },
     getTotal() {
       let total = 0;

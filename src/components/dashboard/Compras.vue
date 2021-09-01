@@ -70,16 +70,16 @@
                     {{ venta.centro_costo.nombre }}
                   </td>
                   <td>
-                    {{ venta.cantidad.toLocaleString() }}
+                    {{ venta.cantidad.toLocaleString("de-DE") }}
                   </td>
                   <td>
-                    {{ venta.valorunitario.toLocaleString() }}
+                    {{ venta.valorunitario.toLocaleString("de-DE") }}
                   </td>
                   <td>
                     {{ venta.unidad }}
                   </td>
                   <td>
-                    {{ venta.total.toLocaleString() }}
+                    {{ Math.floor(venta.total).toLocaleString("de-DE") }}
                   </td>
                   <td>
                     {{ venta.guia }}
@@ -118,7 +118,7 @@
                 </tr>
                 <tr>
                   <td COLSPAN="6">Total:</td>
-                  <td>{{ getTotal.toLocaleString() }}</td>
+                  <td>{{ Math.floor(getTotal).toLocaleString("de-DE") }}</td>
                 </tr>
               </tbody>
             </table>
@@ -198,10 +198,10 @@
         >
           <b-form-input
             id="cantidad-input"
-            type="number"
+            type="text"
             placeholder="Ingrese la cantidad"
-            v-model="cantidadSelected"
             :state="cantidadState"
+            :formatter="cantidadFormat"
             min="0"
           ></b-form-input>
         </b-form-group>
@@ -670,7 +670,11 @@ export default {
     },
     valorUnitarioFormat(value) {
       this.valorUnitarioSelected = Number(value.replace(/\D/g, ""));
-      return value == "0" ? "" : this.valorUnitarioSelected.toLocaleString();
+      return value == "0" ? "" : this.valorUnitarioSelected.toLocaleString("de-DE");
+    },
+    cantidadFormat(value) {
+      this.cantidadSelected = Number(value.replace(/\D/g, ""));
+      return value == "0" ? "" : this.cantidadSelected.toLocaleString("de-DE");
     },
     countDownChanged(dismissCountDown) {
       this.dismissCountDown = dismissCountDown;
@@ -737,7 +741,7 @@ export default {
     totalSelected() {
       var val = 0;
       if (this.cantidadSelected && this.valorUnitarioSelected) {
-        val = (this.cantidadSelected * this.valorUnitarioSelected).toLocaleString();
+        val = (this.cantidadSelected * this.valorUnitarioSelected).toLocaleString("de-DE");
       }
       return val;
     },
