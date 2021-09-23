@@ -150,7 +150,9 @@ export const ACTIVITIES_UPDATE_FINISH_REGISTER = gql`
 
 export const CUIDADO_CREATE_ACTIVIDAD = gql`
   mutation createCuidadoArbole(
-    $arbol: ID!
+    $arbol: String
+    $camellone: String
+    $zona: ID!
     $actividad: String!
     $descripcion: String!
     $estado: String!
@@ -158,6 +160,8 @@ export const CUIDADO_CREATE_ACTIVIDAD = gql`
     createCuidadoArbole(
       input: {
         data: {
+          zona: $zona
+          camellone: $camellone
           arbol: $arbol
           descripcion: $descripcion
           actividad: $actividad
@@ -170,22 +174,15 @@ export const CUIDADO_CREATE_ACTIVIDAD = gql`
         actividad
         estado
         descripcion
-        arbol {
+        zona {
           id
           numero
-          tipo
-          camellone {
+          campo {
             id
-            numero
-            zona {
-              id
-              numero
-              campo {
-                id
-              }
-            }
           }
         }
+        camellone
+        arbol
       }
     }
   }
@@ -201,22 +198,15 @@ export const CUIDADO_UPDATE_ACTIVIDAD = gql`
         actividad
         estado
         descripcion
-        arbol {
+        zona {
           id
           numero
-          tipo
-          camellone {
+          campo {
             id
-            numero
-            zona {
-              id
-              numero
-              campo {
-                id
-              }
-            }
           }
         }
+        camellone
+        arbol
       }
     }
   }
@@ -230,22 +220,15 @@ export const CUIDADO_DELETE_ACTIVIDAD = gql`
         actividad
         estado
         descripcion
-        arbol {
+        zona {
           id
           numero
-          tipo
-          camellone {
+          campo {
             id
-            numero
-            zona {
-              id
-              numero
-              campo {
-                id
-              }
-            }
           }
         }
+        camellone
+        arbol
       }
     }
   }
@@ -254,6 +237,7 @@ export const CUIDADO_DELETE_ACTIVIDAD = gql`
 export const VENTA_CREATE_VENTA = gql`
   mutation createVenta(
     $producto: ID!
+    $proveedor: ID!
     $calidad: String!
     $cantidad: Int!
     $valorKilo: Float!
@@ -267,6 +251,7 @@ export const VENTA_CREATE_VENTA = gql`
       input: {
         data: {
           producto: $producto
+          cliente: $proveedor
           calidad: $calidad
           cantidad: $cantidad
           valorkilo: $valorKilo
@@ -297,6 +282,10 @@ export const VENTA_CREATE_VENTA = gql`
         campo {
           id
         }
+        cliente {
+          id
+          nombre
+        }
       }
     }
   }
@@ -324,6 +313,10 @@ export const VENTAS_DELETE_VENTAS = gql`
         campo {
           id
         }
+        cliente {
+          id
+          nombre
+        }
       }
     }
   }
@@ -332,6 +325,7 @@ export const VENTAS_DELETE_VENTAS = gql`
 export const COMPRAS_CREATE_COMPRAS = gql`
   mutation createCompra(
     $producto: ID!
+    $proveedor: ID!
     $centrocosto: ID!
     $cantidad: Int!
     $valorunitario: Float!
@@ -347,6 +341,7 @@ export const COMPRAS_CREATE_COMPRAS = gql`
       input: {
         data: {
           producto: $producto
+          proveedore: $proveedor
           cantidad: $cantidad
           centro_costo: $centrocosto
           valorunitario: $valorunitario
@@ -384,6 +379,10 @@ export const COMPRAS_CREATE_COMPRAS = gql`
         campo {
           id
         }
+        proveedore {
+          id
+          nombre
+        }
       }
     }
   }
@@ -415,6 +414,10 @@ export const COMPRAS_DELETE_COMPRAS = gql`
         cheque
         campo {
           id
+        }
+        proveedore {
+          id
+          nombre
         }
       }
     }
@@ -453,6 +456,7 @@ export const COSECHA_CREATE_COSECHA = gql`
     $kilosxhectarea: Float!
     $kilosxarbol: Float!
     $campo: ID!
+    $vin: Float!
   ) {
     createCosecha(
       input: {
@@ -466,6 +470,7 @@ export const COSECHA_CREATE_COSECHA = gql`
           kilosxhectarea: $kilosxhectarea
           kilosxarbol: $kilosxarbol
           campo: $campo
+          vin: $vin
         }
       }
     ) {
@@ -488,6 +493,7 @@ export const COSECHA_CREATE_COSECHA = gql`
         campo {
           id
         }
+        vin
       }
     }
   }
@@ -515,6 +521,7 @@ export const COSECHA_DELETE_COSECHA = gql`
         campo {
           id
         }
+        vin
       }
     }
   }
@@ -526,8 +533,9 @@ export const HONORARIOS_CREATE_HONORARIOS = gql`
     $descripcion: String!
     $monto: Float!
     $startDate: DateTime!
-    $factura: String!
+    $factura: String
     $campo: ID!
+    $tipo: String!
   ) {
     createHonorario(
       input: {
@@ -538,6 +546,7 @@ export const HONORARIOS_CREATE_HONORARIOS = gql`
           monto: $monto
           fecha: $startDate
           campo: $campo
+          tipo: $tipo
         }
       }
     ) {
@@ -554,6 +563,7 @@ export const HONORARIOS_CREATE_HONORARIOS = gql`
         campo {
           id
         }
+        tipo
       }
     }
   }
@@ -575,6 +585,7 @@ export const HONORARIOS_DELETE_HONORARIO = gql`
         campo {
           id
         }
+        tipo
       }
     }
   }

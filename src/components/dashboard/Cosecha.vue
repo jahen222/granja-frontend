@@ -47,12 +47,13 @@
                   <th scope="col" class="tableHeaderGreen">ID</th>
                   <th scope="col" class="tableHeaderGreen">Producto</th>
                   <th scope="col" class="tableHeaderGreen">Zona</th>
+                  <th scope="col" class="tableHeaderGreen">Vin</th>
                   <th scope="col" class="tableHeaderGreen">Cantidad</th>
                   <th scope="col" class="tableHeaderGreen">Unidad</th>
                   <th scope="col" class="tableHeaderGreen">Ha</th>
+                  <th scope="col" class="tableHeaderGreen">Kilos x Ha</th>
                   <th scope="col" class="tableHeaderGreen">Árboles</th>
                   <th scope="col" class="tableHeaderGreen">Kilos x Árbol</th>
-                  <th scope="col" class="tableHeaderGreen">Kilos x Ha</th>
                   <th scope="col" class="tableHeaderGreen">Acciones</th>
                 </tr>
               </thead>
@@ -68,6 +69,9 @@
                     {{ venta.zona_cosecha.nombre }}
                   </td>
                   <td>
+                    {{ venta.vin.toLocaleString("de-DE") }}
+                  </td>
+                  <td>
                     {{ venta.cantidad.toLocaleString("de-DE") }}
                   </td>
                   <td>
@@ -76,14 +80,16 @@
                   <td>
                     {{ venta.ha.toLocaleString("de-DE") }}
                   </td>
+                  <td class="tableBodyGrey">
+                    {{
+                      Math.floor(venta.kilosxhectarea).toLocaleString("de-DE")
+                    }}
+                  </td>
                   <td>
                     {{ venta.arboles.toLocaleString("de-DE") }}
                   </td>
                   <td class="tableBodyGrey">
                     {{ Math.floor(venta.kilosxarbol).toLocaleString("de-DE") }}
-                  </td>
-                  <td class="tableBodyGrey">
-                    {{ Math.floor(venta.kilosxhectarea).toLocaleString("de-DE") }}
                   </td>
                   <td>
                     <b-button
@@ -159,22 +165,43 @@
           </select>
         </b-form-group>
         <br />
-        <!-- cantidad -->
-        <b-form-group
-          label="Cantidad"
-          label-for="cantidad-input"
-          invalid-feedback="La cantidad es requerida"
-          :state="cantidadState"
-        >
-          <b-form-input
-            id="cantidad-input"
-            type="text"
-            placeholder="Ingrese la cantidad"
-            :formatter="cantidadFormat"
-            :state="cantidadState"
-            min="0"
-          ></b-form-input>
-        </b-form-group>
+        <!-- cantidad y vin -->
+        <div class="row">
+          <div class="col-6">
+            <b-form-group
+              label="Cantidad"
+              label-for="cantidad-input"
+              invalid-feedback="La cantidad es requerida"
+              :state="cantidadState"
+            >
+              <b-form-input
+                id="cantidad-input"
+                type="text"
+                placeholder="Ingrese la cantidad"
+                :formatter="cantidadFormat"
+                :state="cantidadState"
+                min="0"
+              ></b-form-input>
+            </b-form-group>
+          </div>
+          <div class="col-6">
+            <b-form-group
+              label="Vin"
+              label-for="vin-input"
+              invalid-feedback="El vin es requerido"
+              :state="vinState"
+            >
+              <b-form-input
+                id="vin-input"
+                type="text"
+                placeholder="Ingrese el vin"
+                :formatter="vinFormat"
+                :state="vinState"
+                min="0"
+              ></b-form-input>
+            </b-form-group>
+          </div>
+        </div>
         <br />
         <!-- Unidad -->
         <b-form-group
@@ -211,6 +238,22 @@
           ></b-form-input>
         </b-form-group>
         <br />
+        <!-- kxh -->
+        <b-form-group
+          label="Kilos x Hectárea"
+          label-for="kxh-input"
+          invalid-feedback="Es requerido"
+          :state="kxhState"
+        >
+          <b-form-input
+            id="kxh-input"
+            type="number"
+            v-model="kxhSelected"
+            :state="kxhState"
+            :disabled="true"
+          ></b-form-input>
+        </b-form-group>
+        <br />
         <!-- arboles -->
         <b-form-group
           label="Árboles"
@@ -240,22 +283,6 @@
             type="number"
             v-model="kxaSelected"
             :state="kxaState"
-            :disabled="true"
-          ></b-form-input>
-        </b-form-group>
-        <br />
-        <!-- kxh -->
-        <b-form-group
-          label="Kilos x Hectárea"
-          label-for="kxh-input"
-          invalid-feedback="Es requerido"
-          :state="kxhState"
-        >
-          <b-form-input
-            id="kxh-input"
-            type="number"
-            v-model="kxhSelected"
-            :state="kxhState"
             :disabled="true"
           ></b-form-input>
         </b-form-group>
@@ -316,7 +343,9 @@ export default {
       kxhState: null,
       dismissCountDown: 0,
       typeNotification: "",
-      messageNotification: ""
+      messageNotification: "",
+      vinSelected: "",
+      vinState: null
     };
   },
   apollo: {
@@ -345,6 +374,7 @@ export default {
       const ha = this.haSelected;
       const kxa = this.kxaSelected;
       const kxh = this.kxhSelected;
+      const vin = this.vinSelected;
 
       if (!producto) {
         validate = false;
@@ -378,6 +408,10 @@ export default {
         validate = false;
         this.kxaState = false;
       }
+      if (!vin) {
+        validate = false;
+        this.vinState = false;
+      }
 
       if (validate) {
         if (confirm("¿Desea agregar la cosecha?")) {
@@ -393,7 +427,8 @@ export default {
                 ha: Number(ha),
                 kilosxhectarea: Number(kxh),
                 kilosxarbol: Number(kxa),
-                campo: this.campoSelected ? this.campoSelected.id : null
+                campo: this.campoSelected ? this.campoSelected.id : null,
+                vin: Number(vin)
               }
             })
             .then(data => {
@@ -405,6 +440,7 @@ export default {
               this.arbolesSelected = "";
               this.unidadSelected = "";
               this.haSelected = "";
+              this.vinSelected = "";
               this.productoState = null;
               this.zonaState = null;
               this.cantidadState = null;
@@ -413,6 +449,7 @@ export default {
               this.haState = null;
               this.kxaState = null;
               this.kxhState = null;
+              this.vinState= null;
               this.$root.$emit("bv::hide::modal", "addVentasModal");
               this.showAlert("success", 5, "Cosecha creada exitosamente.");
             })
@@ -424,6 +461,7 @@ export default {
               this.arbolesSelected = "";
               this.unidadSelected = "";
               this.haSelected = "";
+              this.vinSelected = "";
               this.productoState = null;
               this.zonaState = null;
               this.cantidadState = null;
@@ -432,6 +470,7 @@ export default {
               this.haState = null;
               this.kxaState = null;
               this.kxhState = null;
+              this.vinState= null;
               this.showAlert("danger", 5, "La cosecha no pudo ser creada.");
             });
         }
@@ -469,6 +508,10 @@ export default {
       this.cantidadSelected = Number(value.replace(/\D/g, ""));
       return value == "0" ? "" : this.cantidadSelected.toLocaleString("de-DE");
     },
+    vinFormat(value) {
+      this.vinSelected = Number(value.replace(/\D/g, ""));
+      return value == "0" ? "" : this.vinSelected.toLocaleString("de-DE");
+    }
   },
   computed: {
     kxaSelected() {

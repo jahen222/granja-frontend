@@ -125,30 +125,21 @@ export const ARBOLES_GET_CUIDADO = gql`
   query cuidadoArboles($campo: ID) {
     cuidadoArboles(
       sort: "id:desc"
-      where: {
-        arbol: { camellone: { zona: { campo: { id_contains: $campo } } } }
-      }
+      where: { zona: { campo: { id_contains: $campo } } }
     ) {
       id
       actividad
       estado
       descripcion
-      arbol {
+      zona {
         id
         numero
-        tipo
-        camellone {
+        campo {
           id
-          numero
-          zona {
-            id
-            numero
-            campo {
-              id
-            }
-          }
         }
       }
+      camellone
+      arbol
     }
   }
 `;
@@ -213,6 +204,10 @@ export const VENTAS_GET_VENTAS = gql`
       campo {
         id
       }
+      cliente {
+        id
+        nombre
+      }
     }
   }
 `;
@@ -229,6 +224,15 @@ export const VENTAS_GET_PRODUCTOS = gql`
 export const VENTAS_GET_FORMAPAGOS = gql`
   query formaPagos {
     formaPagos(sort: "id:asc") {
+      id
+      nombre
+    }
+  }
+`;
+
+export const VENTAS_GET_CLIENTES = gql`
+  query clientes {
+    clientes(sort: "id:asc") {
       id
       nombre
     }
@@ -260,6 +264,10 @@ export const COMPRAS_GET_COMPRAS = gql`
       cheque
       campo {
         id
+      }
+      proveedore {
+        id
+        nombre
       }
     }
   }
@@ -313,6 +321,7 @@ export const COSECHA_GET_COSECHA = gql`
       ha
       kilosxarbol
       kilosxhectarea
+      vin
       campo {
         id
       }
@@ -344,6 +353,7 @@ export const HONORARIOS_GET_HONORARIOS = gql`
       campo {
         id
       }
+      tipo
     }
   }
 `;

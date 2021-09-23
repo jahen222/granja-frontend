@@ -30,7 +30,7 @@
             ></b-progress>
           </b-alert>
           <h2 class="text-white font-weight-bold">
-            Listado de Honorarios
+            Listado de R.R.H.H.
             {{ campoSelected ? campoSelected.nombre : "" }}
           </h2>
           <hr class="divider" />
@@ -46,9 +46,10 @@
               <thead>
                 <tr>
                   <th scope="col" class="tableHeaderGreen">ID</th>
-                  <th scope="col" class="tableHeaderGreen">Profesional</th>
+                  <th scope="col" class="tableHeaderGreen">Nombre</th>
                   <th scope="col" class="tableHeaderGreen">Descripción</th>
-                  <th scope="col" class="tableHeaderGreen">Boleta</th>
+                  <th scope="col" class="tableHeaderGreen">Tipo</th>
+                  <th scope="col" class="tableHeaderGreen">Nro. Documento</th>
                   <th scope="col" class="tableHeaderGreen">Monto</th>
                   <th scope="col" class="tableHeaderGreen">Fecha</th>
                   <th scope="col" class="tableHeaderGreen">Acciones</th>
@@ -64,6 +65,9 @@
                   </td>
                   <td>
                     {{ venta.descripcion }}
+                  </td>
+                  <td>
+                    {{ venta.tipo }}
                   </td>
                   <td>
                     {{ venta.boleta }}
@@ -87,7 +91,7 @@
                   </td>
                 </tr>
                 <tr>
-                  <td COLSPAN="4">Total:</td>
+                  <td COLSPAN="5">Total:</td>
                   <td>{{ getTotal.toLocaleString() }}</td>
                 </tr>
               </tbody>
@@ -99,12 +103,12 @@
     <b-modal id="addVentasModal">
       <div slot="modal-title">
         <font-awesome-icon icon="bookmark" style="color: green" />
-        Agregar Honorarios
+        R.R.H.H.
       </div>
       <form ref="ventasForm" id="ventasForm" @submit="handleAddVenta">
         <!-- Profesional -->
         <b-form-group
-          label="Profesional"
+          label="Nombre"
           label-for="profesional-input"
           invalid-feedback="El profesional es requerido"
           :state="profesionalState"
@@ -141,9 +145,29 @@
           ></b-form-input>
         </b-form-group>
         <br />
+        <!-- Tipo -->
+        <b-form-group
+          label="Tipo"
+          label-for="tipo-input"
+          invalid-feedback="El tipo es requerido"
+          :state="tipoState"
+        >
+          <select
+            class="form-control"
+            v-model="tipoSelected"
+            :state="tipoState"
+          >
+            <option disabled selected>Seleccione una opción:</option>
+            <option value="Sueldo">Sueldo</option>
+            <option value="Boleta">Boleta</option>
+            <option value="Trato">Trato</option>
+            <option value="Finiquito">Finiquito</option>
+          </select>
+        </b-form-group>
+        <br />
         <!-- boleta -->
         <b-form-group
-          label="Boleta"
+          label="Nro. Documento (opcional)"
           label-for="factura-input"
           invalid-feedback="El numero de boleta es requerido"
           :state="facturaState"
@@ -240,7 +264,9 @@ export default {
       honorarios: [],
       dismissCountDown: 0,
       typeNotification: "",
-      messageNotification: ""
+      messageNotification: "",
+      tipoSelected: "",
+      tipoState: null
     };
   },
   apollo: {
@@ -266,6 +292,7 @@ export default {
       const descripcion = this.descripcionSelected;
       const factura = this.facturaSelected;
       const startDate = this.startDateSelected;
+      const tipo = this.tipoSelected;
 
       if (!profesional) {
         validate = false;
@@ -283,10 +310,14 @@ export default {
         validate = false;
         this.startDateState = false;
       }
-      if (!factura) {
+      if (!tipo) {
+        validate = false;
+        this.tipoState = false;
+      }
+      /* if (!factura) {
         validate = false;
         this.facturaState = false;
-      }
+      } */
 
       if (validate) {
         if (confirm("¿Desea agregar el honorario?")) {
@@ -299,6 +330,7 @@ export default {
                 monto: Number(monto),
                 startDate: moment(startDate),
                 factura: factura,
+                tipo: tipo,
                 campo: this.campoSelected ? this.campoSelected.id : null
               }
             })
@@ -314,6 +346,8 @@ export default {
               this.descripcionSelected = "";
               this.startDateSelected = "";
               this.facturaSelected = "";
+              this.tipoSelected = "";
+              this.tipoState = null;
               this.error = "";
               this.$root.$emit("bv::hide::modal", "addVentasModal");
               this.showAlert("success", 5, "Honorario creado exitosamente.");
@@ -329,6 +363,8 @@ export default {
               this.descripcionSelected = "";
               this.startDateSelected = "";
               this.facturaSelected = "";
+              this.tipoSelected = "";
+              this.tipoState = null;
               this.error = "";
               this.showAlert("danger", 5, "El honorario no pudo ser creado.");
             });

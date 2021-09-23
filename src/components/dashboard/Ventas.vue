@@ -46,6 +46,7 @@
                 <tr>
                   <th scope="col" class="tableHeaderGreen">ID</th>
                   <th scope="col" class="tableHeaderGreen">Producto</th>
+                  <th scope="col" class="tableHeaderGreen">Cliente</th>
                   <th scope="col" class="tableHeaderGreen">Calidad</th>
                   <th scope="col" class="tableHeaderGreen">Cantidad</th>
                   <th scope="col" class="tableHeaderGreen">Precio Kilo</th>
@@ -63,6 +64,9 @@
                   </td>
                   <td class="tableBodyGreen">
                     {{ venta.producto.nombre }}
+                  </td>
+                  <td class="tableBodyGreen">
+                    {{ venta.cliente.nombre }}
                   </td>
                   <td>
                     {{ venta.calidad }}
@@ -98,7 +102,7 @@
                   </td>
                 </tr>
                 <tr>
-                  <td COLSPAN="5">Total:</td>
+                  <td COLSPAN="6">Total:</td>
                   <td>{{ Math.floor(getTotal).toLocaleString("de-DE") }}</td>
                 </tr>
               </tbody>
@@ -132,6 +136,29 @@
               :value="producto.id"
             >
               {{ producto.nombre }}
+            </option>
+          </select>
+        </b-form-group>
+        <br />
+        <!-- Proveedores -->
+        <b-form-group
+          label="Cliente"
+          label-for="proveedores-input"
+          invalid-feedback="El Cliente es requerido"
+          :state="proveedoresState"
+        >
+          <select
+            class="form-control"
+            v-model="proveedoresSelected"
+            :state="proveedoresState"
+          >
+            <option disabled selected>Seleccione una opción:</option>
+            <option
+              v-for="(proveedor, index) in clientes"
+              v-bind:key="index"
+              :value="proveedor.id"
+            >
+              {{ proveedor.nombre }}
             </option>
           </select>
         </b-form-group>
@@ -280,7 +307,8 @@
 import {
   VENTAS_GET_VENTAS,
   VENTAS_GET_PRODUCTOS,
-  VENTAS_GET_FORMAPAGOS
+  VENTAS_GET_FORMAPAGOS,
+  VENTAS_GET_CLIENTES
 } from "./constants/querys";
 import {
   VENTA_CREATE_VENTA,
@@ -314,7 +342,10 @@ export default {
       chequeState: null,
       dismissCountDown: 0,
       typeNotification: "",
-      messageNotification: ""
+      messageNotification: "",
+      clientes: [],
+      proveedoresSelected: "",
+      proveedoresState: null,
     };
   },
   apollo: {
@@ -332,6 +363,9 @@ export default {
     },
     formaPagos: {
       query: VENTAS_GET_FORMAPAGOS
+    },
+    clientes: {
+      query: VENTAS_GET_CLIENTES
     }
   },
   methods: {
@@ -339,6 +373,7 @@ export default {
       e.preventDefault();
       let validate = true;
       const producto = this.productoSelected;
+      const proveedor = this.proveedoresSelected;
       const calidad = this.calidadSelected;
       const cantidad = this.cantidadSelected;
       const total = this.cantidadSelected * this.valorKiloSelected;
@@ -350,6 +385,10 @@ export default {
       if (!producto) {
         validate = false;
         this.productoState = false;
+      }
+      if (!proveedor) {
+        validate = false;
+        this.proveedoresState = false;
       }
       if (!calidad) {
         validate = false;
@@ -379,6 +418,7 @@ export default {
               mutation: VENTA_CREATE_VENTA,
               variables: {
                 producto: producto,
+                proveedor: proveedor,
                 calidad: calidad,
                 cantidad: Number(cantidad),
                 valorKilo: Number(valorKilo),
@@ -406,6 +446,8 @@ export default {
               this.formaPagosSelected = "";
               this.chequeSelected = "";
               this.error = "";
+              this.proveedoresState = null;
+              this.proveedoresSelected = "";
               this.$root.$emit("bv::hide::modal", "addVentasModal");
               this.showAlert("success", 5, "Venta creada exitosamente.");
             })
@@ -425,6 +467,8 @@ export default {
               this.formaPagosSelected = "";
               this.chequeSelected = "";
               this.error = "";
+              this.proveedoresState = null;
+              this.proveedoresSelected = "";
               this.showAlert("danger", 5, "La venta no pudo ser creada.");
             });
         }

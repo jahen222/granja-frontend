@@ -44,18 +44,45 @@
             <table class="table table-borderless table-hover tableStyle">
               <thead>
                 <tr>
-                  <th scope="col" class="tableHeaderGreen" style="width: 50px">ID</th>
-                  <th scope="col" class="tableHeaderGreen" style="width: 120px">Producto</th>
-                  <th scope="col" class="tableHeaderGreen" style="width: 140px">Centro Costo</th>
-                  <th scope="col" class="tableHeaderGreen" style="width: 120px">Cantidad</th>
-                  <th scope="col" class="tableHeaderGreen" style="width: 150px">Precio Unitario</th>
-                  <th scope="col" class="tableHeaderGreen" style="width: 120px">Unidad</th>
-                  <th scope="col" class="tableHeaderGreen" style="width: 120px">Total</th>
-                  <th scope="col" class="tableHeaderGreen" style="width: 120px">Guia</th>
-                  <th scope="col" class="tableHeaderGreen" style="width: 120px">Factura</th>
-                  <th scope="col" class="tableHeaderGreen" style="width: 130px">Forma Pago</th>
-                  <th scope="col" class="tableHeaderGreen" style="width: 130px">Nro. Cheque</th>
-                  <th scope="col" class="tableHeaderGreen" style="width: 120px">Acciones</th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 50px">
+                    ID
+                  </th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 120px">
+                    Producto
+                  </th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 150px">
+                    Proveedor
+                  </th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 140px">
+                    Centro Costo
+                  </th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 120px">
+                    Cantidad
+                  </th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 150px">
+                    Precio Unitario
+                  </th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 120px">
+                    Unidad
+                  </th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 120px">
+                    Total
+                  </th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 120px">
+                    Guia
+                  </th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 120px">
+                    Factura
+                  </th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 130px">
+                    Forma Pago
+                  </th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 130px">
+                    Nro. Cheque
+                  </th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 120px">
+                    Acciones
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -65,6 +92,9 @@
                   </td>
                   <td class="tableBodyGreen">
                     {{ venta.producto.nombre }}
+                  </td>
+                  <td class="tableBodyGreen">
+                    {{ venta.proveedore.nombre }}
                   </td>
                   <td>
                     {{ venta.centro_costo.nombre }}
@@ -117,7 +147,7 @@
                   </td>
                 </tr>
                 <tr>
-                  <td COLSPAN="6">Total:</td>
+                  <td COLSPAN="7">Total:</td>
                   <td>{{ Math.floor(getTotal).toLocaleString("de-DE") }}</td>
                 </tr>
               </tbody>
@@ -165,6 +195,29 @@
             </b-form-group>
           </div>
         </div>
+        <br />
+        <!-- Proveedores -->
+        <b-form-group
+          label="Proveedor"
+          label-for="proveedores-input"
+          invalid-feedback="El proveedor es requerido"
+          :state="proveedoresState"
+        >
+          <select
+            class="form-control"
+            v-model="proveedoresSelected"
+            :state="proveedoresState"
+          >
+            <option disabled selected>Seleccione una opción:</option>
+            <option
+              v-for="(proveedor, index) in proveedores"
+              v-bind:key="index"
+              :value="proveedor.id"
+            >
+              {{ proveedor.nombre }}
+            </option>
+          </select>
+        </b-form-group>
         <br />
         <!-- Centro Costo -->
         <b-form-group
@@ -429,7 +482,8 @@ import {
   COMPRAS_GET_COMPRAS,
   VENTAS_GET_PRODUCTOS,
   VENTAS_GET_FORMAPAGOS,
-  VENTAS_GET_CENTRO_COSTOS
+  VENTAS_GET_CENTRO_COSTOS,
+  GASTOS_GET_PROVEEDORES
 } from "./constants/querys";
 import {
   COMPRAS_CREATE_COMPRAS,
@@ -447,6 +501,9 @@ export default {
       productos: [],
       productoSelected: "",
       productoState: null,
+      proveedores: [],
+      proveedoresSelected: "",
+      proveedoresState: null,
       unidadSelected: "",
       unidadState: null,
       cantidadSelected: "",
@@ -496,12 +553,16 @@ export default {
     },
     centroCostos: {
       query: VENTAS_GET_CENTRO_COSTOS
+    },
+    proveedores: {
+      query: GASTOS_GET_PROVEEDORES
     }
   },
   methods: {
     async handleAddVenta(e) {
       e.preventDefault();
       let validate = true;
+      const proveedor = this.proveedoresSelected;
       const producto = this.productoSelected;
       const centrocosto = this.centroCostoSelected;
       const valorunitario = this.valorUnitarioSelected;
@@ -516,6 +577,10 @@ export default {
       if (!producto) {
         validate = false;
         this.productoState = false;
+      }
+      if (!proveedor) {
+        validate = false;
+        this.proveedoresState = false;
       }
       if (!centrocosto) {
         validate = false;
@@ -549,6 +614,7 @@ export default {
               mutation: COMPRAS_CREATE_COMPRAS,
               variables: {
                 producto: producto,
+                proveedor: proveedor,
                 centrocosto: centrocosto,
                 cantidad: Number(cantidad),
                 valorunitario: Number(valorunitario),
@@ -582,6 +648,8 @@ export default {
               this.chequeSelected = "";
               this.unidadSelected = "";
               this.error = "";
+              this.proveedoresState = null;
+              this.proveedoresSelected = "";
               this.$root.$emit("bv::hide::modal", "addVentasModal");
               this.showAlert("success", 5, "Compra creada exitosamente.");
             })
@@ -605,6 +673,8 @@ export default {
               this.chequeSelected = "";
               this.unidadSelected = "";
               this.error = "";
+              this.proveedoresState = null;
+              this.proveedoresSelected = "";
               this.$root.$emit("bv::hide::modal", "addVentasModal");
               this.showAlert("danger", 5, "La compra no pudo ser creada.");
             });
@@ -670,7 +740,9 @@ export default {
     },
     valorUnitarioFormat(value) {
       this.valorUnitarioSelected = Number(value.replace(/\D/g, ""));
-      return value == "0" ? "" : this.valorUnitarioSelected.toLocaleString("de-DE");
+      return value == "0"
+        ? ""
+        : this.valorUnitarioSelected.toLocaleString("de-DE");
     },
     cantidadFormat(value) {
       this.cantidadSelected = Number(value.replace(/\D/g, ""));
@@ -741,7 +813,9 @@ export default {
     totalSelected() {
       var val = 0;
       if (this.cantidadSelected && this.valorUnitarioSelected) {
-        val = (this.cantidadSelected * this.valorUnitarioSelected).toLocaleString("de-DE");
+        val = (
+          this.cantidadSelected * this.valorUnitarioSelected
+        ).toLocaleString("de-DE");
       }
       return val;
     },

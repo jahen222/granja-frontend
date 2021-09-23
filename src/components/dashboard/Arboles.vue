@@ -49,9 +49,9 @@
                   <th scope="col" class="tableHeaderGreen" style="width: 120px">
                     Tipo Árbol
                   </th>
-                  <th scope="col" class="tableHeaderGreen">Número</th>
                   <th scope="col" class="tableHeaderGreen">Zona</th>
                   <th scope="col" class="tableHeaderGreen">Camellón</th>
+                  <th scope="col" class="tableHeaderGreen">Árbol</th>
                   <th scope="col" class="tableHeaderGreen">Aplicación</th>
                   <th scope="col" class="tableHeaderGreen">Descripción</th>
                   <th scope="col" class="tableHeaderGreen">Estado</th>
@@ -72,16 +72,16 @@
                     {{ cuidadoArbol.actividad }}
                   </td>
                   <td>
-                    {{ cuidadoArbol.arbol.tipo }}
+                    Nogal
                   </td>
                   <td>
-                    {{ cuidadoArbol.arbol.numero }}
+                    {{ cuidadoArbol.zona.numero }}
                   </td>
                   <td>
-                    {{ cuidadoArbol.arbol.camellone.zona.numero }}
+                    {{ cuidadoArbol.camellone }}
                   </td>
                   <td>
-                    {{ cuidadoArbol.arbol.camellone.numero }}
+                    {{ cuidadoArbol.arbol }}
                   </td>
                   <td>
                     {{ cuidadoArbol.actividad }}
@@ -333,14 +333,14 @@ export default {
         validate = false;
         this.zonaState = false;
       }
-      if (!camellonSelected) {
+      /* if (!camellonSelected) {
         validate = false;
         this.camellonState = false;
       }
       if (!arbolSelected) {
         validate = false;
         this.arbolState = false;
-      }
+      } */
       if (!descripcionSelected) {
         validate = false;
         this.descripcionState = false;
@@ -357,6 +357,8 @@ export default {
               mutation: CUIDADO_CREATE_ACTIVIDAD,
               variables: {
                 actividad: activity,
+                zona: zonaSelected,
+                camellone: camellonSelected,
                 arbol: arbolSelected,
                 descripcion: descripcionSelected,
                 estado: "Pendiente"
