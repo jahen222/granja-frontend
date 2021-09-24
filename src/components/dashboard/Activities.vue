@@ -75,21 +75,51 @@
             <table class="table table-borderless table-hover tableStyle">
               <thead>
                 <tr>
-                  <th scope="col" class="tableHeaderGreen" style="width: 50px">ID</th>
-                  <th scope="col" class="tableHeaderGreen" style="width: 120px">Actividad</th>
-                  <th scope="col" class="tableHeaderGreen" style="width: 120px">Estado</th>
-                  <th scope="col" class="tableHeaderGreen" style="width: 120px">Abril</th>
-                  <th scope="col" class="tableHeaderGreen" style="width: 120px">Mayo</th>
-                  <th scope="col" class="tableHeaderGreen" style="width: 120px">Junio</th>
-                  <th scope="col" class="tableHeaderGreen" style="width: 120px">Julio</th>
-                  <th scope="col" class="tableHeaderGreen" style="width: 120px">Agosto</th>
-                  <th scope="col" class="tableHeaderGreen" style="width: 120px">Septiembre</th>
-                  <th scope="col" class="tableHeaderGreen" style="width: 120px">Octubre</th>
-                  <th scope="col" class="tableHeaderGreen" style="width: 120px">Noviembre</th>
-                  <th scope="col" class="tableHeaderGreen" style="width: 120px">Diciembre</th>
-                  <th scope="col" class="tableHeaderGreen" style="width: 120px">Enero</th>
-                  <th scope="col" class="tableHeaderGreen" style="width: 120px">Febrero</th>
-                  <th scope="col" class="tableHeaderGreen" style="width: 120px">Marzo</th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 50px">
+                    ID
+                  </th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 120px">
+                    Actividad
+                  </th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 120px">
+                    Estado
+                  </th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 120px">
+                    Abril
+                  </th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 120px">
+                    Mayo
+                  </th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 120px">
+                    Junio
+                  </th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 120px">
+                    Julio
+                  </th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 120px">
+                    Agosto
+                  </th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 120px">
+                    Septiembre
+                  </th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 120px">
+                    Octubre
+                  </th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 120px">
+                    Noviembre
+                  </th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 120px">
+                    Diciembre
+                  </th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 120px">
+                    Enero
+                  </th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 120px">
+                    Febrero
+                  </th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 120px">
+                    Marzo
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -125,7 +155,7 @@
                       v-if="
                         !register.fechainiciocliente &&
                         getMonth(register.fechainicio) === 3 &&
-                        moment > getMoment(register.fechainicio)
+                        moment > getMoment(register.fechainicio).add(1, 'days')
                       "
                       icon="circle"
                       style="color: red"
@@ -134,7 +164,7 @@
                       v-else-if="
                         !register.fechainiciocliente &&
                         getMonth(register.fechainicio) === 3 &&
-                        moment <= getMoment(register.fechainicio)
+                        moment <= getMoment(register.fechainicio).add(1, 'days')
                       "
                       icon="circle"
                       style="color: green"
@@ -144,7 +174,7 @@
                         register.fechainiciocliente &&
                         getMonth(register.fechainicio) === 3 &&
                         getMoment(register.fechainiciocliente) >
-                          getMoment(register.fechainicio)
+                          getMoment(register.fechainicio).add(1, 'days')
                       "
                       icon="circle"
                       style="color: red"
@@ -154,7 +184,7 @@
                         register.fechainiciocliente &&
                         getMonth(register.fechainicio) === 3 &&
                         getMoment(register.fechainiciocliente) <=
-                          getMoment(register.fechainicio)
+                          getMoment(register.fechainicio).add(1, 'days')
                       "
                       icon="circle"
                       style="color: green"
@@ -175,7 +205,7 @@
                       v-if="
                         !register.fechainiciocliente &&
                         getMonth(register.fechainicio) === 4 &&
-                        moment > getMoment(register.fechainicio)
+                        moment > getMoment(register.fechainicio).add(1, 'days')
                       "
                       icon="circle"
                       style="color: red"
@@ -184,7 +214,7 @@
                       v-else-if="
                         !register.fechainiciocliente &&
                         getMonth(register.fechainicio) === 4 &&
-                        moment <= getMoment(register.fechainicio)
+                        moment <= getMoment(register.fechainicio).add(1, 'days')
                       "
                       icon="circle"
                       style="color: green"
@@ -194,7 +224,7 @@
                         register.fechainiciocliente &&
                         getMonth(register.fechainicio) === 4 &&
                         getMoment(register.fechainiciocliente) >
-                          getMoment(register.fechainicio)
+                          getMoment(register.fechainicio).add(1, 'days')
                       "
                       icon="circle"
                       style="color: red"
@@ -204,7 +234,7 @@
                         register.fechainiciocliente &&
                         getMonth(register.fechainicio) === 4 &&
                         getMoment(register.fechainiciocliente) <=
-                          getMoment(register.fechainicio)
+                          getMoment(register.fechainicio).add(1, 'days')
                       "
                       icon="circle"
                       style="color: green"
@@ -225,7 +255,7 @@
                       v-if="
                         !register.fechainiciocliente &&
                         getMonth(register.fechainicio) === 5 &&
-                        moment > getMoment(register.fechainicio)
+                        moment > getMoment(register.fechainicio).add(1, 'days')
                       "
                       icon="circle"
                       style="color: red"
@@ -234,7 +264,7 @@
                       v-else-if="
                         !register.fechainiciocliente &&
                         getMonth(register.fechainicio) === 5 &&
-                        moment <= getMoment(register.fechainicio)
+                        moment <= getMoment(register.fechainicio).add(1, 'days')
                       "
                       icon="circle"
                       style="color: green"
@@ -244,7 +274,7 @@
                         register.fechainiciocliente &&
                         getMonth(register.fechainicio) === 5 &&
                         getMoment(register.fechainiciocliente) >
-                          getMoment(register.fechainicio)
+                          getMoment(register.fechainicio).add(1, 'days')
                       "
                       icon="circle"
                       style="color: red"
@@ -254,7 +284,7 @@
                         register.fechainiciocliente &&
                         getMonth(register.fechainicio) === 5 &&
                         getMoment(register.fechainiciocliente) <=
-                          getMoment(register.fechainicio)
+                          getMoment(register.fechainicio).add(1, 'days')
                       "
                       icon="circle"
                       style="color: green"
@@ -275,7 +305,7 @@
                       v-if="
                         !register.fechainiciocliente &&
                         getMonth(register.fechainicio) === 6 &&
-                        moment > getMoment(register.fechainicio)
+                        moment > getMoment(register.fechainicio).add(1, 'days')
                       "
                       icon="circle"
                       style="color: red"
@@ -284,7 +314,7 @@
                       v-else-if="
                         !register.fechainiciocliente &&
                         getMonth(register.fechainicio) === 6 &&
-                        moment <= getMoment(register.fechainicio)
+                        moment <= getMoment(register.fechainicio).add(1, 'days')
                       "
                       icon="circle"
                       style="color: green"
@@ -294,7 +324,7 @@
                         register.fechainiciocliente &&
                         getMonth(register.fechainicio) === 6 &&
                         getMoment(register.fechainiciocliente) >
-                          getMoment(register.fechainicio)
+                          getMoment(register.fechainicio).add(1, 'days')
                       "
                       icon="circle"
                       style="color: red"
@@ -304,7 +334,7 @@
                         register.fechainiciocliente &&
                         getMonth(register.fechainicio) === 6 &&
                         getMoment(register.fechainiciocliente) <=
-                          getMoment(register.fechainicio)
+                          getMoment(register.fechainicio).add(1, 'days')
                       "
                       icon="circle"
                       style="color: green"
@@ -325,7 +355,7 @@
                       v-if="
                         !register.fechainiciocliente &&
                         getMonth(register.fechainicio) === 7 &&
-                        moment > getMoment(register.fechainicio)
+                        moment > getMoment(register.fechainicio).add(1, 'days')
                       "
                       icon="circle"
                       style="color: red"
@@ -334,7 +364,7 @@
                       v-else-if="
                         !register.fechainiciocliente &&
                         getMonth(register.fechainicio) === 7 &&
-                        moment <= getMoment(register.fechainicio)
+                        moment <= getMoment(register.fechainicio).add(1, 'days')
                       "
                       icon="circle"
                       style="color: green"
@@ -344,7 +374,7 @@
                         register.fechainiciocliente &&
                         getMonth(register.fechainicio) === 7 &&
                         getMoment(register.fechainiciocliente) >
-                          getMoment(register.fechainicio)
+                          getMoment(register.fechainicio).add(1, 'days')
                       "
                       icon="circle"
                       style="color: red"
@@ -354,7 +384,7 @@
                         register.fechainiciocliente &&
                         getMonth(register.fechainicio) === 7 &&
                         getMoment(register.fechainiciocliente) <=
-                          getMoment(register.fechainicio)
+                          getMoment(register.fechainicio).add(1, 'days')
                       "
                       icon="circle"
                       style="color: green"
@@ -375,7 +405,7 @@
                       v-if="
                         !register.fechainiciocliente &&
                         getMonth(register.fechainicio) === 8 &&
-                        moment > getMoment(register.fechainicio)
+                        moment > getMoment(register.fechainicio).add(1, 'days')
                       "
                       icon="circle"
                       style="color: red"
@@ -384,7 +414,7 @@
                       v-else-if="
                         !register.fechainiciocliente &&
                         getMonth(register.fechainicio) === 8 &&
-                        moment <= getMoment(register.fechainicio)
+                        moment <= getMoment(register.fechainicio).add(1, 'days')
                       "
                       icon="circle"
                       style="color: green"
@@ -394,7 +424,7 @@
                         register.fechainiciocliente &&
                         getMonth(register.fechainicio) === 8 &&
                         getMoment(register.fechainiciocliente) >
-                          getMoment(register.fechainicio)
+                          getMoment(register.fechainicio).add(1, 'days')
                       "
                       icon="circle"
                       style="color: red"
@@ -404,7 +434,7 @@
                         register.fechainiciocliente &&
                         getMonth(register.fechainicio) === 8 &&
                         getMoment(register.fechainiciocliente) <=
-                          getMoment(register.fechainicio)
+                          getMoment(register.fechainicio).add(1, 'days')
                       "
                       icon="circle"
                       style="color: green"
@@ -425,7 +455,7 @@
                       v-if="
                         !register.fechainiciocliente &&
                         getMonth(register.fechainicio) === 9 &&
-                        moment > getMoment(register.fechainicio)
+                        moment > getMoment(register.fechainicio).add(1, 'days')
                       "
                       icon="circle"
                       style="color: red"
@@ -434,7 +464,7 @@
                       v-else-if="
                         !register.fechainiciocliente &&
                         getMonth(register.fechainicio) === 9 &&
-                        moment <= getMoment(register.fechainicio)
+                        moment <= getMoment(register.fechainicio).add(1, 'days')
                       "
                       icon="circle"
                       style="color: green"
@@ -444,7 +474,7 @@
                         register.fechainiciocliente &&
                         getMonth(register.fechainicio) === 9 &&
                         getMoment(register.fechainiciocliente) >
-                          getMoment(register.fechainicio)
+                          getMoment(register.fechainicio).add(1, 'days')
                       "
                       icon="circle"
                       style="color: red"
@@ -454,7 +484,7 @@
                         register.fechainiciocliente &&
                         getMonth(register.fechainicio) === 9 &&
                         getMoment(register.fechainiciocliente) <=
-                          getMoment(register.fechainicio)
+                          getMoment(register.fechainicio).add(1, 'days')
                       "
                       icon="circle"
                       style="color: green"
@@ -475,7 +505,7 @@
                       v-if="
                         !register.fechainiciocliente &&
                         getMonth(register.fechainicio) === 10 &&
-                        moment > getMoment(register.fechainicio)
+                        moment > getMoment(register.fechainicio).add(1, 'days')
                       "
                       icon="circle"
                       style="color: red"
@@ -484,7 +514,7 @@
                       v-else-if="
                         !register.fechainiciocliente &&
                         getMonth(register.fechainicio) === 10 &&
-                        moment <= getMoment(register.fechainicio)
+                        moment <= getMoment(register.fechainicio).add(1, 'days')
                       "
                       icon="circle"
                       style="color: green"
@@ -494,7 +524,7 @@
                         register.fechainiciocliente &&
                         getMonth(register.fechainicio) === 10 &&
                         getMoment(register.fechainiciocliente) >
-                          getMoment(register.fechainicio)
+                          getMoment(register.fechainicio).add(1, 'days')
                       "
                       icon="circle"
                       style="color: red"
@@ -504,7 +534,7 @@
                         register.fechainiciocliente &&
                         getMonth(register.fechainicio) === 10 &&
                         getMoment(register.fechainiciocliente) <=
-                          getMoment(register.fechainicio)
+                          getMoment(register.fechainicio).add(1, 'days')
                       "
                       icon="circle"
                       style="color: green"
@@ -525,7 +555,7 @@
                       v-if="
                         !register.fechainiciocliente &&
                         getMonth(register.fechainicio) === 11 &&
-                        moment > getMoment(register.fechainicio)
+                        moment > getMoment(register.fechainicio).add(1, 'days')
                       "
                       icon="circle"
                       style="color: red"
@@ -534,7 +564,7 @@
                       v-else-if="
                         !register.fechainiciocliente &&
                         getMonth(register.fechainicio) === 11 &&
-                        moment <= getMoment(register.fechainicio)
+                        moment <= getMoment(register.fechainicio).add(1, 'days')
                       "
                       icon="circle"
                       style="color: green"
@@ -544,7 +574,7 @@
                         register.fechainiciocliente &&
                         getMonth(register.fechainicio) === 11 &&
                         getMoment(register.fechainiciocliente) >
-                          getMoment(register.fechainicio)
+                          getMoment(register.fechainicio).add(1, 'days')
                       "
                       icon="circle"
                       style="color: red"
@@ -554,7 +584,7 @@
                         register.fechainiciocliente &&
                         getMonth(register.fechainicio) === 11 &&
                         getMoment(register.fechainiciocliente) <=
-                          getMoment(register.fechainicio)
+                          getMoment(register.fechainicio).add(1, 'days')
                       "
                       icon="circle"
                       style="color: green"
@@ -575,7 +605,7 @@
                       v-if="
                         !register.fechainiciocliente &&
                         getMonth(register.fechainicio) === 0 &&
-                        moment > getMoment(register.fechainicio)
+                        moment > getMoment(register.fechainicio).add(1, 'days')
                       "
                       icon="circle"
                       style="color: red"
@@ -584,7 +614,7 @@
                       v-else-if="
                         !register.fechainiciocliente &&
                         getMonth(register.fechainicio) === 0 &&
-                        moment <= getMoment(register.fechainicio)
+                        moment <= getMoment(register.fechainicio).add(1, 'days')
                       "
                       icon="circle"
                       style="color: green"
@@ -594,7 +624,7 @@
                         register.fechainiciocliente &&
                         getMonth(register.fechainicio) === 0 &&
                         getMoment(register.fechainiciocliente) >
-                          getMoment(register.fechainicio)
+                          getMoment(register.fechainicio).add(1, 'days')
                       "
                       icon="circle"
                       style="color: red"
@@ -604,7 +634,7 @@
                         register.fechainiciocliente &&
                         getMonth(register.fechainicio) === 0 &&
                         getMoment(register.fechainiciocliente) <=
-                          getMoment(register.fechainicio)
+                          getMoment(register.fechainicio).add(1, 'days')
                       "
                       icon="circle"
                       style="color: green"
@@ -625,7 +655,7 @@
                       v-if="
                         !register.fechainiciocliente &&
                         getMonth(register.fechainicio) === 1 &&
-                        moment > getMoment(register.fechainicio)
+                        moment > getMoment(register.fechainicio).add(1, 'days')
                       "
                       icon="circle"
                       style="color: red"
@@ -634,7 +664,7 @@
                       v-else-if="
                         !register.fechainiciocliente &&
                         getMonth(register.fechainicio) === 1 &&
-                        moment <= getMoment(register.fechainicio)
+                        moment <= getMoment(register.fechainicio).add(1, 'days')
                       "
                       icon="circle"
                       style="color: green"
@@ -644,7 +674,7 @@
                         register.fechainiciocliente &&
                         getMonth(register.fechainicio) === 1 &&
                         getMoment(register.fechainiciocliente) >
-                          getMoment(register.fechainicio)
+                          getMoment(register.fechainicio).add(1, 'days')
                       "
                       icon="circle"
                       style="color: red"
@@ -654,7 +684,7 @@
                         register.fechainiciocliente &&
                         getMonth(register.fechainicio) === 1 &&
                         getMoment(register.fechainiciocliente) <=
-                          getMoment(register.fechainicio)
+                          getMoment(register.fechainicio).add(1, 'days')
                       "
                       icon="circle"
                       style="color: green"
@@ -675,7 +705,7 @@
                       v-if="
                         !register.fechainiciocliente &&
                         getMonth(register.fechainicio) === 2 &&
-                        moment > getMoment(register.fechainicio)
+                        moment > getMoment(register.fechainicio).add(1, 'days')
                       "
                       icon="circle"
                       style="color: red"
@@ -684,7 +714,7 @@
                       v-else-if="
                         !register.fechainiciocliente &&
                         getMonth(register.fechainicio) === 2 &&
-                        moment <= getMoment(register.fechainicio)
+                        moment <= getMoment(register.fechainicio).add(1, 'days')
                       "
                       icon="circle"
                       style="color: green"
@@ -694,7 +724,7 @@
                         register.fechainiciocliente &&
                         getMonth(register.fechainicio) === 2 &&
                         getMoment(register.fechainiciocliente) >
-                          getMoment(register.fechainicio)
+                          getMoment(register.fechainicio).add(1, 'days')
                       "
                       icon="circle"
                       style="color: red"
@@ -704,7 +734,7 @@
                         register.fechainiciocliente &&
                         getMonth(register.fechainicio) === 2 &&
                         getMoment(register.fechainiciocliente) <=
-                          getMoment(register.fechainicio)
+                          getMoment(register.fechainicio).add(1, 'days')
                       "
                       icon="circle"
                       style="color: green"
@@ -912,11 +942,11 @@
             <table class="table table-borderless">
               <tbody>
                 <tr>
-                  <td>Actividad:</td>
+                  <td class="blakita">Actividad:</td>
                   <td COLSPAN="3">{{ this.showRegister.actividad }}</td>
                 </tr>
                 <tr>
-                  <td>Inicio:</td>
+                  <td class="blakita">Inicio:</td>
                   <td>
                     {{
                       this.showRegister.fechainicio
@@ -924,7 +954,7 @@
                         : ""
                     }}
                   </td>
-                  <td>Fin:</td>
+                  <td class="blakita">Fin:</td>
                   <td>
                     {{
                       this.showRegister.fechafin
@@ -934,15 +964,15 @@
                   </td>
                 </tr>
                 <tr>
-                  <td>Tipo:</td>
+                  <td class="blakita">Tipo:</td>
                   <td>{{ this.showRegister.tipo }}</td>
                 </tr>
                 <tr v-if="this.showRegister.registro_actividad">
-                  <td>Depende:</td>
+                  <td class="blakita">Depende:</td>
                   <td>
                     {{ this.showRegister.registro_actividad.actividad }}
                   </td>
-                  <td>Finaliza:</td>
+                  <td class="blakita">Finaliza:</td>
                   <td>
                     {{
                       this.showRegister.registro_actividad.fechafin
@@ -954,19 +984,19 @@
                   </td>
                 </tr>
                 <tr v-if="this.showRegister.tipo === 'Aplicación'">
-                  <td>Cantidad:</td>
+                  <td class="blakita">Cantidad:</td>
                   <td>{{ this.showRegister.cantidad }}</td>
-                  <td>Medida:</td>
+                  <td class="blakita">Medida:</td>
                   <td>{{ this.showRegister.medida }}</td>
                 </tr>
                 <tr>
-                  <td>Propósito:</td>
+                  <td class="blakita">Propósito:</td>
                   <td COLSPAN="3">
                     {{ this.showRegister.proposito }}
                   </td>
                 </tr>
                 <tr>
-                  <td>Inicio:</td>
+                  <td class="blakita">Inicio:</td>
                   <td>
                     {{
                       this.showRegister.fechainiciocliente
@@ -974,7 +1004,7 @@
                         : "---"
                     }}
                   </td>
-                  <td>Fin:</td>
+                  <td class="blakita">Fin:</td>
                   <td>
                     {{
                       this.showRegister.fechafincliente
@@ -983,8 +1013,8 @@
                     }}
                   </td>
                 </tr>
-                <tr v-if="!showRegister.recursos">
-                  <td>Recursos:</td>
+                <tr v-if="showRegister.estado == 'Iniciado'">
+                  <td class="blakita">Recursos:</td>
                   <td>
                     <input
                       class="form-control"
@@ -996,25 +1026,31 @@
                       min="0"
                     />
                   </td>
-                  <td>Estado:</td>
+                  <td class="blakita">Estado:</td>
+                  <td>{{ this.showRegister.estado }}</td>
+                </tr>
+                <tr v-else-if="!showRegister.recursos">
+                  <td class="blakita">Recursos:</td>
+                  <td>---</td>
+                  <td class="blakita">Estado:</td>
                   <td>{{ this.showRegister.estado }}</td>
                 </tr>
                 <tr v-else>
-                  <td>Recursos:</td>
+                  <td class="blakita">Recursos:</td>
                   <td>
                     {{ showRegister.recursos }}
                   </td>
-                  <td>Estado:</td>
+                  <td class="blakita">Estado:</td>
                   <td>{{ this.showRegister.estado }}</td>
                 </tr>
                 <tr
                   v-if="
                     !showRegister.observacion &&
                     !showRegister.fechainiciocliente &&
-                    moment > getMoment(showRegister.fechainicio)
+                    moment > getMoment(showRegister.fechainicio).add(1, 'days')
                   "
                 >
-                  <td>Obs:</td>
+                  <td class="blakita">Obs. inicial:</td>
                   <td COLSPAN="3">
                     <textarea
                       class="form-control"
@@ -1028,12 +1064,41 @@
                 <tr
                   v-else-if="
                     showRegister.observacion &&
-                    moment > getMoment(showRegister.fechainicio)
+                    moment > getMoment(showRegister.fechainicio).add(1, 'days')
                   "
                 >
-                  <td>Obs:</td>
+                  <td class="blakita">Obs. inicial:</td>
                   <td COLSPAN="3">
                     {{ showRegister.observacion }}
+                  </td>
+                </tr>
+                <tr
+                  v-if="
+                    !showRegister.observacionfinal &&
+                    !showRegister.fechafincliente &&
+                    moment > getMoment(showRegister.fechafin).add(1, 'days')
+                  "
+                >
+                  <td class="blakita">Obs. final:</td>
+                  <td COLSPAN="3">
+                    <textarea
+                      class="form-control"
+                      v-model="observacionfinal"
+                      minlength="10"
+                      :state="observacionfinalState"
+                      required
+                    ></textarea>
+                  </td>
+                </tr>
+                <tr
+                  v-else-if="
+                    showRegister.observacionfinal &&
+                    moment > getMoment(showRegister.fechafin).add(1, 'days')
+                  "
+                >
+                  <td class="blakita">Obs. final:</td>
+                  <td COLSPAN="3">
+                    {{ showRegister.observacionfinal }}
                   </td>
                 </tr>
                 <tr v-if="errorModal">
@@ -1170,8 +1235,8 @@ export default {
       cantidadSelected: "",
       cantidadState: null,
       medidas: [
-        { value: "Litros", text: "Litros" },
-        { value: "Kilos", text: "Kilos" }
+        { value: "Litros*Ha", text: "Litros*Ha" },
+        { value: "Kilos*Ha", text: "Kilos*Ha" }
       ],
       medidaSelected: "",
       medidaState: null,
@@ -1187,12 +1252,15 @@ export default {
       recursosState: null,
       dismissCountDown: 0,
       typeNotification: "",
-      messageNotification: ""
+      messageNotification: "",
+      observacionfinal: "",
+      observacionfinalState: null
     };
   },
   apollo: {
     actividades: {
-      query: ACTIVITIES_GET_ACTIVIDADES
+      query: ACTIVITIES_GET_ACTIVIDADES,
+      fetchPolicy: "no-cache"
     },
     registroActividads: {
       query: ACTIVITIES_GET_REGISTROS,
@@ -1342,23 +1410,17 @@ export default {
       e.preventDefault;
       let validate = true;
       const observacion = this.observacion;
-      const recursos = this.recursos;
       this.observacionState = true;
-      this.recursosState = true;
       this.error = "";
 
       if (
-        moment() > this.getMoment(this.showRegister.fechainicio) &&
+        moment() >
+          this.getMoment(this.showRegister.fechainicio).add(1, "days") &&
         !observacion
       ) {
         validate = false;
         this.observacionState = false;
         this.errorModal = "Debes agregar una observación valida.";
-      }
-      if (!recursos) {
-        validate = false;
-        this.recursosState = false;
-        this.errorModal = "Debes agregar los recursos.";
       }
 
       if (validate) {
@@ -1369,10 +1431,9 @@ export default {
               variables: {
                 id: this.showRegister.id,
                 estado: "Iniciado",
-                recursos: Number(recursos),
                 observacion,
                 startDate: moment()
-              },
+              } /* ,
               refetchQueries: [
                 {
                   query: ACTIVITIES_GET_REGISTROS,
@@ -1382,14 +1443,22 @@ export default {
                     endDate: this.thisYear + 1 + "-03-31"
                   }
                 }
-              ]
+              ] */
             })
             .then(data => {
               this.showRegister =
                 data.data.updateRegistroActividad.registroActividad;
+              this.registroActividads = this.registroActividads.map(function(
+                registroActividad
+              ) {
+                if (
+                  registroActividad.id ===
+                  data.data.updateRegistroActividad.registroActividad.id
+                ) {
+                  return data.data.updateRegistroActividad.registroActividad;
+                } else return registroActividad;
+              });
               this.observacion = "";
-              this.recursos = null;
-              this.recursosState = null;
               this.observacionState = null;
               this.error = "";
               this.errorModal = "";
@@ -1397,8 +1466,6 @@ export default {
             })
             .catch(({ graphQLErrors }) => {
               this.observacion = "";
-              this.recursos = null;
-              this.recursosState = null;
               this.observacionState = null;
               this.error = "";
               this.errorModal = "";
@@ -1415,11 +1482,29 @@ export default {
     async handleFinishActivity(e) {
       e.preventDefault;
       let validate = true;
-      const campoId = this.campoSelected.id;
       this.error = "";
       const id = this.showRegister.id;
       const endDate = moment();
       const estado = "Finalizado";
+      const recursos = this.recursos;
+      this.recursosState = true;
+      const observacionfinal = this.observacionfinal;
+
+      if (!recursos) {
+        validate = false;
+        this.recursosState = false;
+        this.errorModal = "Debes agregar los recursos.";
+      }
+
+      if (
+        moment() >
+          this.getMoment(this.showRegister.fechafin).add(1, "days") &&
+        !observacionfinal
+      ) {
+        validate = false;
+        this.observacionfinalState = false;
+        this.errorModal = "Debes agregar una observación valida.";
+      }
 
       if (validate) {
         if (confirm("¿Desea finalizar la actividad?")) {
@@ -1429,28 +1514,42 @@ export default {
               variables: {
                 id,
                 estado,
-                endDate
-              },
+                endDate,
+                observacionfinal,
+                recursos: Number(recursos)
+              } /* ,
               refetchQueries: [
                 {
                   query: ACTIVITIES_GET_REGISTROS,
                   variables: {
-                    campo: campoId,
+                    campo: this.campoSelected.id,
                     startDate: this.thisYear + "-04-01",
                     endDate: this.thisYear + 1 + "-03-31"
                   }
                 }
-              ]
+              ] */
             })
             .then(data => {
               this.showRegister =
                 data.data.updateRegistroActividad.registroActividad;
+              this.registroActividads = this.registroActividads.map(function(
+                registroActividad
+              ) {
+                if (
+                  registroActividad.id ===
+                  data.data.updateRegistroActividad.registroActividad.id
+                ) {
+                  return data.data.updateRegistroActividad.registroActividad;
+                } else return registroActividad;
+              });
               this.observacion = "";
               this.recursos = null;
               this.recursosState = null;
               this.observacionState = null;
               this.error = "";
               this.errorModal = "";
+              this.observacionfinal = "";
+              this.observacionfinalState = null;
               //this.$root.$emit("bv::hide::modal", "showActivityModal");
             })
             .catch(({ graphQLErrors }) => {
@@ -1460,6 +1559,8 @@ export default {
               this.observacionState = null;
               this.error = "";
               this.errorModal = "";
+              this.observacionfinal = "";
+              this.observacionfinalState = null;
               graphQLErrors.map(
                 ({ extensions }) => console.log(extensions.exception)
                 /* extensions.exception.data.message.map(({ messages }) =>
@@ -1548,5 +1649,8 @@ td {
 }
 th {
   background: #eee;
+}
+.blakita {
+  font-weight: bold;
 }
 </style>

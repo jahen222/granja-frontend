@@ -43,6 +43,7 @@ export const ACTIVITIES_GET_REGISTROS = gql`
       fechafincliente
       observacion
       recursos
+      observacionfinal
     }
   }
 `;

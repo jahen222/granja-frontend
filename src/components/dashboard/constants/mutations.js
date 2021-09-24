@@ -54,6 +54,7 @@ export const ACTIVITIES_CREATE_REGISTER = gql`
         fechafincliente
         observacion
         recursos
+        observacionfinal
       }
     }
   }
@@ -63,7 +64,6 @@ export const ACTIVITIES_UPDATE_REGISTER = gql`
   mutation updateRegistroActividad(
     $id: ID!
     $estado: String!
-    $recursos: Int!
     $observacion: String
     $startDate: DateTime!
   ) {
@@ -72,7 +72,6 @@ export const ACTIVITIES_UPDATE_REGISTER = gql`
         where: { id: $id }
         data: {
           observacion: $observacion
-          recursos: $recursos
           estado: $estado
           fechainiciocliente: $startDate
         }
@@ -102,6 +101,7 @@ export const ACTIVITIES_UPDATE_REGISTER = gql`
         fechafincliente
         observacion
         recursos
+        observacionfinal
       }
     }
   }
@@ -112,11 +112,18 @@ export const ACTIVITIES_UPDATE_FINISH_REGISTER = gql`
     $id: ID!
     $estado: String!
     $endDate: DateTime!
+    $recursos: Int!
+    $observacionfinal: String
   ) {
     updateRegistroActividad(
       input: {
         where: { id: $id }
-        data: { estado: $estado, fechafincliente: $endDate }
+        data: {
+          estado: $estado
+          observacionfinal: $observacionfinal
+          fechafincliente: $endDate
+          recursos: $recursos
+        }
       }
     ) {
       registroActividad {
@@ -143,6 +150,7 @@ export const ACTIVITIES_UPDATE_FINISH_REGISTER = gql`
         fechafincliente
         observacion
         recursos
+        observacionfinal
       }
     }
   }
