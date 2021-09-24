@@ -194,6 +194,14 @@
                         ? "F:" + getDate(register.fechafin)
                         : ""
                     }}
+                    <font-awesome-icon
+                      v-if="
+                        register.estado == 'Finalizado' &&
+                        getMonth(register.fechafin) === 3
+                      "
+                      icon="check"
+                      style="color: green"
+                    />
                   </td>
                   <td @click="handleShowAvtivity(register)">
                     {{
@@ -244,6 +252,14 @@
                         ? "F:" + getDate(register.fechafin)
                         : ""
                     }}
+                    <font-awesome-icon
+                      v-if="
+                        register.estado == 'Finalizado' &&
+                        getMonth(register.fechafincliente) === 4
+                      "
+                      icon="check"
+                      style="color: green"
+                    />
                   </td>
                   <td @click="handleShowAvtivity(register)">
                     {{
@@ -294,6 +310,14 @@
                         ? "F:" + getDate(register.fechafin)
                         : ""
                     }}
+                    <font-awesome-icon
+                      v-if="
+                        register.estado == 'Finalizado' &&
+                        getMonth(register.fechafincliente) === 5
+                      "
+                      icon="check"
+                      style="color: green"
+                    />
                   </td>
                   <td @click="handleShowAvtivity(register)">
                     {{
@@ -344,6 +368,14 @@
                         ? "F:" + getDate(register.fechafin)
                         : ""
                     }}
+                    <font-awesome-icon
+                      v-if="
+                        register.estado == 'Finalizado' &&
+                        getMonth(register.fechafincliente) === 6
+                      "
+                      icon="check"
+                      style="color: green"
+                    />
                   </td>
                   <td @click="handleShowAvtivity(register)">
                     {{
@@ -394,6 +426,14 @@
                         ? "F:" + getDate(register.fechafin)
                         : ""
                     }}
+                    <font-awesome-icon
+                      v-if="
+                        register.estado == 'Finalizado' &&
+                        getMonth(register.fechafincliente) === 7
+                      "
+                      icon="check"
+                      style="color: green"
+                    />
                   </td>
                   <td @click="handleShowAvtivity(register)">
                     {{
@@ -444,6 +484,14 @@
                         ? "F:" + getDate(register.fechafin)
                         : ""
                     }}
+                    <font-awesome-icon
+                      v-if="
+                        register.estado == 'Finalizado' &&
+                        getMonth(register.fechafincliente) === 8
+                      "
+                      icon="check"
+                      style="color: green"
+                    />
                   </td>
                   <td @click="handleShowAvtivity(register)">
                     {{
@@ -494,6 +542,14 @@
                         ? "F:" + getDate(register.fechafin)
                         : ""
                     }}
+                    <font-awesome-icon
+                      v-if="
+                        register.estado == 'Finalizado' &&
+                        getMonth(register.fechafincliente) === 9
+                      "
+                      icon="check"
+                      style="color: green"
+                    />
                   </td>
                   <td @click="handleShowAvtivity(register)">
                     {{
@@ -544,6 +600,14 @@
                         ? "F:" + getDate(register.fechafin)
                         : ""
                     }}
+                    <font-awesome-icon
+                      v-if="
+                        register.estado == 'Finalizado' &&
+                        getMonth(register.fechafincliente) === 10
+                      "
+                      icon="check"
+                      style="color: green"
+                    />
                   </td>
                   <td @click="handleShowAvtivity(register)">
                     {{
@@ -594,6 +658,14 @@
                         ? "F:" + getDate(register.fechafin)
                         : ""
                     }}
+                    <font-awesome-icon
+                      v-if="
+                        register.estado == 'Finalizado' &&
+                        getMonth(register.fechafincliente) === 11
+                      "
+                      icon="check"
+                      style="color: green"
+                    />
                   </td>
                   <td @click="handleShowAvtivity(register)">
                     {{
@@ -644,6 +716,14 @@
                         ? "F:" + getDate(register.fechafin)
                         : ""
                     }}
+                    <font-awesome-icon
+                      v-if="
+                        register.estado == 'Finalizado' &&
+                        getMonth(register.fechafincliente) === 0
+                      "
+                      icon="check"
+                      style="color: green"
+                    />
                   </td>
                   <td @click="handleShowAvtivity(register)">
                     {{
@@ -694,6 +774,14 @@
                         ? "F:" + getDate(register.fechafin)
                         : ""
                     }}
+                    <font-awesome-icon
+                      v-if="
+                        register.estado == 'Finalizado' &&
+                        getMonth(register.fechafincliente) === 1
+                      "
+                      icon="check"
+                      style="color: green"
+                    />
                   </td>
                   <td @click="handleShowAvtivity(register)">
                     {{
@@ -744,6 +832,14 @@
                         ? "F:" + getDate(register.fechafin)
                         : ""
                     }}
+                    <font-awesome-icon
+                      v-if="
+                        register.estado == 'Finalizado' &&
+                        getMonth(register.fechafincliente) === 2
+                      "
+                      icon="check"
+                      style="color: green"
+                    />
                   </td>
                 </tr>
               </tbody>
@@ -1497,8 +1593,7 @@ export default {
       }
 
       if (
-        moment() >
-          this.getMoment(this.showRegister.fechafin).add(1, "days") &&
+        moment() > this.getMoment(this.showRegister.fechafin).add(1, "days") &&
         !observacionfinal
       ) {
         validate = false;

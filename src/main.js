@@ -12,7 +12,7 @@ import "bootstrap-vue/dist/bootstrap-vue.css";
 import AsyncComputed from "vue-async-computed";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { faCircle, faBookmark, faPlus, faTrash, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faCircle, faBookmark, faPlus, faTrash, faUser, faCheck } from "@fortawesome/free-solid-svg-icons";
 
 const apolloProvider = new VueApollo({
   defaultClient: apolloClient,
@@ -30,7 +30,7 @@ router.beforeEach((to, from, next) => {
   }
 });
 
-library.add(faCircle, faBookmark, faPlus, faTrash, faUser);
+library.add(faCircle, faBookmark, faPlus, faTrash, faUser, faCheck);
 
 Vue.config.productionTip = false;
 Vue.use(VueApollo);
