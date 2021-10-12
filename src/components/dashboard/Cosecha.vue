@@ -45,15 +45,16 @@
               <thead>
                 <tr>
                   <th scope="col" class="tableHeaderGreen">ID</th>
+                  <th scope="col" class="tableHeaderGreen">Fecha</th>
                   <th scope="col" class="tableHeaderGreen">Producto</th>
                   <th scope="col" class="tableHeaderGreen">Zona</th>
-                  <th scope="col" class="tableHeaderGreen">Vin</th>
                   <th scope="col" class="tableHeaderGreen">Cantidad</th>
                   <th scope="col" class="tableHeaderGreen">Unidad</th>
                   <th scope="col" class="tableHeaderGreen">Ha</th>
                   <th scope="col" class="tableHeaderGreen">Kilos x Ha</th>
                   <th scope="col" class="tableHeaderGreen">Árboles</th>
                   <th scope="col" class="tableHeaderGreen">Kilos x Árbol</th>
+                  <th scope="col" class="tableHeaderGreen">Vin</th>
                   <th scope="col" class="tableHeaderGreen">Acciones</th>
                 </tr>
               </thead>
@@ -63,13 +64,13 @@
                     {{ venta.id }}
                   </td>
                   <td class="tableBodyGreen">
+                    {{ getMoment(venta.created_at).format("D/MMM/YY") }}
+                  </td>
+                  <td class="tableBodyGreen">
                     {{ venta.producto_cosecha.nombre }}
                   </td>
                   <td>
                     {{ venta.zona_cosecha.nombre }}
-                  </td>
-                  <td>
-                    {{ venta.vin.toLocaleString("de-DE") }}
                   </td>
                   <td>
                     {{ venta.cantidad.toLocaleString("de-DE") }}
@@ -90,6 +91,9 @@
                   </td>
                   <td class="tableBodyGrey">
                     {{ Math.floor(venta.kilosxarbol).toLocaleString("de-DE") }}
+                  </td>
+                  <td>
+                    {{ venta.vin.toLocaleString("de-DE") }}
                   </td>
                   <td>
                     <b-button
@@ -230,9 +234,9 @@
         >
           <b-form-input
             id="ha-input"
-            type="number"
+            type="text"
             placeholder="Ingrese las hectáreas"
-            v-model="haSelected"
+            :formatter="haFormat"
             :state="haState"
             min="0"
           ></b-form-input>
@@ -263,9 +267,9 @@
         >
           <b-form-input
             id="arboles-input"
-            type="number"
+            type="text"
             placeholder="Ingrese los árboles"
-            v-model="arbolesSelected"
+            :formatter="arbolesFormat"
             :state="arbolesState"
             min="0"
           ></b-form-input>
@@ -317,6 +321,7 @@ import {
   COSECHA_CREATE_COSECHA,
   COSECHA_DELETE_COSECHA
 } from "./constants/mutations";
+import moment from "moment";
 
 export default {
   name: "Cosecha",
@@ -408,10 +413,10 @@ export default {
         validate = false;
         this.kxaState = false;
       }
-      if (!vin) {
+      /* if (!vin) {
         validate = false;
         this.vinState = false;
-      }
+      } */
 
       if (validate) {
         if (confirm("¿Desea agregar la cosecha?")) {
@@ -449,7 +454,7 @@ export default {
               this.haState = null;
               this.kxaState = null;
               this.kxhState = null;
-              this.vinState= null;
+              this.vinState = null;
               this.$root.$emit("bv::hide::modal", "addVentasModal");
               this.showAlert("success", 5, "Cosecha creada exitosamente.");
             })
@@ -470,7 +475,7 @@ export default {
               this.haState = null;
               this.kxaState = null;
               this.kxhState = null;
-              this.vinState= null;
+              this.vinState = null;
               this.showAlert("danger", 5, "La cosecha no pudo ser creada.");
             });
         }
@@ -511,20 +516,31 @@ export default {
     vinFormat(value) {
       this.vinSelected = Number(value.replace(/\D/g, ""));
       return value == "0" ? "" : this.vinSelected.toLocaleString("de-DE");
-    }
+    },
+    haFormat(value) {
+      this.haSelected = Number(value.replace(/\D/g, ""));
+      return value == "0" ? "" : this.haSelected.toLocaleString("de-DE");
+    },
+    arbolesFormat(value) {
+      this.arbolesSelected = Number(value.replace(/\D/g, ""));
+      return value == "0" ? "" : this.arbolesSelected.toLocaleString("de-DE");
+    },
+    getMoment(date) {
+      return moment(date);
+    },
   },
   computed: {
     kxaSelected() {
       if (this.cantidadSelected && this.arbolesSelected) {
         return (this.cantidadSelected / this.arbolesSelected)
-          .toFixed(3)
+          .toFixed(0)
           .toLocaleString("de-DE");
       } else return 0;
     },
     kxhSelected() {
       if (this.cantidadSelected && this.haSelected) {
         return (this.cantidadSelected / this.haSelected)
-          .toFixed(3)
+          .toFixed(0)
           .toLocaleString("de-DE");
       } else return 0;
     }

@@ -45,6 +45,7 @@
               <thead>
                 <tr>
                   <th scope="col" class="tableHeaderGreen">ID</th>
+                  <th scope="col" class="tableHeaderGreen">Fecha</th>
                   <th scope="col" class="tableHeaderGreen">Proveedor</th>
                   <th scope="col" class="tableHeaderGreen">Descripción</th>
                   <th scope="col" class="tableHeaderGreen">Cantidad</th>
@@ -66,6 +67,9 @@
                 >
                   <td class="tableBodyGreen">
                     {{ venta.id }}
+                  </td>
+                  <td class="tableBodyGreen">
+                    {{ getMoment(venta.created_at).format("D/MMM/YY") }}
                   </td>
                   <td class="tableBodyGreen">
                     {{ venta.proveedore.nombre }}
@@ -511,7 +515,10 @@ export default {
       this.typeNotification = type;
       this.dismissCountDown = time;
       this.messageNotification = message;
-    }
+    },
+    getMoment(date) {
+      return moment(date);
+    },
   },
   computed: {
     totalSelected() {

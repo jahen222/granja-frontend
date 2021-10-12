@@ -45,6 +45,7 @@
               <thead>
                 <tr>
                   <th scope="col" class="tableHeaderGreen">ID</th>
+                  <th scope="col" class="tableHeaderGreen">Fecha</th>
                   <th scope="col" class="tableHeaderGreen">Actividad</th>
                   <th scope="col" class="tableHeaderGreen" style="width: 120px">
                     Tipo Árbol
@@ -67,6 +68,9 @@
                 >
                   <td class="tableBodyGreen">
                     {{ cuidadoArbol.id }}
+                  </td>
+                  <td class="tableBodyGreen">
+                    {{ getMoment(cuidadoArbol.created_at).format("D/MMM/YY") }}
                   </td>
                   <td class="tableBodyGreen">
                     {{ cuidadoArbol.actividad }}
@@ -273,6 +277,7 @@ import {
   CUIDADO_UPDATE_ACTIVIDAD,
   CUIDADO_DELETE_ACTIVIDAD
 } from "./constants/mutations";
+import moment from "moment";
 
 export default {
   name: "Arboles",
@@ -484,7 +489,10 @@ export default {
       this.typeNotification = type;
       this.dismissCountDown = time;
       this.messageNotification = message;
-    }
+    },
+    getMoment(date) {
+      return moment(date);
+    },
   },
   asyncComputed: {
     async camellones() {

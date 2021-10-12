@@ -46,6 +46,7 @@
               <thead>
                 <tr>
                   <th scope="col" class="tableHeaderGreen">ID</th>
+                  <th scope="col" class="tableHeaderGreen">Fecha</th>
                   <th scope="col" class="tableHeaderGreen">Nombre</th>
                   <th scope="col" class="tableHeaderGreen">Descripción</th>
                   <th scope="col" class="tableHeaderGreen">Tipo</th>
@@ -59,6 +60,9 @@
                 <tr v-for="(venta, index) in honorarios" v-bind:key="index">
                   <td class="tableBodyGreen">
                     {{ venta.id }}
+                  </td>
+                  <td class="tableBodyGreen">
+                    {{ getMoment(venta.created_at).format("D/MMM/YY") }}
                   </td>
                   <td class="tableBodyGreen">
                     {{ venta.profesionale.nombre }}
@@ -402,7 +406,10 @@ export default {
       this.typeNotification = type;
       this.dismissCountDown = time;
       this.messageNotification = message;
-    }
+    },
+    getMoment(date) {
+      return moment(date);
+    },
   },
   computed: {
     getTotal() {

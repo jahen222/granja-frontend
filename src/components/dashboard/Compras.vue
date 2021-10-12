@@ -47,6 +47,9 @@
                   <th scope="col" class="tableHeaderGreen" style="width: 50px">
                     ID
                   </th>
+                  <th scope="col" class="tableHeaderGreen" style="width: 50px">
+                    Fecha
+                  </th>
                   <th scope="col" class="tableHeaderGreen" style="width: 120px">
                     Producto
                   </th>
@@ -89,6 +92,9 @@
                 <tr v-for="(venta, index) in compras" v-bind:key="index">
                   <td class="tableBodyGreen">
                     {{ venta.id }}
+                  </td>
+                  <td class="tableBodyGreen">
+                    {{ getMoment(venta.created_at).format("D/MMM/YY") }}
                   </td>
                   <td class="tableBodyGreen">
                     {{ venta.producto.nombre }}
@@ -491,6 +497,7 @@ import {
   COMPRAS_CREATE_PRODUCTO,
   COMPRAS_UPDATE_FACTURA
 } from "./constants/mutations";
+import moment from "moment";
 
 export default {
   name: "Compras",
@@ -807,7 +814,10 @@ export default {
             });
         }
       }
-    }
+    },
+    getMoment(date) {
+      return moment(date);
+    },
   },
   computed: {
     totalSelected() {

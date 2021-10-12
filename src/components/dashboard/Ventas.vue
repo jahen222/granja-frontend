@@ -45,6 +45,7 @@
               <thead>
                 <tr>
                   <th scope="col" class="tableHeaderGreen">ID</th>
+                  <th scope="col" class="tableHeaderGreen">Fecha</th>
                   <th scope="col" class="tableHeaderGreen">Producto</th>
                   <th scope="col" class="tableHeaderGreen">Cliente</th>
                   <th scope="col" class="tableHeaderGreen">Calidad</th>
@@ -63,7 +64,10 @@
                     {{ venta.id }}
                   </td>
                   <td class="tableBodyGreen">
-                    {{ venta.producto.nombre }}
+                    {{ getMoment(venta.created_at).format("D/MMM/YY") }}
+                  </td>
+                  <td class="tableBodyGreen">
+                    {{ venta.producto_cosecha.nombre }}
                   </td>
                   <td class="tableBodyGreen">
                     {{ venta.cliente.nombre }}
@@ -131,7 +135,7 @@
           >
             <option disabled selected>Seleccione una opción:</option>
             <option
-              v-for="(producto, index) in productos"
+              v-for="(producto, index) in productoCosechas"
               v-bind:key="index"
               :value="producto.id"
             >
@@ -314,6 +318,7 @@ import {
   VENTA_CREATE_VENTA,
   VENTAS_DELETE_VENTAS
 } from "./constants/mutations";
+import moment from "moment";
 
 export default {
   name: "Ventas",
@@ -321,7 +326,7 @@ export default {
   data() {
     return {
       error: "",
-      productos: [],
+      productoCosechas: [],
       productoSelected: "",
       productoState: null,
       calidadSelected: "",
@@ -345,7 +350,7 @@ export default {
       messageNotification: "",
       clientes: [],
       proveedoresSelected: "",
-      proveedoresState: null,
+      proveedoresState: null
     };
   },
   apollo: {
@@ -358,7 +363,7 @@ export default {
       },
       fetchPolicy: "no-cache"
     },
-    productos: {
+    productoCosechas: {
       query: VENTAS_GET_PRODUCTOS
     },
     formaPagos: {
@@ -427,7 +432,8 @@ export default {
                 formaPago: formaPago,
                 cheque: cheque,
                 campo: this.campoSelected ? this.campoSelected.id : null
-              }
+              },
+              fetchPolicy: "no-cache"
             })
             .then(data => {
               this.ventas.unshift(data.data.createVenta.venta);
@@ -509,7 +515,10 @@ export default {
       this.typeNotification = type;
       this.dismissCountDown = time;
       this.messageNotification = message;
-    }
+    },
+    getMoment(date) {
+      return moment(date);
+    },
   },
   computed: {
     totalSelected() {

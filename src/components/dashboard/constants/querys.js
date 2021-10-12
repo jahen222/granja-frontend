@@ -20,6 +20,7 @@ export const ACTIVITIES_GET_REGISTROS = gql`
       }
     ) {
       id
+      created_at
       actividad
       fechainicio
       fechafin
@@ -118,6 +119,7 @@ export const ACTIVITIES_GET_REGISTROS_CLIENTE = gql`
       fechafincliente
       observacion
       recursos
+      created_at
     }
   }
 `;
@@ -141,6 +143,7 @@ export const ARBOLES_GET_CUIDADO = gql`
       }
       camellone
       arbol
+      created_at
     }
   }
 `;
@@ -188,7 +191,7 @@ export const VENTAS_GET_VENTAS = gql`
   query ventas($campo: ID) {
     ventas(sort: "id:desc", where: { campo: { id_contains: $campo } }) {
       id
-      producto {
+      producto_cosecha {
         id
         nombre
       }
@@ -209,13 +212,14 @@ export const VENTAS_GET_VENTAS = gql`
         id
         nombre
       }
+      created_at
     }
   }
 `;
 
 export const VENTAS_GET_PRODUCTOS = gql`
-  query productos {
-    productos(sort: "id:asc") {
+  query productoCosechas {
+    productoCosechas(sort: "id:asc") {
       id
       nombre
     }
@@ -270,6 +274,7 @@ export const COMPRAS_GET_COMPRAS = gql`
         id
         nombre
       }
+      created_at
     }
   }
 `;
@@ -326,6 +331,7 @@ export const COSECHA_GET_COSECHA = gql`
       campo {
         id
       }
+      created_at
     }
   }
 `;
@@ -355,6 +361,7 @@ export const HONORARIOS_GET_HONORARIOS = gql`
         id
       }
       tipo
+      created_at
     }
   }
 `;
@@ -390,6 +397,7 @@ export const GASTOS_GET_GASTOS = gql`
       campo {
         id
       }
+      created_at
     }
   }
 `;

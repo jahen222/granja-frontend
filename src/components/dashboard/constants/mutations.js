@@ -55,6 +55,7 @@ export const ACTIVITIES_CREATE_REGISTER = gql`
         observacion
         recursos
         observacionfinal
+        created_at
       }
     }
   }
@@ -102,6 +103,7 @@ export const ACTIVITIES_UPDATE_REGISTER = gql`
         observacion
         recursos
         observacionfinal
+        created_at
       }
     }
   }
@@ -151,6 +153,7 @@ export const ACTIVITIES_UPDATE_FINISH_REGISTER = gql`
         observacion
         recursos
         observacionfinal
+        created_at
       }
     }
   }
@@ -191,6 +194,7 @@ export const CUIDADO_CREATE_ACTIVIDAD = gql`
         }
         camellone
         arbol
+        created_at
       }
     }
   }
@@ -215,6 +219,7 @@ export const CUIDADO_UPDATE_ACTIVIDAD = gql`
         }
         camellone
         arbol
+        created_at
       }
     }
   }
@@ -237,6 +242,7 @@ export const CUIDADO_DELETE_ACTIVIDAD = gql`
         }
         camellone
         arbol
+        created_at
       }
     }
   }
@@ -258,7 +264,7 @@ export const VENTA_CREATE_VENTA = gql`
     createVenta(
       input: {
         data: {
-          producto: $producto
+          producto_cosecha: $producto
           cliente: $proveedor
           calidad: $calidad
           cantidad: $cantidad
@@ -273,7 +279,7 @@ export const VENTA_CREATE_VENTA = gql`
     ) {
       venta {
         id
-        producto {
+        producto_cosecha {
           id
           nombre
         }
@@ -294,6 +300,7 @@ export const VENTA_CREATE_VENTA = gql`
           id
           nombre
         }
+        created_at
       }
     }
   }
@@ -304,7 +311,7 @@ export const VENTAS_DELETE_VENTAS = gql`
     deleteVenta(input: { where: { id: $id } }) {
       venta {
         id
-        producto {
+        producto_cosecha {
           id
           nombre
         }
@@ -325,6 +332,7 @@ export const VENTAS_DELETE_VENTAS = gql`
           id
           nombre
         }
+        created_at
       }
     }
   }
@@ -391,6 +399,7 @@ export const COMPRAS_CREATE_COMPRAS = gql`
           id
           nombre
         }
+        created_at
       }
     }
   }
@@ -427,6 +436,7 @@ export const COMPRAS_DELETE_COMPRAS = gql`
           id
           nombre
         }
+        created_at
       }
     }
   }
@@ -464,7 +474,7 @@ export const COSECHA_CREATE_COSECHA = gql`
     $kilosxhectarea: Float!
     $kilosxarbol: Float!
     $campo: ID!
-    $vin: Float!
+    $vin: Float
   ) {
     createCosecha(
       input: {
@@ -502,6 +512,7 @@ export const COSECHA_CREATE_COSECHA = gql`
           id
         }
         vin
+        created_at
       }
     }
   }
@@ -530,6 +541,7 @@ export const COSECHA_DELETE_COSECHA = gql`
           id
         }
         vin
+        created_at
       }
     }
   }
@@ -572,6 +584,7 @@ export const HONORARIOS_CREATE_HONORARIOS = gql`
           id
         }
         tipo
+        created_at
       }
     }
   }
@@ -594,6 +607,7 @@ export const HONORARIOS_DELETE_HONORARIO = gql`
           id
         }
         tipo
+        created_at
       }
     }
   }
@@ -645,6 +659,7 @@ export const GASTO_CREATE_GASTO = gql`
         campo {
           id
         }
+        created_at
       }
     }
   }
@@ -670,6 +685,7 @@ export const GASTO_DELETE_GASTO = gql`
         campo {
           id
         }
+        created_at
       }
     }
   }
