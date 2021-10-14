@@ -75,17 +75,21 @@
                   <td class="tableBodyGreen">
                     {{ cuidadoArbol.actividad }}
                   </td>
-                  <td>
-                    Nogal
-                  </td>
+                  <td>Nogal</td>
                   <td>
                     {{ cuidadoArbol.zona.numero }}
                   </td>
                   <td>
-                    {{ cuidadoArbol.camellone }}
+                    {{
+                      cuidadoArbol.camellone
+                        ? cuidadoArbol.camellone.numero
+                        : "Todos"
+                    }}
                   </td>
                   <td>
-                    {{ cuidadoArbol.arbol }}
+                    {{
+                      cuidadoArbol.arbole ? cuidadoArbol.arbole.numero : "Todos"
+                    }}
                   </td>
                   <td>
                     {{ cuidadoArbol.actividad }}
@@ -275,7 +279,9 @@ import {
 import {
   CUIDADO_CREATE_ACTIVIDAD,
   CUIDADO_UPDATE_ACTIVIDAD,
-  CUIDADO_DELETE_ACTIVIDAD
+  CUIDADO_DELETE_ACTIVIDAD,
+  CUIDADO_CREATE_ACTIVIDAD_CAMELLONE,
+  CUIDADO_CREATE_ACTIVIDAD_ZONE
 } from "./constants/mutations";
 import moment from "moment";
 
@@ -338,14 +344,6 @@ export default {
         validate = false;
         this.zonaState = false;
       }
-      /* if (!camellonSelected) {
-        validate = false;
-        this.camellonState = false;
-      }
-      if (!arbolSelected) {
-        validate = false;
-        this.arbolState = false;
-      } */
       if (!descripcionSelected) {
         validate = false;
         this.descripcionState = false;
@@ -357,58 +355,164 @@ export default {
 
       if (validate) {
         if (confirm("¿Desea agregar la nueva actividad?")) {
-          await this.$apollo
-            .mutate({
-              mutation: CUIDADO_CREATE_ACTIVIDAD,
-              variables: {
-                actividad: activity,
-                zona: zonaSelected,
-                camellone: camellonSelected,
-                arbol: arbolSelected,
-                descripcion: descripcionSelected,
-                estado: "Pendiente"
-              }
-            })
-            .then(data => {
-              this.cuidadoArboles.unshift(
-                data.data.createCuidadoArbole.cuidadoArbole
-              );
-              this.zonaState = null;
-              this.camellonState = null;
-              this.arbolState = null;
-              this.descripcionState = null;
-              this.activityState = null;
-              this.activitySelected = "";
-              this.zonaSelected = "";
-              this.camellonSelected = "";
-              this.arbolSelected = "";
-              this.descripcionSelected = "";
-              this.error = "";
-              this.$root.$emit("bv::hide::modal", "addCuidadoModal");
-              this.showAlert(
-                "success",
-                5,
-                "Cuidado de arbol creado exitosamente."
-              );
-            })
-            .catch(() => {
-              this.zonaState = null;
-              this.camellonState = null;
-              this.arbolState = null;
-              this.descripcionState = null;
-              this.activityState = null;
-              this.activitySelected = "";
-              this.zonaSelected = "";
-              this.camellonSelected = "";
-              this.arbolSelected = "";
-              this.descripcionSelected = "";
-              this.error = "";
-              this.showAlert(
-                "danger",
-                5,
-                "El cuidado de árbol no pudo ser creado."
-              );
-            });
+          if (!arbolSelected && !camellonSelected) {
+            await this.$apollo
+              .mutate({
+                mutation: CUIDADO_CREATE_ACTIVIDAD_ZONE,
+                variables: {
+                  actividad: activity,
+                  zona: zonaSelected,
+                  descripcion: descripcionSelected,
+                  estado: "Pendiente"
+                }
+              })
+              .then(data => {
+                this.cuidadoArboles.unshift(
+                  data.data.createCuidadoArbole.cuidadoArbole
+                );
+                this.zonaState = null;
+                this.camellonState = null;
+                this.arbolState = null;
+                this.descripcionState = null;
+                this.activityState = null;
+                this.activitySelected = "";
+                this.zonaSelected = "";
+                this.camellonSelected = "";
+                this.arbolSelected = "";
+                this.descripcionSelected = "";
+                this.error = "";
+                this.$root.$emit("bv::hide::modal", "addCuidadoModal");
+                this.showAlert(
+                  "success",
+                  5,
+                  "Cuidado de arbol creado exitosamente."
+                );
+              })
+              .catch(() => {
+                this.zonaState = null;
+                this.camellonState = null;
+                this.arbolState = null;
+                this.descripcionState = null;
+                this.activityState = null;
+                this.activitySelected = "";
+                this.zonaSelected = "";
+                this.camellonSelected = "";
+                this.arbolSelected = "";
+                this.descripcionSelected = "";
+                this.error = "";
+                this.showAlert(
+                  "danger",
+                  5,
+                  "El cuidado de árbol no pudo ser creado."
+                );
+              });
+          } else if (!arbolSelected && camellonSelected) {
+            console.log("aqui perro");
+            await this.$apollo
+              .mutate({
+                mutation: CUIDADO_CREATE_ACTIVIDAD_CAMELLONE,
+                variables: {
+                  actividad: activity,
+                  zona: zonaSelected,
+                  camellone: camellonSelected,
+                  descripcion: descripcionSelected,
+                  estado: "Pendiente"
+                }
+              })
+              .then(data => {
+                this.cuidadoArboles.unshift(
+                  data.data.createCuidadoArbole.cuidadoArbole
+                );
+                this.zonaState = null;
+                this.camellonState = null;
+                this.arbolState = null;
+                this.descripcionState = null;
+                this.activityState = null;
+                this.activitySelected = "";
+                this.zonaSelected = "";
+                this.camellonSelected = "";
+                this.arbolSelected = "";
+                this.descripcionSelected = "";
+                this.error = "";
+                this.$root.$emit("bv::hide::modal", "addCuidadoModal");
+                this.showAlert(
+                  "success",
+                  5,
+                  "Cuidado de arbol creado exitosamente."
+                );
+              })
+              .catch(() => {
+                this.zonaState = null;
+                this.camellonState = null;
+                this.arbolState = null;
+                this.descripcionState = null;
+                this.activityState = null;
+                this.activitySelected = "";
+                this.zonaSelected = "";
+                this.camellonSelected = "";
+                this.arbolSelected = "";
+                this.descripcionSelected = "";
+                this.error = "";
+                this.showAlert(
+                  "danger",
+                  5,
+                  "El cuidado de árbol no pudo ser creado."
+                );
+              });
+          } else if (arbolSelected && camellonSelected) {
+            await this.$apollo
+              .mutate({
+                mutation: CUIDADO_CREATE_ACTIVIDAD,
+                variables: {
+                  actividad: activity,
+                  zona: zonaSelected,
+                  camellone: camellonSelected,
+                  arbol: arbolSelected,
+                  descripcion: descripcionSelected,
+                  estado: "Pendiente"
+                }
+              })
+              .then(data => {
+                this.cuidadoArboles.unshift(
+                  data.data.createCuidadoArbole.cuidadoArbole
+                );
+                this.zonaState = null;
+                this.camellonState = null;
+                this.arbolState = null;
+                this.descripcionState = null;
+                this.activityState = null;
+                this.activitySelected = "";
+                this.zonaSelected = "";
+                this.camellonSelected = "";
+                this.arbolSelected = "";
+                this.descripcionSelected = "";
+                this.error = "";
+                this.$root.$emit("bv::hide::modal", "addCuidadoModal");
+                this.showAlert(
+                  "success",
+                  5,
+                  "Cuidado de arbol creado exitosamente."
+                );
+              })
+              .catch(() => {
+                this.zonaState = null;
+                this.camellonState = null;
+                this.arbolState = null;
+                this.descripcionState = null;
+                this.activityState = null;
+                this.activitySelected = "";
+                this.zonaSelected = "";
+                this.camellonSelected = "";
+                this.arbolSelected = "";
+                this.descripcionSelected = "";
+                this.error = "";
+                this.showAlert(
+                  "danger",
+                  5,
+                  "El cuidado de árbol no pudo ser creado."
+                );
+              });
+          }
         }
       }
     },
@@ -430,8 +534,8 @@ export default {
                 cuidadoArbol.id ===
                 data.data.updateCuidadoArbole.cuidadoArbole.id
               ) {
-                return (data.data.updateCuidadoArbole.cuidadoArbole);
-              } else return (cuidadoArbol);
+                return data.data.updateCuidadoArbole.cuidadoArbole;
+              } else return cuidadoArbol;
             });
 
             this.showAlert(
@@ -492,7 +596,7 @@ export default {
     },
     getMoment(date) {
       return moment(date);
-    },
+    }
   },
   asyncComputed: {
     async camellones() {

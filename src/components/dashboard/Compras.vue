@@ -47,7 +47,7 @@
                   <th scope="col" class="tableHeaderGreen" style="width: 50px">
                     ID
                   </th>
-                  <th scope="col" class="tableHeaderGreen" style="width: 50px">
+                  <th scope="col" class="tableHeaderGreen" style="width: 120px">
                     Fecha
                   </th>
                   <th scope="col" class="tableHeaderGreen" style="width: 120px">

@@ -141,8 +141,14 @@ export const ARBOLES_GET_CUIDADO = gql`
           id
         }
       }
-      camellone
-      arbol
+      camellone {
+        id
+        numero
+      }
+      arbole {
+        id
+        numero
+      }
       created_at
     }
   }

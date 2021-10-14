@@ -161,8 +161,8 @@ export const ACTIVITIES_UPDATE_FINISH_REGISTER = gql`
 
 export const CUIDADO_CREATE_ACTIVIDAD = gql`
   mutation createCuidadoArbole(
-    $arbol: String
-    $camellone: String
+    $arbol: ID!
+    $camellone: ID!
     $zona: ID!
     $actividad: String!
     $descripcion: String!
@@ -173,7 +173,7 @@ export const CUIDADO_CREATE_ACTIVIDAD = gql`
         data: {
           zona: $zona
           camellone: $camellone
-          arbol: $arbol
+          arbole: $arbol
           descripcion: $descripcion
           actividad: $actividad
           estado: $estado
@@ -192,8 +192,102 @@ export const CUIDADO_CREATE_ACTIVIDAD = gql`
             id
           }
         }
-        camellone
-        arbol
+        camellone {
+          id
+          numero
+        }
+        arbole {
+          id
+          numero
+        }
+        created_at
+      }
+    }
+  }
+`;
+
+export const CUIDADO_CREATE_ACTIVIDAD_CAMELLONE = gql`
+  mutation createCuidadoArbole(
+    $camellone: ID!
+    $zona: ID!
+    $actividad: String!
+    $descripcion: String!
+    $estado: String!
+  ) {
+    createCuidadoArbole(
+      input: {
+        data: {
+          zona: $zona
+          camellone: $camellone
+          descripcion: $descripcion
+          actividad: $actividad
+          estado: $estado
+        }
+      }
+    ) {
+      cuidadoArbole {
+        id
+        actividad
+        estado
+        descripcion
+        zona {
+          id
+          numero
+          campo {
+            id
+          }
+        }
+        camellone {
+          id
+          numero
+        }
+        arbole {
+          id
+          numero
+        }
+        created_at
+      }
+    }
+  }
+`;
+
+export const CUIDADO_CREATE_ACTIVIDAD_ZONA = gql`
+  mutation createCuidadoArbole(
+    $zona: ID!
+    $actividad: String!
+    $descripcion: String!
+    $estado: String!
+  ) {
+    createCuidadoArbole(
+      input: {
+        data: {
+          zona: $zona
+          descripcion: $descripcion
+          actividad: $actividad
+          estado: $estado
+        }
+      }
+    ) {
+      cuidadoArbole {
+        id
+        actividad
+        estado
+        descripcion
+        zona {
+          id
+          numero
+          campo {
+            id
+          }
+        }
+        camellone {
+          id
+          numero
+        }
+        arbole {
+          id
+          numero
+        }
         created_at
       }
     }
