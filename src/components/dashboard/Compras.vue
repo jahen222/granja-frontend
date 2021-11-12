@@ -153,7 +153,7 @@
                   </td>
                 </tr>
                 <tr>
-                  <td COLSPAN="7">Total:</td>
+                  <td COLSPAN="8">Total:</td>
                   <td>{{ Math.floor(getTotal).toLocaleString("de-DE") }}</td>
                 </tr>
               </tbody>
@@ -486,7 +486,7 @@
 <script>
 import {
   COMPRAS_GET_COMPRAS,
-  VENTAS_GET_PRODUCTOS,
+  COMPRAS_GET_PRODUCTOS,
   VENTAS_GET_FORMAPAGOS,
   VENTAS_GET_CENTRO_COSTOS,
   GASTOS_GET_PROVEEDORES
@@ -553,7 +553,7 @@ export default {
       fetchPolicy: "no-cache"
     },
     productos: {
-      query: VENTAS_GET_PRODUCTOS
+      query: COMPRAS_GET_PRODUCTOS
     },
     formaPagos: {
       query: VENTAS_GET_FORMAPAGOS
@@ -728,9 +728,10 @@ export default {
               },
               refetchQueries: [
                 {
-                  query: VENTAS_GET_PRODUCTOS
+                  query: COMPRAS_GET_PRODUCTOS
                 }
-              ]
+              ],
+              fetchPolicy: "no-cache"
             })
             .then(() => {
               this.productoaddState = null;
@@ -817,7 +818,7 @@ export default {
     },
     getMoment(date) {
       return moment(date);
-    },
+    }
   },
   computed: {
     totalSelected() {

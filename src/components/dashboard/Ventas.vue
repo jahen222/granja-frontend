@@ -67,7 +67,7 @@
                     {{ getMoment(venta.created_at).format("D/MMM/YY") }}
                   </td>
                   <td class="tableBodyGreen">
-                    {{ venta.producto_cosecha.nombre }}
+                    {{ venta.producto }}
                   </td>
                   <td class="tableBodyGreen">
                     {{ venta.cliente.nombre }}
@@ -106,7 +106,7 @@
                   </td>
                 </tr>
                 <tr>
-                  <td COLSPAN="6">Total:</td>
+                  <td COLSPAN="7">Total:</td>
                   <td>{{ Math.floor(getTotal).toLocaleString("de-DE") }}</td>
                 </tr>
               </tbody>
@@ -135,9 +135,9 @@
           >
             <option disabled selected>Seleccione una opción:</option>
             <option
-              v-for="(producto, index) in productoCosechas"
+              v-for="(producto, index) in productos"
               v-bind:key="index"
-              :value="producto.id"
+              :value="producto.nombre"
             >
               {{ producto.nombre }}
             </option>
@@ -310,7 +310,7 @@
 <script>
 import {
   VENTAS_GET_VENTAS,
-  VENTAS_GET_PRODUCTOS,
+  COMPRAS_GET_PRODUCTOS,
   VENTAS_GET_FORMAPAGOS,
   VENTAS_GET_CLIENTES
 } from "./constants/querys";
@@ -326,7 +326,7 @@ export default {
   data() {
     return {
       error: "",
-      productoCosechas: [],
+      productos: [],
       productoSelected: "",
       productoState: null,
       calidadSelected: "",
@@ -363,8 +363,8 @@ export default {
       },
       fetchPolicy: "no-cache"
     },
-    productoCosechas: {
-      query: VENTAS_GET_PRODUCTOS
+    productos: {
+      query: COMPRAS_GET_PRODUCTOS
     },
     formaPagos: {
       query: VENTAS_GET_FORMAPAGOS
@@ -433,6 +433,17 @@ export default {
                 cheque: cheque,
                 campo: this.campoSelected ? this.campoSelected.id : null
               },
+              refetchQueries: [
+                {
+                  query: VENTAS_GET_VENTAS,
+                  variables() {
+                    return {
+                      campo: this.campoSelected ? this.campoSelected.id : null
+                    };
+                  },
+                  fetchPolicy: "no-cache"
+                }
+              ],
               fetchPolicy: "no-cache"
             })
             .then(data => {
@@ -518,7 +529,7 @@ export default {
     },
     getMoment(date) {
       return moment(date);
-    },
+    }
   },
   computed: {
     totalSelected() {

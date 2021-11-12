@@ -197,10 +197,7 @@ export const VENTAS_GET_VENTAS = gql`
   query ventas($campo: ID) {
     ventas(sort: "id:desc", where: { campo: { id_contains: $campo } }) {
       id
-      producto_cosecha {
-        id
-        nombre
-      }
+      producto
       calidad
       cantidad
       valorkilo
@@ -224,8 +221,8 @@ export const VENTAS_GET_VENTAS = gql`
 `;
 
 export const VENTAS_GET_PRODUCTOS = gql`
-  query productoCosechas {
-    productoCosechas(sort: "id:asc") {
+  query productos {
+    productos(sort: "id:asc") {
       id
       nombre
     }
@@ -281,6 +278,15 @@ export const COMPRAS_GET_COMPRAS = gql`
         nombre
       }
       created_at
+    }
+  }
+`;
+
+export const COMPRAS_GET_PRODUCTOS = gql`
+  query productos {
+    productos(sort: "id:asc") {
+      id
+      nombre
     }
   }
 `;

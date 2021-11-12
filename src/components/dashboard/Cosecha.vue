@@ -393,10 +393,10 @@ export default {
         validate = false;
         this.cantidadState = false;
       }
-      if (!arboles) {
+      /* if (!arboles) {
         validate = false;
         this.arbolesState = false;
-      }
+      } */
       if (!unidad) {
         validate = false;
         this.unidadState = false;
@@ -409,10 +409,10 @@ export default {
         validate = false;
         this.kxhState = false;
       }
-      if (!kxa) {
+      /* if (!kxa) {
         validate = false;
         this.kxaState = false;
-      }
+      } */
       /* if (!vin) {
         validate = false;
         this.vinState = false;

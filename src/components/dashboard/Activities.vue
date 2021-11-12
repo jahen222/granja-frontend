@@ -968,6 +968,30 @@
             </option>
           </select>
         </b-form-group>
+        <!-- compra -->
+        <br v-if="typeSelected === 'Aplicación'" />
+        <b-form-group
+          v-if="typeSelected === 'Aplicación'"
+          label="Compras"
+          label-for="compras-input"
+          invalid-feedback="La compra es requerida"
+          :state="compraState"
+        >
+          <select
+            class="form-control"
+            v-model="compraSelected"
+            :state="compraState"
+          >
+            <option disabled selected>Seleccione una opción:</option>
+            <option
+              v-for="(compra, index) in comprasGroup"
+              v-bind:key="index"
+              :value="compra"
+            >
+              {{ compra.nombre + ": " + compra.cantidad + " " + compra.unidad }}
+            </option>
+          </select>
+        </b-form-group>
         <!-- cantidad -->
         <br v-if="typeSelected === 'Aplicación'" />
         <b-form-group
@@ -980,6 +1004,8 @@
           <b-form-input
             id="cantidad-input"
             type="number"
+            :disabled="compraSelected ? false : true"
+            :max="compraSelected.cantidad"
             placeholder="Ingrese la cantidad"
             v-model="cantidadSelected"
             :state="cantidadState"
@@ -1280,7 +1306,8 @@
 import {
   ACTIVITIES_GET_ACTIVIDADES,
   ACTIVITIES_GET_REGISTROS,
-  ACTIVITIES_GET_DEPENDENCIAS
+  ACTIVITIES_GET_DEPENDENCIAS,
+  COMPRAS_GET_COMPRAS
 } from "./constants/querys";
 import {
   ACTIVITIES_CREATE_REGISTER,
@@ -1350,7 +1377,10 @@ export default {
       typeNotification: "",
       messageNotification: "",
       observacionfinal: "",
-      observacionfinalState: null
+      observacionfinalState: null,
+      compras: [],
+      compraSelected: "",
+      compraState: null
     };
   },
   apollo: {
@@ -1365,6 +1395,15 @@ export default {
           campo: this.campoSelected ? this.campoSelected.id : null,
           startDate: this.thisYear + "-04-01",
           endDate: this.thisYear + 1 + "-03-31"
+        };
+      },
+      fetchPolicy: "no-cache"
+    },
+    compras: {
+      query: COMPRAS_GET_COMPRAS,
+      variables() {
+        return {
+          campo: this.campoSelected ? this.campoSelected.id : null
         };
       },
       fetchPolicy: "no-cache"
@@ -1393,6 +1432,8 @@ export default {
       const campoId = this.campoSelected.id;
       const dependenciaId = this.dependenciaSelected;
       const estado = "Proyectado";
+      const compra = this.compraSelected;
+      this.compraState = true;
 
       if (!activity) {
         validate = false;
@@ -1415,6 +1456,10 @@ export default {
         this.typeState = false;
       }
       if (type && type === "Aplicación") {
+        if (!compra) {
+          validate = false;
+          this.compraState = false;
+        }
         if (!cantidad) {
           validate = false;
           this.cantidadState = false;
@@ -1462,6 +1507,7 @@ export default {
               this.typeSelected = "";
               this.cantidadSelected = "";
               this.medidaSelected = "";
+              this.compraSelected = "";
               this.dependenciaSelected = null;
               this.activityState = null;
               this.propositoState = null;
@@ -1471,6 +1517,7 @@ export default {
               this.cantidadState = null;
               this.medidaState = null;
               this.dependenciaSelected = null;
+              this.compraState = null;
               this.error = "";
               this.$root.$emit("bv::hide::modal", "addActivityModal");
               this.showAlert("success", 5, "Actividad creada exitosamente.");
@@ -1695,6 +1742,44 @@ export default {
       }
 
       return dependencias;
+    }
+  },
+  computed: {
+    comprasGroup() {
+      const compras = this.compras;
+      let result = [];
+
+      compras.map(compra => {
+        if (
+          result.find(result => {
+            if (
+              result.nombre.toUpperCase() ===
+              compra.producto.nombre.toUpperCase()
+            )
+              return true;
+            else return false;
+          })
+        )
+          result.map(result => {
+            if (
+              result.nombre.toUpperCase() ===
+              compra.producto.nombre.toUpperCase()
+            ) {
+              result.cantidad = result.cantidad + compra.cantidad;
+            }
+          });
+        else
+          result.push({
+            id: compra.id,
+            nombre: compra.producto.nombre,
+            cantidad: compra.cantidad,
+            unidad: compra.unidad
+          });
+      });
+
+      console.log("aqui: ", result);
+
+      return result;
     }
   }
 };

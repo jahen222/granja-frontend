@@ -344,7 +344,7 @@ export const CUIDADO_DELETE_ACTIVIDAD = gql`
 
 export const VENTA_CREATE_VENTA = gql`
   mutation createVenta(
-    $producto: ID!
+    $producto: String!
     $proveedor: ID!
     $calidad: String!
     $cantidad: Int!
@@ -358,7 +358,7 @@ export const VENTA_CREATE_VENTA = gql`
     createVenta(
       input: {
         data: {
-          producto_cosecha: $producto
+          producto: $producto
           cliente: $proveedor
           calidad: $calidad
           cantidad: $cantidad
@@ -373,10 +373,7 @@ export const VENTA_CREATE_VENTA = gql`
     ) {
       venta {
         id
-        producto_cosecha {
-          id
-          nombre
-        }
+        producto
         calidad
         cantidad
         valorkilo
@@ -405,10 +402,7 @@ export const VENTAS_DELETE_VENTAS = gql`
     deleteVenta(input: { where: { id: $id } }) {
       venta {
         id
-        producto_cosecha {
-          id
-          nombre
-        }
+        producto
         calidad
         cantidad
         valorkilo
@@ -563,7 +557,7 @@ export const COSECHA_CREATE_COSECHA = gql`
     $zona: ID!
     $unidad: String!
     $cantidad: Int!
-    $arboles: Int!
+    $arboles: Int
     $ha: Float!
     $kilosxhectarea: Float!
     $kilosxarbol: Float!

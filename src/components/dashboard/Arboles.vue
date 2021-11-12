@@ -281,7 +281,7 @@ import {
   CUIDADO_UPDATE_ACTIVIDAD,
   CUIDADO_DELETE_ACTIVIDAD,
   CUIDADO_CREATE_ACTIVIDAD_CAMELLONE,
-  CUIDADO_CREATE_ACTIVIDAD_ZONE
+  CUIDADO_CREATE_ACTIVIDAD_ZONA
 } from "./constants/mutations";
 import moment from "moment";
 
@@ -358,7 +358,7 @@ export default {
           if (!arbolSelected && !camellonSelected) {
             await this.$apollo
               .mutate({
-                mutation: CUIDADO_CREATE_ACTIVIDAD_ZONE,
+                mutation: CUIDADO_CREATE_ACTIVIDAD_ZONA,
                 variables: {
                   actividad: activity,
                   zona: zonaSelected,

@@ -114,7 +114,7 @@
                 class="menuLink"
                 href="#"
                 @click="changeOption('honorarios')"
-                >Honorarios</b-nav-item
+                >RRHH</b-nav-item
               >
               <b-nav-item
                 class="menuLink"
