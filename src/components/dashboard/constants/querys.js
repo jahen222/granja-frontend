@@ -45,6 +45,7 @@ export const ACTIVITIES_GET_REGISTROS = gql`
       observacion
       recursos
       observacionfinal
+      compra
     }
   }
 `;
@@ -419,6 +420,57 @@ export const GASTOS_GET_UNIDADES = gql`
     unidadesGastos(sort: "id:asc") {
       id
       nombre
+    }
+  }
+`;
+
+export const REPORTES_GET_COMPRAS = gql`
+  query compras($campo: ID, $startDate: Date!, $endDate: Date!) {
+    compras(
+      sort: "id:desc"
+      where: {
+        campo: { id_contains: $campo }
+        created_at_gte: $startDate
+        created_at_lte: $endDate
+      }
+    ) {
+      id
+      total
+      created_at
+    }
+  }
+`;
+
+export const REPORTES_GET_HONORARIOS = gql`
+  query honorarios($campo: ID, $startDate: Date!, $endDate: Date!) {
+    honorarios(
+      sort: "id:desc"
+      where: {
+        campo: { id_contains: $campo }
+        created_at_gte: $startDate
+        created_at_lte: $endDate
+      }
+    ) {
+      id
+      monto
+      created_at
+    }
+  }
+`;
+
+export const REPORTES_GET_GASTOS = gql`
+  query gastosGenerales($campo: ID, $startDate: Date!, $endDate: Date!) {
+    gastosGenerales(
+      sort: "id:desc"
+      where: {
+        campo: { id_contains: $campo }
+        created_at_gte: $startDate
+        created_at_lte: $endDate
+      }
+    ) {
+      id
+      total
+      created_at
     }
   }
 `;

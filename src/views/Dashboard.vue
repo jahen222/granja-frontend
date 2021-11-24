@@ -122,6 +122,12 @@
                 @click="changeOption('gastos')"
                 >Gastos Generales</b-nav-item
               >
+              <b-nav-item
+                class="menuLink"
+                href="#"
+                @click="changeOption('reportes')"
+                >Reportes</b-nav-item
+              >
             </b-nav>
           </nav>
           <b-button variant="success" block @click="hide">Cerrar</b-button>
@@ -181,6 +187,9 @@
     </header>
     <header class="masthead" v-if="menuOption == 'gastos'">
       <GastosGenerales :user="user" :campoSelected="campoSelected" />
+    </header>
+    <header class="masthead" v-if="menuOption == 'reportes'">
+      <Reportes :user="user" :campoSelected="campoSelected" />
     </header>
   </div>
   <div class="dashboard" v-else>
@@ -287,6 +296,7 @@ import Compras from "../components/dashboard/Compras.vue";
 import Cosecha from "../components/dashboard/Cosecha.vue";
 import Honorarios from "../components/dashboard/Honorarios.vue";
 import GastosGenerales from "../components/dashboard/GastosGenerales.vue";
+import Reportes from "../components/dashboard/Reportes.vue";
 
 export default {
   name: "Dashboard",
@@ -298,7 +308,8 @@ export default {
     Compras,
     Cosecha,
     Honorarios,
-    GastosGenerales
+    GastosGenerales,
+    Reportes
   },
   data() {
     return {

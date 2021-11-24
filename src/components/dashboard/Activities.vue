@@ -1006,6 +1006,7 @@
             type="number"
             :disabled="compraSelected ? false : true"
             :max="compraSelected.cantidad"
+            :min="0"
             placeholder="Ingrese la cantidad"
             v-model="cantidadSelected"
             :state="cantidadState"
@@ -1088,6 +1089,15 @@
                 <tr>
                   <td class="blakita">Tipo:</td>
                   <td>{{ this.showRegister.tipo }}</td>
+                  <td
+                    v-if="this.showRegister.tipo === 'Aplicación'"
+                    class="blakita"
+                  >
+                    Producto:
+                  </td>
+                  <td v-if="this.showRegister.tipo === 'Aplicación'">
+                    {{ this.showRegister.compra }}
+                  </td>
                 </tr>
                 <tr v-if="this.showRegister.registro_actividad">
                   <td class="blakita">Depende:</td>
@@ -1432,7 +1442,7 @@ export default {
       const campoId = this.campoSelected.id;
       const dependenciaId = this.dependenciaSelected;
       const estado = "Proyectado";
-      const compra = this.compraSelected;
+      const compra = this.compraSelected.nombre;
       this.compraState = true;
 
       if (!activity) {
@@ -1493,7 +1503,8 @@ export default {
                 medida,
                 campoId,
                 dependenciaId,
-                estado
+                estado,
+                compra
               }
             })
             .then(data => {
@@ -1777,7 +1788,16 @@ export default {
           });
       });
 
-      console.log("aqui: ", result);
+      this.registroActividads.map(registro => {
+        result.map(item => {
+          if (
+            registro.tipo === "Aplicación" &&
+            registro.compra === item.nombre
+          ) {
+            item.cantidad = item.cantidad - registro.cantidad;
+          }
+        });
+      });
 
       return result;
     }

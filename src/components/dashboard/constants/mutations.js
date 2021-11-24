@@ -12,6 +12,7 @@ export const ACTIVITIES_CREATE_REGISTER = gql`
     $campoId: ID!
     $dependenciaId: ID
     $estado: String!
+    $compra: String
   ) {
     createRegistroActividad(
       input: {
@@ -26,6 +27,7 @@ export const ACTIVITIES_CREATE_REGISTER = gql`
           campo: $campoId
           registro_actividad: $dependenciaId
           estado: $estado
+          compra: $compra
         }
       }
     ) {
@@ -56,6 +58,7 @@ export const ACTIVITIES_CREATE_REGISTER = gql`
         recursos
         observacionfinal
         created_at
+        compra
       }
     }
   }
@@ -104,6 +107,7 @@ export const ACTIVITIES_UPDATE_REGISTER = gql`
         recursos
         observacionfinal
         created_at
+        compra
       }
     }
   }

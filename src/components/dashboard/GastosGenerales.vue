@@ -111,7 +111,7 @@
                   </td>
                 </tr>
                 <tr>
-                  <td COLSPAN="6">Total:</td>
+                  <td COLSPAN="7">Total:</td>
                   <td>{{ Math.floor(getTotal).toLocaleString("de-DE") }}</td>
                 </tr>
               </tbody>
